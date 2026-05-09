@@ -12,8 +12,8 @@ export default function HomePage() {
           <span className="text-[var(--color-ink)]">Up</span>
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-[var(--color-ink)]/80">
-          Find a court near you, RSVP to a game, and show up knowing exactly who's running with
-          you. Sessions cap at 15 — first come, first hooped.
+          Find a court near you, RSVP to a game, and show up knowing exactly who's running with you.
+          Sessions cap at 15 — first come, first hooped.
         </p>
         <div className="mt-10 flex justify-center gap-3">
           <Link
