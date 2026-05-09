@@ -10,12 +10,7 @@
     },
     "supabase": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@supabase/mcp-server-supabase",
-        "--access-token",
-        "${SUPABASE_ACCESS_TOKEN}"
-      ]
+      "args": ["-y", "@supabase/mcp-server-supabase", "--access-token", "${SUPABASE_ACCESS_TOKEN}"]
     },
     "playwright": {
       "command": "npx",
