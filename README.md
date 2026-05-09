@@ -24,6 +24,7 @@ npm run dev                  # http://localhost:5173/hoopup/
 ```
 
 You'll need:
+
 1. A free Supabase project — copy the **Project URL** and **anon key** into `.env.local` (never the `service_role` key).
 2. Google + GitHub OAuth client IDs configured in Supabase Auth → Providers (only required for OAuth sign-in; email/password works out of the box).
 

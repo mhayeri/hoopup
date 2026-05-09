@@ -1,8 +1,8 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-display: "Bebas Neue", "Oswald", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
+  --font-display: 'Bebas Neue', 'Oswald', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
 
   --color-court: oklch(0.62 0.18 45);
   --color-hardwood: oklch(0.45 0.07 60);
@@ -11,7 +11,9 @@
   --color-ink: oklch(0.18 0.02 60);
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
