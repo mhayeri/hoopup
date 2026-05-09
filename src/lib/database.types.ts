@@ -42,6 +42,7 @@ export type Database = {
           home_court_id?: number | null;
           avatar_url?: string | null;
         };
+        Relationships: [];
       };
       courts: {
         Row: {
@@ -56,8 +57,14 @@ export type Database = {
           last_synced_at: string;
           created_at: string;
         };
-        Insert: never; // writes are service_role only via RPC
-        Update: never;
+        // courts is upserted only by the service_role via an RPC; the
+        // anon/authenticated client cannot insert or update directly
+        // (no write RLS policies). Keep these structurally empty so
+        // postgrest-js accepts the Database type but practical writes
+        // through the public client are blocked at the API layer.
+        Insert: Record<string, never>;
+        Update: Record<string, never>;
+        Relationships: [];
       };
       sessions: {
         Row: {
@@ -84,6 +91,7 @@ export type Database = {
           notes?: string | null;
           cancelled_at?: string | null;
         };
+        Relationships: [];
       };
       session_rsvps: {
         Row: {
@@ -100,8 +108,11 @@ export type Database = {
         Update: {
           status?: RsvpStatus;
         };
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
   };
 };
 
