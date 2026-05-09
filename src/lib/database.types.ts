@@ -112,8 +112,24 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      upsert_osm_courts: {
+        Args: { payload: OsmCourtUpsert[] };
+        Returns: null;
+      };
+    };
   };
+};
+
+// Shape the upsert_osm_courts RPC expects in each payload entry.
+export type OsmCourtUpsert = {
+  osm_id: number;
+  name: string | null;
+  lat: number;
+  lng: number;
+  surface?: string | null;
+  hoops?: number | null;
+  lit?: 'yes' | 'no' | null;
 };
 
 // Postgres error codes we throw from triggers

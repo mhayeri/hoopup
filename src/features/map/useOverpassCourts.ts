@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 import type { LatLngBounds } from 'leaflet';
+import { supabase } from '../../lib/supabase';
+import type { OsmCourtUpsert } from '../../lib/database.types';
 
 export type OsmCourt = {
   osmId: number;
@@ -8,6 +10,9 @@ export type OsmCourt = {
   name: string | null;
   lat: number;
   lng: number;
+  surface: string | null;
+  hoops: number | null;
+  lit: 'yes' | 'no' | null;
 };
 
 const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
@@ -53,13 +58,30 @@ function elementToCourt(el: OverpassElement): OsmCourt | null {
   const lat = el.lat ?? el.center?.lat;
   const lng = el.lon ?? el.center?.lon;
   if (lat === undefined || lng === undefined) return null;
+  const hoopsTag = el.tags?.hoops;
+  const litTag = el.tags?.lit;
   return {
     osmId: el.id,
     osmType: el.type,
     name: el.tags?.name ?? null,
     lat,
     lng,
+    surface: el.tags?.surface ?? null,
+    hoops: hoopsTag && /^\d+$/.test(hoopsTag) ? Number(hoopsTag) : null,
+    lit: litTag === 'yes' ? 'yes' : litTag === 'no' ? 'no' : null,
   };
+}
+
+function toUpsertPayload(courts: OsmCourt[]): OsmCourtUpsert[] {
+  return courts.map((c) => ({
+    osm_id: c.osmId,
+    name: c.name,
+    lat: c.lat,
+    lng: c.lng,
+    surface: c.surface,
+    hoops: c.hoops,
+    lit: c.lit,
+  }));
 }
 
 function mergeUnique(prev: OsmCourt[], next: OsmCourt[]): OsmCourt[] {
@@ -117,6 +139,13 @@ export function useOverpassCourts(): { courts: OsmCourt[]; loading: boolean } {
           .filter((c): c is OsmCourt => c !== null);
         cache.set(key, found);
         setCourts((prev) => mergeUnique(prev, found));
+        if (found.length > 0) {
+          void supabase
+            .rpc('upsert_osm_courts', { payload: toUpsertPayload(found) })
+            .then(({ error }) => {
+              if (error) console.warn('upsert_osm_courts failed', error.message);
+            });
+        }
       } catch (err) {
         if ((err as Error).name === 'AbortError') return;
         console.warn('Overpass fetch failed', err);
