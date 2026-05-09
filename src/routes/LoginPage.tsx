@@ -3,6 +3,17 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import OAuthButtons from '../components/OAuthButtons';
 
+// Only allow same-origin paths starting with a single '/'. This blocks
+// protocol-relative ('//evil.com'), absolute ('https://evil.com'), and
+// scheme-only ('javascript:...') values that could turn the post-login
+// redirect into an open-redirect vector.
+function safeReturnPath(raw: string | null): string {
+  if (!raw) return '/';
+  if (!raw.startsWith('/')) return '/';
+  if (raw.startsWith('//')) return '/';
+  return raw;
+}
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const [search] = useSearchParams();
@@ -21,8 +32,7 @@ export default function LoginPage() {
       setError(error.message);
       return;
     }
-    const from = search.get('from') ?? '/';
-    navigate(from, { replace: true });
+    navigate(safeReturnPath(search.get('from')), { replace: true });
   }
 
   return (
