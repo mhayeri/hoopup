@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import { useOverpassCourts } from './useOverpassCourts';
 
 const DEFAULT_CENTER: [number, number] = [32.7849, -117.1611];
@@ -21,18 +21,20 @@ function RecenterOnUser() {
   return null;
 }
 
-function OverpassStatus() {
-  const { courts, loading } = useOverpassCourts();
+function CourtMarkers() {
+  const { courts } = useOverpassCourts();
   return (
-    <div className="pointer-events-none absolute right-3 top-3 z-[400] rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[var(--color-ink)] shadow">
-      {loading ? 'Loading courts…' : `${courts.length} courts in view`}
-    </div>
+    <>
+      {courts.map((c) => (
+        <Marker key={`${c.osmType}:${c.osmId}`} position={[c.lat, c.lng]} />
+      ))}
+    </>
   );
 }
 
 export default function MapPage() {
   return (
-    <div className="relative h-[calc(100vh-3.5rem)] w-full">
+    <div className="h-[calc(100vh-3.5rem)] w-full">
       <MapContainer
         center={DEFAULT_CENTER}
         zoom={DEFAULT_ZOOM}
@@ -44,7 +46,7 @@ export default function MapPage() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <RecenterOnUser />
-        <OverpassStatus />
+        <CourtMarkers />
       </MapContainer>
     </div>
   );
