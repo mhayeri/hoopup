@@ -49,14 +49,10 @@ function CourtMarkers() {
         <Marker key={c.id} position={[c.lat, c.lng]}>
           <Popup>
             <div className="space-y-1">
-              <p className="font-semibold text-[var(--color-ink)]">
-                {c.name ?? 'Unnamed court'}
-              </p>
+              <p className="font-semibold text-[var(--color-ink)]">{c.name ?? 'Unnamed court'}</p>
               {c.surface || c.hoops ? (
                 <p className="text-xs text-[var(--color-ink)]/70">
-                  {[c.surface, c.hoops ? `${c.hoops} hoops` : null]
-                    .filter(Boolean)
-                    .join(' · ')}
+                  {[c.surface, c.hoops ? `${c.hoops} hoops` : null].filter(Boolean).join(' · ')}
                 </p>
               ) : null}
               <Link

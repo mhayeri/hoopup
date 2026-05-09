@@ -86,9 +86,7 @@ export default function CourtDetailPage() {
   const facts = [
     court.surface ? { label: 'Surface', value: court.surface } : null,
     court.hoops ? { label: 'Hoops', value: String(court.hoops) } : null,
-    court.lit !== null
-      ? { label: 'Lit at night', value: court.lit ? 'Yes' : 'No' }
-      : null,
+    court.lit !== null ? { label: 'Lit at night', value: court.lit ? 'Yes' : 'No' } : null,
     {
       label: 'Coordinates',
       value: `${court.lat.toFixed(5)}, ${court.lng.toFixed(5)}`,
@@ -97,10 +95,7 @@ export default function CourtDetailPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
-      <Link
-        to="/map"
-        className="text-sm font-semibold text-[var(--color-court)] hover:underline"
-      >
+      <Link to="/map" className="text-sm font-semibold text-[var(--color-court)] hover:underline">
         ← Back to map
       </Link>
       <h1 className="mt-3 text-4xl font-black uppercase tracking-tight text-[var(--color-court)]">
