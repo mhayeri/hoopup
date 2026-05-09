@@ -54,19 +54,29 @@ function bboxKey(bounds: LatLngBounds): string {
   ].join(',');
 }
 
+// Sanitize Overpass elements before they leave the client. Drops anything
+// with non-finite or out-of-range coords; truncates user-controlled string
+// fields so a poisoned mirror can't pad a JSON payload arbitrarily.
+const MAX_NAME_LEN = 200;
+const MAX_SURFACE_LEN = 50;
+
 function elementToCourt(el: OverpassElement): OsmCourt | null {
   const lat = el.lat ?? el.center?.lat;
   const lng = el.lon ?? el.center?.lon;
   if (lat === undefined || lng === undefined) return null;
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+  if (!Number.isSafeInteger(el.id)) return null;
+
   const hoopsTag = el.tags?.hoops;
   const litTag = el.tags?.lit;
   return {
     osmId: el.id,
     osmType: el.type,
-    name: el.tags?.name ?? null,
+    name: el.tags?.name?.slice(0, MAX_NAME_LEN) ?? null,
     lat,
     lng,
-    surface: el.tags?.surface ?? null,
+    surface: el.tags?.surface?.slice(0, MAX_SURFACE_LEN) ?? null,
     hoops: hoopsTag && /^\d+$/.test(hoopsTag) ? Number(hoopsTag) : null,
     lit: litTag === 'yes' ? 'yes' : litTag === 'no' ? 'no' : null,
   };
