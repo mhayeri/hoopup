@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import OAuthButtons from '../components/OAuthButtons';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -77,6 +78,14 @@ export default function LoginPage() {
             {submitting ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
+
+        <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-[var(--color-ink)]/40">
+          <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
+          or
+          <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
+        </div>
+
+        <OAuthButtons />
 
         <p className="mt-6 text-sm text-[var(--color-ink)]/70">
           New here?{' '}
