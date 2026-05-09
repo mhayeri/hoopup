@@ -1,40 +1,34 @@
-function App() {
+import { Routes, Route } from 'react-router-dom';
+import HomePage from './routes/HomePage';
+import LoginPage from './routes/LoginPage';
+import SignupPage from './routes/SignupPage';
+import AuthCallbackPage from './routes/AuthCallbackPage';
+import ProfilePage from './routes/ProfilePage';
+import NotFoundPage from './routes/NotFoundPage';
+import RequireAuth from './components/RequireAuth';
+import NavBar from './components/NavBar';
+
+export default function App() {
   return (
-    <main className="flex min-h-full items-center justify-center px-6 py-16">
-      <section className="max-w-2xl text-center">
-        <p className="mb-4 text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-hardwood)]">
-          Pickup, organized.
-        </p>
-        <h1 className="text-7xl font-black uppercase leading-[0.9] tracking-tight text-[var(--color-court)] md:text-8xl">
-          Hoop
-          <span className="text-[var(--color-ink)]">Up</span>
-        </h1>
-        <p className="mt-6 text-lg leading-relaxed text-[var(--color-ink)]/80">
-          Find a court near you, RSVP to a game, and show up knowing exactly who's running with you.
-          Sessions cap at 15 — first come, first hooped.
-        </p>
-        <div className="mt-10 flex justify-center gap-3">
-          <button
-            type="button"
-            className="rounded-full bg-[var(--color-court)] px-6 py-3 font-semibold text-white shadow-lg shadow-[var(--color-court)]/30 transition hover:scale-[1.02] hover:bg-[var(--color-court)]/90"
-            disabled
-          >
-            Find a court
-          </button>
-          <button
-            type="button"
-            className="rounded-full border border-[var(--color-ink)]/20 px-6 py-3 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-            disabled
-          >
-            Sign in
-          </button>
-        </div>
-        <p className="mt-12 text-xs uppercase tracking-widest text-[var(--color-hardwood)]/70">
-          v0.0.0 · scaffold deploy
-        </p>
-      </section>
-    </main>
+    <div className="flex min-h-full flex-col">
+      <NavBar />
+      <div className="flex-1">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <ProfilePage />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
-
-export default App;

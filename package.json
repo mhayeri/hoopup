@@ -15,7 +15,8 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.15.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

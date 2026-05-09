@@ -6,12 +6,12 @@ HoopUp is a basketball pickup-game coordinator. Pull up the map, see nearby cour
 
 ## Stack
 
-- **Frontend**: React 18 + Vite + TypeScript + Tailwind CSS
+- **Frontend**: React 19 + Vite + TypeScript + Tailwind CSS
 - **Backend**: Supabase (Postgres + Auth + Storage + Realtime + Row-Level Security)
 - **Map**: Leaflet + OpenStreetMap, court data via the OSM Overpass API
 - **Auth**: Email/password, Google OAuth, GitHub OAuth
 - **Hosting**: GitHub Pages via GitHub Actions
-- **Live site**: https://mhayeri.github.io/hoopup/ _(after first deploy)_
+- **Live site**: https://mhayeri.github.io/hoopup/
 
 ## Local development
 
@@ -28,6 +28,36 @@ You'll need:
 1. A free Supabase project — copy the **Project URL** and **anon key** into `.env.local` (never the `service_role` key).
 2. Google + GitHub OAuth client IDs configured in Supabase Auth → Providers (only required for OAuth sign-in; email/password works out of the box).
 
+### Configuring OAuth providers (optional)
+
+Email/password auth works out of the box. To enable Google or GitHub sign-in, you need to register an OAuth app with each provider and paste the credentials into the Supabase dashboard.
+
+**The Supabase callback URL is the same for both providers:**
+
+```
+https://<your-project-ref>.supabase.co/auth/v1/callback
+```
+
+#### Google (Google Cloud Console)
+
+1. Go to https://console.cloud.google.com/apis/credentials
+2. Create or select a project
+3. **Create credentials → OAuth client ID → Web application**
+4. **Authorized JavaScript origins**: `https://<your-project-ref>.supabase.co`
+5. **Authorized redirect URIs**: the Supabase callback URL above
+6. Copy the **Client ID** and **Client secret**
+7. In the Supabase dashboard → **Authentication → Providers → Google** → enable, paste both values, save
+
+#### GitHub
+
+1. https://github.com/settings/developers → **OAuth Apps → New OAuth App**
+2. **Homepage URL**: `https://<your-username>.github.io/hoopup/`
+3. **Authorization callback URL**: the Supabase callback URL above
+4. Generate a **Client secret**
+5. In the Supabase dashboard → **Authentication → Providers → GitHub** → enable, paste **Client ID** and **Client secret**, save
+
+Once a provider is enabled in the dashboard, the corresponding button on the sign-in / sign-up page will work end-to-end.
+
 ## How it works
 
 - **Map view** geolocates you and renders nearby basketball courts pulled from OpenStreetMap. Courts are cached server-side to avoid hammering Overpass.
@@ -38,13 +68,14 @@ You'll need:
 
 ```
 src/
-  features/        # auth, profiles, map, sessions, rsvp
-  lib/             # supabase client, env, leaflet helpers
-  providers/       # AuthProvider, etc.
-  routes/          # page-level components
+  components/      # shared UI (NavBar, RequireAuth, OAuthButtons)
+  lib/             # supabase client, env, database types
+  providers/       # AuthProvider + useAuth hook
+  routes/          # page-level components (one per route)
 supabase/
-  migrations/      # SQL schema, RLS, triggers
-.github/workflows/ # deploy.yml
+  config.toml      # CLI-readable project link + auth redirect allowlist
+  migrations/      # SQL schema, RLS, triggers, seed
+.github/workflows/ # CI + deploy
 ```
 
 ## License
