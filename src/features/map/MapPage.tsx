@@ -12,13 +12,18 @@ function RecenterOnUser() {
   const map = useMap();
   useEffect(() => {
     if (!('geolocation' in navigator)) return;
+    let cancelled = false;
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        if (cancelled) return;
         map.setView([pos.coords.latitude, pos.coords.longitude], USER_ZOOM);
       },
       () => undefined,
       { timeout: 10000, maximumAge: 60_000 }
     );
+    return () => {
+      cancelled = true;
+    };
   }, [map]);
   return null;
 }
