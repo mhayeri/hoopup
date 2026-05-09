@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
-import { useOverpassCourts } from './useOverpassCourts';
+import { useOverpassSync } from './useOverpassSync';
 import { useCourtsInView } from './useCourtsInView';
 
 const DEFAULT_CENTER: [number, number] = [32.7849, -117.1611];
@@ -29,7 +29,7 @@ function RecenterOnUser() {
 }
 
 function OverpassSync() {
-  useOverpassCourts();
+  useOverpassSync();
   return null;
 }
 

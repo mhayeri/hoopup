@@ -1,23 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import type { LatLngBounds } from 'leaflet';
 import { supabase } from '../../lib/supabase';
 import type { OsmCourtUpsert } from '../../lib/database.types';
 
-export type OsmCourt = {
-  osmId: number;
-  osmType: 'node' | 'way' | 'relation';
-  name: string | null;
-  lat: number;
-  lng: number;
-  surface: string | null;
-  hoops: number | null;
-  lit: 'yes' | 'no' | null;
-};
-
 const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 const MIN_ZOOM = 12;
 const DEBOUNCE_MS = 800;
+const MAX_NAME_LEN = 200;
+const MAX_SURFACE_LEN = 50;
 
 type OverpassElement = {
   type: 'node' | 'way' | 'relation';
@@ -57,10 +48,7 @@ function bboxKey(bounds: LatLngBounds): string {
 // Sanitize Overpass elements before they leave the client. Drops anything
 // with non-finite or out-of-range coords; truncates user-controlled string
 // fields so a poisoned mirror can't pad a JSON payload arbitrarily.
-const MAX_NAME_LEN = 200;
-const MAX_SURFACE_LEN = 50;
-
-function elementToCourt(el: OverpassElement): OsmCourt | null {
+function elementToUpsert(el: OverpassElement): OsmCourtUpsert | null {
   const lat = el.lat ?? el.center?.lat;
   const lng = el.lon ?? el.center?.lon;
   if (lat === undefined || lng === undefined) return null;
@@ -71,8 +59,7 @@ function elementToCourt(el: OverpassElement): OsmCourt | null {
   const hoopsTag = el.tags?.hoops;
   const litTag = el.tags?.lit;
   return {
-    osmId: el.id,
-    osmType: el.type,
+    osm_id: el.id,
     name: el.tags?.name?.slice(0, MAX_NAME_LEN) ?? null,
     lat,
     lng,
@@ -82,59 +69,31 @@ function elementToCourt(el: OverpassElement): OsmCourt | null {
   };
 }
 
-function toUpsertPayload(courts: OsmCourt[]): OsmCourtUpsert[] {
-  return courts.map((c) => ({
-    osm_id: c.osmId,
-    name: c.name,
-    lat: c.lat,
-    lng: c.lng,
-    surface: c.surface,
-    hoops: c.hoops,
-    lit: c.lit,
-  }));
-}
-
-function mergeUnique(prev: OsmCourt[], next: OsmCourt[]): OsmCourt[] {
-  const seen = new Set(prev.map((c) => `${c.osmType}:${c.osmId}`));
-  const merged = [...prev];
-  for (const c of next) {
-    const key = `${c.osmType}:${c.osmId}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      merged.push(c);
-    }
-  }
-  return merged;
-}
-
 /**
- * Must be called from a child of <MapContainer>. Listens to map move/zoom,
- * debounces, and queries the Overpass API for basketball courts in view.
- * Caches by bbox-rounded key so panning back over a region doesn't refetch.
+ * Must be called from a child of <MapContainer>. Side-effect-only: on
+ * debounced map move/zoom, queries Overpass for basketball courts in view
+ * and upserts them via the upsert_osm_courts RPC. Per-bbox cache (keyed at
+ * ~1km granularity) is held in a ref so it survives StrictMode double-mount.
+ *
+ * Marker rendering reads from useCourtsInView, not from this hook.
  */
-export function useOverpassCourts(): { courts: OsmCourt[]; loading: boolean } {
+export function useOverpassSync(): void {
   const map = useMap();
-  const [courts, setCourts] = useState<OsmCourt[]>([]);
-  const [loading, setLoading] = useState(false);
+  const cacheRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    const cache = new Map<string, OsmCourt[]>();
     let debounce: number | null = null;
     let abort: AbortController | null = null;
 
-    async function fetchForBounds() {
+    async function fetchAndUpsert() {
       if (map.getZoom() < MIN_ZOOM) return;
       const bounds = map.getBounds();
       const key = bboxKey(bounds);
-      const cached = cache.get(key);
-      if (cached) {
-        setCourts((prev) => mergeUnique(prev, cached));
-        return;
-      }
+      if (cacheRef.current.has(key)) return;
+
       abort?.abort();
       const ctrl = new AbortController();
       abort = ctrl;
-      setLoading(true);
       try {
         const res = await fetch(OVERPASS_URL, {
           method: 'POST',
@@ -144,30 +103,23 @@ export function useOverpassCourts(): { courts: OsmCourt[]; loading: boolean } {
         });
         if (!res.ok) return;
         const data = (await res.json()) as OverpassResponse;
-        const found = data.elements
-          .map(elementToCourt)
-          .filter((c): c is OsmCourt => c !== null);
-        cache.set(key, found);
-        setCourts((prev) => mergeUnique(prev, found));
-        if (found.length > 0) {
-          void supabase
-            .rpc('upsert_osm_courts', { payload: toUpsertPayload(found) })
-            .then(({ error }) => {
-              if (error) console.warn('upsert_osm_courts failed', error.message);
-            });
-        }
+        const payload = data.elements
+          .map(elementToUpsert)
+          .filter((c): c is OsmCourtUpsert => c !== null);
+        cacheRef.current.add(key);
+        if (payload.length === 0) return;
+        const { error } = await supabase.rpc('upsert_osm_courts', { payload });
+        if (error) console.warn('upsert_osm_courts failed', error.message);
       } catch (err) {
         if ((err as Error).name === 'AbortError') return;
         console.warn('Overpass fetch failed', err);
-      } finally {
-        setLoading(false);
       }
     }
 
     function schedule() {
       if (debounce !== null) window.clearTimeout(debounce);
       debounce = window.setTimeout(() => {
-        void fetchForBounds();
+        void fetchAndUpsert();
       }, DEBOUNCE_MS);
     }
 
@@ -182,6 +134,4 @@ export function useOverpassCourts(): { courts: OsmCourt[]; loading: boolean } {
       abort?.abort();
     };
   }, [map]);
-
-  return { courts, loading };
 }
