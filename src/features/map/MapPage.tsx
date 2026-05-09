@@ -29,9 +29,17 @@ function OverpassSync() {
 }
 
 function CourtMarkers() {
-  const courts = useCourtsInView();
+  const { courts, error } = useCourtsInView();
   return (
     <>
+      {error ? (
+        <div
+          role="alert"
+          className="pointer-events-auto absolute right-3 top-3 z-[400] max-w-xs rounded-md border border-red-300 bg-red-50 px-3 py-2 text-xs font-semibold text-red-800 shadow"
+        >
+          Couldn't load courts: {error}
+        </div>
+      ) : null}
       {courts.map((c) => (
         <Marker key={c.id} position={[c.lat, c.lng]}>
           <Popup>
@@ -62,7 +70,7 @@ function CourtMarkers() {
 
 export default function MapPage() {
   return (
-    <div className="h-[calc(100vh-3.5rem)] w-full">
+    <div className="relative h-[calc(100vh-3.5rem)] w-full">
       <MapContainer
         center={DEFAULT_CENTER}
         zoom={DEFAULT_ZOOM}

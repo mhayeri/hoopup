@@ -19,9 +19,10 @@ const MAX_ROWS = 2000;
  * Refresh is bounded by debounce + an in-flight request abort, so panning
  * fast doesn't queue redundant queries.
  */
-export function useCourtsInView(): Court[] {
+export function useCourtsInView(): { courts: Court[]; error: string | null } {
   const map = useMap();
   const [courts, setCourts] = useState<Court[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let debounce: number | null = null;
@@ -32,7 +33,7 @@ export function useCourtsInView(): Court[] {
       abort?.abort();
       const ctrl = new AbortController();
       abort = ctrl;
-      const { data, error } = await supabase
+      const { data, error: queryError } = await supabase
         .from('courts')
         .select('id, osm_id, name, lat, lng, surface, hoops, lit')
         .gte('lat', b.getSouth())
@@ -42,10 +43,11 @@ export function useCourtsInView(): Court[] {
         .limit(MAX_ROWS)
         .abortSignal(ctrl.signal);
       if (ctrl.signal.aborted) return;
-      if (error) {
-        console.warn('courts query failed', error.message);
+      if (queryError) {
+        setError(queryError.message);
         return;
       }
+      setError(null);
       if (data) setCourts(data);
     }
 
@@ -68,5 +70,5 @@ export function useCourtsInView(): Court[] {
     };
   }, [map]);
 
-  return courts;
+  return { courts, error };
 }
