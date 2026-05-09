@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
+import { Link } from 'react-router-dom';
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { useOverpassCourts } from './useOverpassCourts';
 import { useCourtsInView } from './useCourtsInView';
 
@@ -32,7 +33,28 @@ function CourtMarkers() {
   return (
     <>
       {courts.map((c) => (
-        <Marker key={c.id} position={[c.lat, c.lng]} />
+        <Marker key={c.id} position={[c.lat, c.lng]}>
+          <Popup>
+            <div className="space-y-1">
+              <p className="font-semibold text-[var(--color-ink)]">
+                {c.name ?? 'Unnamed court'}
+              </p>
+              {c.surface || c.hoops ? (
+                <p className="text-xs text-[var(--color-ink)]/70">
+                  {[c.surface, c.hoops ? `${c.hoops} hoops` : null]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+              ) : null}
+              <Link
+                to={`/courts/${c.id}`}
+                className="inline-block text-sm font-semibold text-[var(--color-court)] hover:underline"
+              >
+                View details →
+              </Link>
+            </div>
+          </Popup>
+        </Marker>
       ))}
     </>
   );
