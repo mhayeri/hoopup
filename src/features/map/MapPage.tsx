@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import { useOverpassCourts } from './useOverpassCourts';
+import { useCourtsInView } from './useCourtsInView';
 
 const DEFAULT_CENTER: [number, number] = [32.7849, -117.1611];
 const DEFAULT_ZOOM = 12;
@@ -21,12 +22,17 @@ function RecenterOnUser() {
   return null;
 }
 
+function OverpassSync() {
+  useOverpassCourts();
+  return null;
+}
+
 function CourtMarkers() {
-  const { courts } = useOverpassCourts();
+  const courts = useCourtsInView();
   return (
     <>
       {courts.map((c) => (
-        <Marker key={`${c.osmType}:${c.osmId}`} position={[c.lat, c.lng]} />
+        <Marker key={c.id} position={[c.lat, c.lng]} />
       ))}
     </>
   );
@@ -46,6 +52,7 @@ export default function MapPage() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <RecenterOnUser />
+        <OverpassSync />
         <CourtMarkers />
       </MapContainer>
     </div>
