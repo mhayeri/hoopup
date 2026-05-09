@@ -6,23 +6,29 @@ import AuthCallbackPage from './routes/AuthCallbackPage';
 import ProfilePage from './routes/ProfilePage';
 import NotFoundPage from './routes/NotFoundPage';
 import RequireAuth from './components/RequireAuth';
+import NavBar from './components/NavBar';
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/auth/callback" element={<AuthCallbackPage />} />
-      <Route
-        path="/profile"
-        element={
-          <RequireAuth>
-            <ProfilePage />
-          </RequireAuth>
-        }
-      />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <div className="flex min-h-full flex-col">
+      <NavBar />
+      <div className="flex-1">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <ProfilePage />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
