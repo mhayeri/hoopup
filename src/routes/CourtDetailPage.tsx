@@ -13,8 +13,11 @@ export default function CourtDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    const courtId = Number(id);
-    if (!Number.isInteger(courtId) || courtId <= 0) {
+    // parseInt + roundtrip rejects decimals ("3.5" → 3 ≠ "3.5"), trailing
+    // junk ("3abc" → 3 ≠ "3abc"), and ids past Number.MAX_SAFE_INTEGER (which
+    // would silently coerce to a different integer and fetch the wrong row).
+    const courtId = parseInt(id, 10);
+    if (!Number.isFinite(courtId) || courtId <= 0 || String(courtId) !== id) {
       setError('Invalid court id');
       setLoading(false);
       return;
