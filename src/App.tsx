@@ -6,6 +6,7 @@ import AuthCallbackPage from './routes/AuthCallbackPage';
 import ProfilePage from './routes/ProfilePage';
 import MapPage from './features/map/MapPage';
 import CourtDetailPage from './routes/CourtDetailPage';
+import SessionDetailPage from './routes/SessionDetailPage';
 import NotFoundPage from './routes/NotFoundPage';
 import RequireAuth from './components/RequireAuth';
 import NavBar from './components/NavBar';
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/courts/:id" element={<CourtDetailPage />} />
+          <Route path="/sessions/:id" element={<SessionDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
