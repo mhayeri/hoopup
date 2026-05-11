@@ -177,7 +177,7 @@ export default function CourtDetailPage() {
         )}
       </section>
 
-      {user && court ? (
+      {user ? (
         <SessionModal
           open={hostModalOpen}
           title="Host a session"

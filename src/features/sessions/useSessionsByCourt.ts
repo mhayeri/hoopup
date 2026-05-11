@@ -12,9 +12,11 @@ type Result = {
 };
 
 /**
- * Lists sessions for a court ordered by start time. Includes cancelled
- * sessions so the UI can show them in a "cancelled" state — past sessions
- * (ends_at < now) are filtered out at the query layer to keep the list tight.
+ * Lists sessions for a court ordered by start time. Past sessions
+ * (ends_at < now) are filtered out at the query layer. Cancelled sessions
+ * are intentionally still returned when their end time is in the future so
+ * the UI can show them in a "cancelled" state — useful for RSVP'd users to
+ * see that a game they were watching was called off.
  */
 export function useSessionsByCourt(courtId: number | null | undefined): Result {
   const [sessions, setSessions] = useState<SessionRow[]>([]);
