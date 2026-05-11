@@ -89,10 +89,7 @@ export function useSession(sessionId: string | null | undefined): Result {
     [sessionId, load]
   );
 
-  const cancel = useCallback(
-    () => update({ cancelled_at: new Date().toISOString() }),
-    [update]
-  );
+  const cancel = useCallback(() => update({ cancelled_at: new Date().toISOString() }), [update]);
 
   return { session, loading, error, refresh: load, update, cancel };
 }
