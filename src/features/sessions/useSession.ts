@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Database } from '../../lib/database.types';
 
@@ -24,20 +24,34 @@ type Result = {
  * the court name. The composite SELECT uses PostgREST's foreign-table syntax;
  * the embedded relations honor RLS so unauthenticated callers still see them
  * (profiles + courts are publicly readable per 0002_rls.sql).
+ *
+ * State writes are gated by a mounted ref so a late-resolving fetch after
+ * unmount (e.g. user navigates away mid-update) does not warn or thrash state.
  */
 export function useSession(sessionId: string | null | undefined): Result {
   const [session, setSession] = useState<SessionWithRelations | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   const load = useCallback(async () => {
     if (!sessionId) {
+      if (!mountedRef.current) return;
       setSession(null);
       setLoading(false);
       return;
     }
-    setLoading(true);
-    setError(null);
+    if (mountedRef.current) {
+      setLoading(true);
+      setError(null);
+    }
     const { data, error: queryError } = await supabase
       .from('sessions')
       .select(
@@ -47,6 +61,7 @@ export function useSession(sessionId: string | null | undefined): Result {
       )
       .eq('id', sessionId)
       .maybeSingle<SessionWithRelations>();
+    if (!mountedRef.current) return;
     if (queryError) {
       setError(queryError.message);
       setSession(null);
