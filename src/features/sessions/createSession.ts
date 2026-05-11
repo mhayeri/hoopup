@@ -12,11 +12,7 @@ type SessionRow = Database['public']['Tables']['sessions']['Row'];
 export async function createSession(
   insert: SessionInsert
 ): Promise<{ data: SessionRow | null; error: string | null }> {
-  const { data, error } = await supabase
-    .from('sessions')
-    .insert(insert)
-    .select('*')
-    .single();
+  const { data, error } = await supabase.from('sessions').insert(insert).select('*').single();
   if (error) return { data: null, error: error.message };
   return { data, error: null };
 }

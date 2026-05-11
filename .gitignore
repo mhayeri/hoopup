@@ -33,6 +33,7 @@ coverage/
 playwright-report/
 test-results/
 .nyc_output/
+.playwright-mcp/
 
 # Claude / agent helpers (local-only)
 .claude/
