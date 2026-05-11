@@ -2,14 +2,28 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
+import { useAuth } from '../providers/useAuth';
+import { useSessionsByCourt } from '../features/sessions/useSessionsByCourt';
+import SessionListItem from '../features/sessions/SessionListItem';
+import SessionModal from '../features/sessions/SessionModal';
+import { createSession } from '../features/sessions/createSession';
 
 type Court = Database['public']['Tables']['courts']['Row'];
 
 export default function CourtDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const [court, setCourt] = useState<Court | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hostModalOpen, setHostModalOpen] = useState(false);
+
+  const {
+    sessions,
+    loading: sessionsLoading,
+    error: sessionsError,
+    refresh: refreshSessions,
+  } = useSessionsByCourt(court?.id);
 
   useEffect(() => {
     if (!id) return;
@@ -117,13 +131,71 @@ export default function CourtDetailPage() {
       </dl>
 
       <section className="mt-12">
-        <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-ink)]">
-          Upcoming sessions
-        </h2>
-        <p className="mt-3 text-[var(--color-ink)]/70">
-          No sessions scheduled yet. Hosting will land in a follow-up.
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-ink)]">
+            Upcoming sessions
+          </h2>
+          {user ? (
+            <button
+              type="button"
+              onClick={() => setHostModalOpen(true)}
+              className="rounded-full bg-[var(--color-court)] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90"
+            >
+              Host a session
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="rounded-full border border-[var(--color-ink)]/20 px-5 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+            >
+              Sign in to host
+            </Link>
+          )}
+        </div>
+
+        {sessionsError ? (
+          <p
+            role="alert"
+            className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+          >
+            {sessionsError}
+          </p>
+        ) : sessionsLoading ? (
+          <p className="mt-4 text-sm text-[var(--color-ink)]/60">Loading sessions…</p>
+        ) : sessions.length === 0 ? (
+          <p className="mt-4 text-[var(--color-ink)]/70">
+            No upcoming sessions. Be the first to host one.
+          </p>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {sessions.map((s) => (
+              <li key={s.id}>
+                <SessionListItem session={s} />
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
+
+      {user ? (
+        <SessionModal
+          open={hostModalOpen}
+          title="Host a session"
+          submitLabel="Create"
+          onClose={() => setHostModalOpen(false)}
+          onSubmit={async ({ startsAt, endsAt, notes }) => {
+            const result = await createSession({
+              court_id: court.id,
+              host_id: user.id,
+              starts_at: startsAt,
+              ends_at: endsAt,
+              notes,
+            });
+            if (!result.error) await refreshSessions();
+            return { error: result.error };
+          }}
+        />
+      ) : null}
     </main>
   );
 }
