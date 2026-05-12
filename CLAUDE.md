@@ -67,4 +67,4 @@ npm run format:check # Prettier check (CI uses this)
 5. ~~Map + Courts (Leaflet + Overpass + court detail)~~ — PR #5
 6. ~~Sessions (host, list, detail, edit, cancel)~~ — PR #6
 7. ~~RSVP system (roster UI, waitlist, session-full handling)~~ — PR #8
-8. **Design polish** — final pass
+8. **Design polish** — in progress (PR #9)
