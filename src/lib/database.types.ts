@@ -132,6 +132,15 @@ export type OsmCourtUpsert = {
   lit?: 'yes' | 'no' | null;
 };
 
+/** RSVP row joined with the player's public profile (PostgREST embed). */
+export type RsvpWithProfile = {
+  session_id: string;
+  user_id: string;
+  status: RsvpStatus;
+  created_at: string;
+  profile: { id: string; username: string; avatar_url: string | null } | null;
+};
+
 // Postgres error codes we throw from triggers
 export const PG_ERROR_CODES = {
   SESSION_FULL: 'P0001',
