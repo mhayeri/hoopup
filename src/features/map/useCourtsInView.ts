@@ -5,7 +5,7 @@ import type { Database } from '../../lib/database.types';
 
 export type Court = Pick<
   Database['public']['Tables']['courts']['Row'],
-  'id' | 'osm_id' | 'name' | 'lat' | 'lng' | 'surface' | 'hoops' | 'lit'
+  'id' | 'osm_id' | 'name' | 'address' | 'lat' | 'lng' | 'surface' | 'hoops' | 'lit'
 >;
 
 const DEBOUNCE_MS = 600;
@@ -35,7 +35,7 @@ export function useCourtsInView(): { courts: Court[]; error: string | null } {
       abort = ctrl;
       const { data, error: queryError } = await supabase
         .from('courts')
-        .select('id, osm_id, name, lat, lng, surface, hoops, lit')
+        .select('id, osm_id, name, address, lat, lng, surface, hoops, lit')
         .gte('lat', b.getSouth())
         .lte('lat', b.getNorth())
         .gte('lng', b.getWest())

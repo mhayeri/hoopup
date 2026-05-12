@@ -56,7 +56,9 @@ function CourtMarkers() {
         >
           <Popup>
             <div className="space-y-1">
-              <p className="font-semibold text-[var(--color-ink)]">{c.name ?? 'Unnamed court'}</p>
+              <p className="font-semibold text-[var(--color-ink)]">
+                {c.name ?? c.address ?? 'Basketball Court'}
+              </p>
               {c.surface || c.hoops ? (
                 <p className="text-xs text-[var(--color-ink)]/70">
                   {[c.surface, c.hoops ? `${c.hoops} hoops` : null].filter(Boolean).join(' · ')}
