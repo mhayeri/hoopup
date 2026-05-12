@@ -7,6 +7,7 @@ import { useSessionsByCourt } from '../features/sessions/useSessionsByCourt';
 import SessionListItem from '../features/sessions/SessionListItem';
 import SessionModal from '../features/sessions/SessionModal';
 import { createSession } from '../features/sessions/createSession';
+import { useCourtAddress } from '../features/map/useCourtAddress';
 
 type Court = Database['public']['Tables']['courts']['Row'];
 
@@ -17,6 +18,8 @@ export default function CourtDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hostModalOpen, setHostModalOpen] = useState(false);
+
+  const courtDisplayName = useCourtAddress(court);
 
   const {
     sessions,
@@ -113,7 +116,7 @@ export default function CourtDetailPage() {
         ← Back to map
       </Link>
       <h1 className="mt-3 text-4xl font-black uppercase tracking-tight text-[var(--color-court)]">
-        {court.name ?? 'Unnamed court'}
+        {courtDisplayName}
       </h1>
 
       <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">

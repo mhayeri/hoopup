@@ -5,6 +5,7 @@ import { useSession } from '../features/sessions/useSession';
 import { formatSessionRange, relativeTime } from '../features/sessions/formatTime';
 import SessionModal from '../features/sessions/SessionModal';
 import RosterSection from '../features/sessions/RosterSection';
+import { useCourtAddress } from '../features/map/useCourtAddress';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -13,6 +14,7 @@ export default function SessionDetailPage() {
   const { user } = useAuth();
   const validId = id && UUID_RE.test(id) ? id : null;
   const { session, loading, error, update, cancel } = useSession(validId);
+  const courtDisplayName = useCourtAddress(session?.court ?? null);
   const [editOpen, setEditOpen] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
@@ -79,7 +81,7 @@ export default function SessionDetailPage() {
   }
 
   const cancelled = session.cancelled_at != null;
-  const courtName = session.court?.name ?? 'Unnamed court';
+  const courtName = courtDisplayName;
   const hostName = session.host?.username ?? 'Unknown host';
   const isHost = user?.id === session.host_id;
   const startsInPast = new Date(session.starts_at).getTime() <= Date.now();

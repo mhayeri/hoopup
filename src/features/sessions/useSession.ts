@@ -7,7 +7,13 @@ type SessionUpdate = Database['public']['Tables']['sessions']['Update'];
 
 export type SessionWithRelations = SessionRow & {
   host: { id: string; username: string; avatar_url: string | null } | null;
-  court: { id: number; name: string | null } | null;
+  court: {
+    id: number;
+    name: string | null;
+    address: string | null;
+    lat: number;
+    lng: number;
+  } | null;
 };
 
 type Result = {
@@ -57,7 +63,7 @@ export function useSession(sessionId: string | null | undefined): Result {
       .select(
         `*,
          host:profiles!sessions_host_id_fkey ( id, username, avatar_url ),
-         court:courts!sessions_court_id_fkey ( id, name )`
+         court:courts!sessions_court_id_fkey ( id, name, address, lat, lng )`
       )
       .eq('id', sessionId)
       .maybeSingle<SessionWithRelations>();

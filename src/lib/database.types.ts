@@ -49,6 +49,7 @@ export type Database = {
           id: number;
           osm_id: number | null;
           name: string | null;
+          address: string | null;
           lat: number;
           lng: number;
           surface: string | null;
@@ -115,6 +116,10 @@ export type Database = {
     Functions: {
       upsert_osm_courts: {
         Args: { payload: OsmCourtUpsert[] };
+        Returns: null;
+      };
+      set_court_address: {
+        Args: { p_court_id: number; p_address: string };
         Returns: null;
       };
     };
