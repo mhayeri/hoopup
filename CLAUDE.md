@@ -19,12 +19,12 @@ Live: https://mhayeri.github.io/hoopup/
 src/
   components/         Shared UI (NavBar, RequireAuth, OAuthButtons)
   providers/          AuthProvider + useAuth hook
-  lib/                supabase client, database.types.ts, env.ts, leaflet.ts
+  lib/                supabase client, database.types.ts, errors.ts, env.ts, leaflet.ts
   routes/             Page-level components (one per route)
   features/
     map/              MapPage, useCourtsInView, useOverpassSync
     sessions/         SessionForm/Modal/ListItem, useSession, useSessionsByCourt, createSession, formatTime
-    profiles/         ProfileEditForm, AvatarUpload, useProfile
+    profiles/         ProfileEditForm, ChangePasswordForm, AvatarUpload, useProfile
 supabase/
   migrations/         SQL migrations (applied to live project)
   config.toml         Supabase CLI config
@@ -37,7 +37,7 @@ supabase/
 | `profiles`      | id (uuid, FK auth.users), username, skill_level, preferred_position, years_playing, home_court_id, avatar_url | Auto-created on signup via trigger. RLS: owner-only writes.                                                            |
 | `courts`        | id (bigserial), osm_id, name, lat, lng, surface, hoops, lit, geom (PostGIS)                                   | Read-only for clients. Upserted via `upsert_osm_courts()` SECURITY DEFINER RPC.                                        |
 | `sessions`      | id (uuid), court_id, host_id, starts_at, ends_at, notes, cancelled_at                                         | Host-only writes via RLS. DB triggers block post-start edits and un-cancellation.                                      |
-| `session_rsvps` | session_id + user_id (composite PK), status ('going'\|'waitlist'\|'cancelled')                                | User-only writes via RLS. 15-player cap enforced atomically by `enforce_session_cap()` trigger with row-level locking. |
+| `session_rsvps` | session_id + user_id (composite PK), status ('going'\|'waitlist'\|'cancelled')                                | User-only writes via RLS. 15-player cap enforced atomically by `enforce_session_cap()` SECURITY DEFINER trigger with row-level locking. |
 
 ## Key patterns
 
@@ -47,6 +47,8 @@ supabase/
 - **Sanitized client-to-server** — Overpass data validated + truncated before RPC call.
 - **Optimistic UI** — useProfile applies updates optimistically, reverts on error.
 - **PG error codes** — `P0001` = SESSION_FULL, `P0002` = SESSION_NOT_AVAILABLE, `P0003` = USERNAME_GENERATION_FAILED.
+- **Centralized error mapping** — `friendlyMessage()` in `src/lib/errors.ts` converts raw Supabase/Postgres errors to user-friendly strings. All error call sites use this instead of `error.message`.
+- **SECURITY DEFINER triggers** — `enforce_session_cap()` and `upsert_osm_courts()` run as function owner to bypass RLS for cross-table locks/writes. Always paired with `SET search_path = public`.
 
 ## Commands
 
@@ -68,3 +70,4 @@ npm run format:check # Prettier check (CI uses this)
 6. ~~Sessions (host, list, detail, edit, cancel)~~ — PR #6
 7. ~~RSVP system (roster UI, waitlist, session-full handling)~~ — PR #8
 8. **Design polish** — in progress (PR #9)
+9. ~~Password change + friendly error messages~~ — PR #13
