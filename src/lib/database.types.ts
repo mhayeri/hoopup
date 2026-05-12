@@ -122,6 +122,10 @@ export type Database = {
         Args: { p_court_id: number; p_address: string };
         Returns: null;
       };
+      get_email_by_username: {
+        Args: { p_username: string };
+        Returns: string | null;
+      };
     };
   };
 };

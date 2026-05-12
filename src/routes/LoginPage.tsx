@@ -19,7 +19,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [search] = useSearchParams();
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,6 +30,27 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
+
+    let email: string;
+    if (identifier.includes('@')) {
+      email = identifier;
+    } else {
+      const { data, error: rpcError } = await supabase.rpc('get_email_by_username', {
+        p_username: identifier,
+      });
+      if (rpcError) {
+        setSubmitting(false);
+        setError(rpcError.message);
+        return;
+      }
+      if (!data) {
+        setSubmitting(false);
+        setError('Username not found');
+        return;
+      }
+      email = data;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setSubmitting(false);
     if (error) {
@@ -50,14 +71,14 @@ export default function LoginPage() {
         <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
           <label className="block">
             <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
-              Email
+              Email or username
             </span>
             <input
-              type="email"
+              type="text"
               required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username email"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               className="mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20"
             />
           </label>
