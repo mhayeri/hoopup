@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import { useOverpassSync } from './useOverpassSync';
 import { useCourtsInView } from './useCourtsInView';
+import { useActiveCourts } from './useActiveCourts';
+import { defaultCourtIcon, activeCourtIcon } from './courtMarkerIcons';
 
 const DEFAULT_CENTER: [number, number] = [32.7849, -117.1611];
 const DEFAULT_ZOOM = 12;
@@ -35,6 +37,7 @@ function OverpassSync() {
 
 function CourtMarkers() {
   const { courts, error } = useCourtsInView();
+  const activeCourts = useActiveCourts();
   return (
     <>
       {error ? (
@@ -46,7 +49,11 @@ function CourtMarkers() {
         </div>
       ) : null}
       {courts.map((c) => (
-        <Marker key={c.id} position={[c.lat, c.lng]}>
+        <Marker
+          key={c.id}
+          position={[c.lat, c.lng]}
+          icon={activeCourts.has(c.id) ? activeCourtIcon : defaultCourtIcon}
+        >
           <Popup>
             <div className="space-y-1">
               <p className="font-semibold text-[var(--color-ink)]">{c.name ?? 'Unnamed court'}</p>
