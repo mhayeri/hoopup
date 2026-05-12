@@ -4,6 +4,7 @@ import { useAuth } from '../providers/useAuth';
 import { useSession } from '../features/sessions/useSession';
 import { formatSessionRange, relativeTime } from '../features/sessions/formatTime';
 import SessionModal from '../features/sessions/SessionModal';
+import RosterSection from '../features/sessions/RosterSection';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -161,14 +162,12 @@ export default function SessionDetailPage() {
         </p>
       ) : null}
 
-      <section className="mt-12">
-        <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-ink)]">
-          Roster
-        </h2>
-        <p className="mt-3 text-[var(--color-ink)]/70">
-          RSVPs land in the next feature branch. Cap is 15 per session.
-        </p>
-      </section>
+      <RosterSection
+        sessionId={session.id}
+        cancelled={cancelled}
+        hostId={session.host_id}
+        startsAt={session.starts_at}
+      />
 
       {isHost ? (
         <SessionModal
