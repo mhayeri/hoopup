@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Database } from '../../lib/database.types';
+import { friendlyMessage } from '../../lib/errors';
 
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 type ProfileUpdate = Database['public']['Tables']['profiles']['Update'];
@@ -38,7 +39,7 @@ export function useProfile(userId: string | null | undefined): UseProfileResult 
       .eq('id', userId)
       .maybeSingle();
     if (error) {
-      setError(error.message);
+      setError(friendlyMessage(error));
       setProfile(null);
     } else {
       setProfile(data);
@@ -61,7 +62,7 @@ export function useProfile(userId: string | null | undefined): UseProfileResult 
       const { error } = await supabase.from('profiles').update(patch).eq('id', userId);
       if (error) {
         setProfile(previous);
-        return { error: error.message };
+        return { error: friendlyMessage(error) };
       }
       return { error: null };
     },

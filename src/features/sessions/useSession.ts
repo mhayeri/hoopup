@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Database } from '../../lib/database.types';
+import { friendlyMessage } from '../../lib/errors';
 
 type SessionRow = Database['public']['Tables']['sessions']['Row'];
 type SessionUpdate = Database['public']['Tables']['sessions']['Update'];
@@ -69,7 +70,7 @@ export function useSession(sessionId: string | null | undefined): Result {
       .maybeSingle<SessionWithRelations>();
     if (!mountedRef.current) return;
     if (queryError) {
-      setError(queryError.message);
+      setError(friendlyMessage(queryError));
       setSession(null);
     } else {
       setSession(data);
@@ -88,7 +89,7 @@ export function useSession(sessionId: string | null | undefined): Result {
         .from('sessions')
         .update(patch)
         .eq('id', sessionId);
-      if (queryError) return { error: queryError.message };
+      if (queryError) return { error: friendlyMessage(queryError) };
       await load();
       return { error: null };
     },

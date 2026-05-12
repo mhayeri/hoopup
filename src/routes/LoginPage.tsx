@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../providers/useAuth';
 import OAuthButtons from '../components/OAuthButtons';
+import { friendlyMessage } from '../lib/errors';
 
 // Only allow same-origin paths starting with a single '/'. This blocks
 // protocol-relative ('//evil.com'), absolute ('https://evil.com'), and
@@ -40,7 +41,7 @@ export default function LoginPage() {
       });
       if (rpcError) {
         setSubmitting(false);
-        setError(rpcError.message);
+        setError(friendlyMessage(rpcError));
         return;
       }
       if (!data) {
@@ -54,7 +55,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setSubmitting(false);
     if (error) {
-      setError(error.message);
+      setError(friendlyMessage(error));
       return;
     }
     navigate(safeReturnPath(search.get('from')), { replace: true });

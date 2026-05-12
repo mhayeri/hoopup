@@ -3,11 +3,14 @@ import { useAuth } from '../providers/useAuth';
 import { useProfile } from '../features/profiles/useProfile';
 import ProfileEditForm from '../features/profiles/ProfileEditForm';
 import AvatarUpload from '../features/profiles/AvatarUpload';
+import ChangePasswordForm from '../features/profiles/ChangePasswordForm';
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { profile, loading, error, updateProfile, refresh } = useProfile(user?.id);
   const [editing, setEditing] = useState(false);
+  const hasEmailAuth =
+    (user?.app_metadata?.providers as string[] | undefined)?.includes('email') ?? false;
 
   if (loading) {
     return (
@@ -61,6 +64,17 @@ export default function ProfilePage() {
           )}
         </div>
       </div>
+
+      {hasEmailAuth ? (
+        <div className="mt-8 rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
+          <h2 className="text-xl font-black uppercase tracking-tight text-[var(--color-ink)]">
+            Change password
+          </h2>
+          <div className="mt-4">
+            <ChangePasswordForm />
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }

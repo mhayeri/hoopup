@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../providers/useAuth';
 import OAuthButtons from '../components/OAuthButtons';
+import { friendlyMessage } from '../lib/errors';
 
 export default function SignupPage() {
   const { user } = useAuth();
@@ -31,7 +32,7 @@ export default function SignupPage() {
     });
     setSubmitting(false);
     if (error) {
-      setError(error.message);
+      setError(friendlyMessage(error));
       return;
     }
     // If confirmations are enabled, session is null until they click the link.
