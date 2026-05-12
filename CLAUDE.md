@@ -32,12 +32,12 @@ supabase/
 
 ## Database schema (public)
 
-| Table | Key columns | Notes |
-|-------|------------|-------|
-| `profiles` | id (uuid, FK auth.users), username, skill_level, preferred_position, years_playing, home_court_id, avatar_url | Auto-created on signup via trigger. RLS: owner-only writes. |
-| `courts` | id (bigserial), osm_id, name, lat, lng, surface, hoops, lit, geom (PostGIS) | Read-only for clients. Upserted via `upsert_osm_courts()` SECURITY DEFINER RPC. |
-| `sessions` | id (uuid), court_id, host_id, starts_at, ends_at, notes, cancelled_at | Host-only writes via RLS. DB triggers block post-start edits and un-cancellation. |
-| `session_rsvps` | session_id + user_id (composite PK), status ('going'\|'waitlist'\|'cancelled') | User-only writes via RLS. 15-player cap enforced atomically by `enforce_session_cap()` trigger with row-level locking. |
+| Table           | Key columns                                                                                                   | Notes                                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `profiles`      | id (uuid, FK auth.users), username, skill_level, preferred_position, years_playing, home_court_id, avatar_url | Auto-created on signup via trigger. RLS: owner-only writes.                                                            |
+| `courts`        | id (bigserial), osm_id, name, lat, lng, surface, hoops, lit, geom (PostGIS)                                   | Read-only for clients. Upserted via `upsert_osm_courts()` SECURITY DEFINER RPC.                                        |
+| `sessions`      | id (uuid), court_id, host_id, starts_at, ends_at, notes, cancelled_at                                         | Host-only writes via RLS. DB triggers block post-start edits and un-cancellation.                                      |
+| `session_rsvps` | session_id + user_id (composite PK), status ('going'\|'waitlist'\|'cancelled')                                | User-only writes via RLS. 15-player cap enforced atomically by `enforce_session_cap()` trigger with row-level locking. |
 
 ## Key patterns
 
