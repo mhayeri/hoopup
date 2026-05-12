@@ -7,11 +7,10 @@ import type { RsvpWithProfile } from '../../lib/database.types';
 type Props = {
   sessionId: string;
   cancelled: boolean;
-  hostId: string;
   startsAt: string;
 };
 
-export default function RosterSection({ sessionId, cancelled, hostId, startsAt }: Props) {
+export default function RosterSection({ sessionId, cancelled, startsAt }: Props) {
   const { user } = useAuth();
   const { rsvps, goingCount, waitlistCount, loading, error, rsvp, joinWaitlist, leave } =
     useSessionRsvps(sessionId);
@@ -22,12 +21,11 @@ export default function RosterSection({ sessionId, cancelled, hostId, startsAt }
   const [waitlistOpen, setWaitlistOpen] = useState(false);
 
   const startsInPast = new Date(startsAt).getTime() <= Date.now();
-  const isHost = user?.id === hostId;
   const myRsvp: RsvpWithProfile | undefined = user
     ? rsvps.find((r) => r.user_id === user.id)
     : undefined;
   const isFull = goingCount >= SESSION_CAP;
-  const canAct = !cancelled && !startsInPast && !isHost;
+  const canAct = !cancelled && !startsInPast;
 
   const goingList = rsvps.filter((r) => r.status === 'going');
   const waitlist = rsvps.filter((r) => r.status === 'waitlist');
