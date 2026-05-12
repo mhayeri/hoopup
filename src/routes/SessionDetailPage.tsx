@@ -165,7 +165,6 @@ export default function SessionDetailPage() {
       <RosterSection
         sessionId={session.id}
         cancelled={cancelled}
-        hostId={session.host_id}
         startsAt={session.starts_at}
       />
 
