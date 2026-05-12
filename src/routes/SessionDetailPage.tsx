@@ -162,11 +162,7 @@ export default function SessionDetailPage() {
         </p>
       ) : null}
 
-      <RosterSection
-        sessionId={session.id}
-        cancelled={cancelled}
-        startsAt={session.starts_at}
-      />
+      <RosterSection sessionId={session.id} cancelled={cancelled} startsAt={session.starts_at} />
 
       {isHost ? (
         <SessionModal
