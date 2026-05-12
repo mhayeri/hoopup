@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { friendlyMessage } from '../lib/errors';
 
 type Provider = 'google' | 'github';
 
@@ -23,7 +24,7 @@ export default function OAuthButtons() {
     });
     if (error) {
       setPending(null);
-      setError(error.message);
+      setError(friendlyMessage(error));
     }
     // On success the browser is redirected; no further state to handle here.
   }

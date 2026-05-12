@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../providers/useAuth';
+import { friendlyMessage } from '../lib/errors';
 
 /**
  * Lands here after OAuth redirect or email confirmation. Two ways the URL
@@ -23,8 +24,7 @@ export default function AuthCallbackPage() {
     const url = window.location.href;
     if (url.includes('code=')) {
       supabase.auth.exchangeCodeForSession(url).catch((e: unknown) => {
-        const msg = e instanceof Error ? e.message : 'Authentication failed.';
-        setError(msg);
+        setError(friendlyMessage(e instanceof Error ? e : null));
       });
     }
   }, []);

@@ -1,5 +1,6 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { supabase } from '../../lib/supabase';
+import { friendlyMessage } from '../../lib/errors';
 
 type Props = {
   userId: string;
@@ -41,7 +42,7 @@ export default function AvatarUpload({ userId, currentUrl, onUploaded }: Props) 
 
     if (uploadError) {
       setUploading(false);
-      setError(uploadError.message);
+      setError(friendlyMessage(uploadError));
       return;
     }
 

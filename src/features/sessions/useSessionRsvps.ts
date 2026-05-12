@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { PG_ERROR_CODES, type RsvpWithProfile } from '../../lib/database.types';
+import { friendlyMessage } from '../../lib/errors';
 
 /** Must match the cap in the enforce_session_cap trigger. */
 const SESSION_CAP = 15;
@@ -60,7 +61,7 @@ export function useSessionRsvps(sessionId: string | null | undefined): Result {
       .returns<RsvpWithProfile[]>();
     if (!mountedRef.current) return;
     if (queryError) {
-      setError(queryError.message);
+      setError(friendlyMessage(queryError));
       setRsvps([]);
     } else {
       setRsvps((data ?? []).filter((r) => r.profile !== null));
@@ -97,7 +98,7 @@ export function useSessionRsvps(sessionId: string | null | undefined): Result {
             },
           };
         }
-        return { error: { code: 'UNKNOWN', message: insertError.message } };
+        return { error: { code: 'UNKNOWN', message: friendlyMessage(insertError) } };
       }
       await load();
       return { error: null };
@@ -111,7 +112,7 @@ export function useSessionRsvps(sessionId: string | null | undefined): Result {
       const { error: insertError } = await supabase
         .from('session_rsvps')
         .upsert({ session_id: sessionId, user_id: userId, status: 'waitlist' as const });
-      if (insertError) return { error: insertError.message };
+      if (insertError) return { error: friendlyMessage(insertError) };
       await load();
       return { error: null };
     },
@@ -126,7 +127,7 @@ export function useSessionRsvps(sessionId: string | null | undefined): Result {
         .update({ status: 'cancelled' as const })
         .eq('session_id', sessionId)
         .eq('user_id', userId);
-      if (updateError) return { error: updateError.message };
+      if (updateError) return { error: friendlyMessage(updateError) };
       await load();
       return { error: null };
     },

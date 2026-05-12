@@ -8,6 +8,7 @@ import SessionListItem from '../features/sessions/SessionListItem';
 import SessionModal from '../features/sessions/SessionModal';
 import { createSession } from '../features/sessions/createSession';
 import { useCourtAddress } from '../features/map/useCourtAddress';
+import { friendlyMessage } from '../lib/errors';
 
 type Court = Database['public']['Tables']['courts']['Row'];
 
@@ -46,7 +47,7 @@ export default function CourtDetailPage() {
       .eq('id', courtId)
       .maybeSingle()
       .then(({ data, error: queryError }) => {
-        if (queryError) setError(queryError.message);
+        if (queryError) setError(friendlyMessage(queryError));
         else setCourt(data ?? null);
         setLoading(false);
       });

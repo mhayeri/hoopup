@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { Database } from '../../lib/database.types';
+import { friendlyMessage } from '../../lib/errors';
 
 export type SessionRow = Database['public']['Tables']['sessions']['Row'];
 
@@ -38,7 +39,7 @@ export function useSessionsByCourt(courtId: number | null | undefined): Result {
       .gte('ends_at', new Date().toISOString())
       .order('starts_at', { ascending: true });
     if (queryError) {
-      setError(queryError.message);
+      setError(friendlyMessage(queryError));
       setSessions([]);
     } else {
       setSessions(data ?? []);

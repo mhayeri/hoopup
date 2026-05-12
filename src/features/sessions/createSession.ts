@@ -1,5 +1,6 @@
 import { supabase } from '../../lib/supabase';
 import type { Database } from '../../lib/database.types';
+import { friendlyMessage } from '../../lib/errors';
 
 type SessionInsert = Database['public']['Tables']['sessions']['Insert'];
 type SessionRow = Database['public']['Tables']['sessions']['Row'];
@@ -13,6 +14,6 @@ export async function createSession(
   insert: SessionInsert
 ): Promise<{ data: SessionRow | null; error: string | null }> {
   const { data, error } = await supabase.from('sessions').insert(insert).select('*').single();
-  if (error) return { data: null, error: error.message };
+  if (error) return { data: null, error: friendlyMessage(error) };
   return { data, error: null };
 }
