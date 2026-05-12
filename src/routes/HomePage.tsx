@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../providers/useAuth';
 
 export default function HomePage() {
+  const { user } = useAuth();
+
   return (
     <main className="flex min-h-full items-center justify-center px-6 py-16">
       <section className="max-w-2xl text-center">
@@ -16,18 +19,37 @@ export default function HomePage() {
           Sessions cap at 15 — first come, first hooped.
         </p>
         <div className="mt-10 flex justify-center gap-3">
-          <Link
-            to="/signup"
-            className="rounded-full bg-[var(--color-court)] px-6 py-3 font-semibold text-white shadow-lg shadow-[var(--color-court)]/30 transition hover:scale-[1.02] hover:bg-[var(--color-court)]/90"
-          >
-            Create an account
-          </Link>
-          <Link
-            to="/login"
-            className="rounded-full border border-[var(--color-ink)]/20 px-6 py-3 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-          >
-            Sign in
-          </Link>
+          {user ? (
+            <>
+              <Link
+                to="/map"
+                className="rounded-full bg-[var(--color-court)] px-6 py-3 font-semibold text-white shadow-lg shadow-[var(--color-court)]/30 transition hover:scale-[1.02] hover:bg-[var(--color-court)]/90"
+              >
+                Find a court
+              </Link>
+              <Link
+                to="/profile"
+                className="rounded-full border border-[var(--color-ink)]/20 px-6 py-3 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+              >
+                View profile
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/signup"
+                className="rounded-full bg-[var(--color-court)] px-6 py-3 font-semibold text-white shadow-lg shadow-[var(--color-court)]/30 transition hover:scale-[1.02] hover:bg-[var(--color-court)]/90"
+              >
+                Create an account
+              </Link>
+              <Link
+                to="/login"
+                className="rounded-full border border-[var(--color-ink)]/20 px-6 py-3 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+              >
+                Sign in
+              </Link>
+            </>
+          )}
         </div>
       </section>
     </main>
