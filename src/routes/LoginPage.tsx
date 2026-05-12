@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../providers/useAuth';
 import OAuthButtons from '../components/OAuthButtons';
 
 // Only allow same-origin paths starting with a single '/'. This blocks
@@ -16,11 +17,14 @@ function safeReturnPath(raw: string | null): string {
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [search] = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  if (user) return <Navigate to={safeReturnPath(search.get('from'))} replace />;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
