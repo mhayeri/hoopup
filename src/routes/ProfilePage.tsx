@@ -3,12 +3,14 @@ import { useAuth } from '../providers/useAuth';
 import { useProfile } from '../features/profiles/useProfile';
 import ProfileEditForm from '../features/profiles/ProfileEditForm';
 import AvatarUpload from '../features/profiles/AvatarUpload';
-import ChangePasswordForm from '../features/profiles/ChangePasswordForm';
+import ChangePasswordModal from '../features/profiles/ChangePasswordModal';
+import ActiveSessionsList from '../features/profiles/ActiveSessionsList';
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { profile, loading, error, updateProfile, refresh } = useProfile(user?.id);
   const [editing, setEditing] = useState(false);
+  const [passwordOpen, setPasswordOpen] = useState(false);
   const hasEmailAuth =
     (user?.app_metadata?.providers as string[] | undefined)?.includes('email') ?? false;
 
@@ -59,21 +61,24 @@ export default function ProfilePage() {
             <ReadView
               profile={profile}
               onEdit={() => setEditing(true)}
+              onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
               email={user?.email ?? null}
             />
           )}
         </div>
       </div>
 
-      {hasEmailAuth ? (
-        <div className="mt-8 rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
-          <h2 className="text-xl font-black uppercase tracking-tight text-[var(--color-ink)]">
-            Change password
-          </h2>
-          <div className="mt-4">
-            <ChangePasswordForm />
-          </div>
+      <div className="mt-8 rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
+        <h2 className="text-xl font-black uppercase tracking-tight text-[var(--color-ink)]">
+          Active sessions
+        </h2>
+        <div className="mt-4">
+          <ActiveSessionsList userId={profile.id} />
         </div>
+      </div>
+
+      {hasEmailAuth ? (
+        <ChangePasswordModal open={passwordOpen} onClose={() => setPasswordOpen(false)} />
       ) : null}
     </main>
   );
@@ -83,24 +88,37 @@ function ReadView({
   profile,
   email,
   onEdit,
+  onChangePassword,
 }: {
   profile: NonNullable<ReturnType<typeof useProfile>['profile']>;
   email: string | null;
   onEdit: () => void;
+  onChangePassword: (() => void) | null;
 }) {
   return (
     <div>
-      <div className="flex items-baseline justify-between gap-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h1 className="text-3xl font-black tracking-tight text-[var(--color-court)]">
           @{profile.username}
         </h1>
-        <button
-          type="button"
-          onClick={onEdit}
-          className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-        >
-          Edit
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+          >
+            Edit
+          </button>
+          {onChangePassword ? (
+            <button
+              type="button"
+              onClick={onChangePassword}
+              className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+            >
+              Change password
+            </button>
+          ) : null}
+        </div>
       </div>
       {email ? <p className="mt-1 text-sm text-[var(--color-ink)]/60">{email}</p> : null}
 
