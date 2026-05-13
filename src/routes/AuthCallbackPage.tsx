@@ -1,36 +1,115 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import type { EmailOtpType } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../providers/useAuth';
 import { friendlyMessage } from '../lib/errors';
 
+const TIMEOUT_MS = 20_000;
+const OTP_TYPES: ReadonlySet<EmailOtpType> = new Set([
+  'signup',
+  'invite',
+  'magiclink',
+  'recovery',
+  'email_change',
+  'email',
+]);
+
 /**
- * Lands here after OAuth redirect or email confirmation. Two ways the URL
- * arrives:
- *   - PKCE flow with ?code=... appended (new OAuth providers)
- *   - URL fragment with access_token=... (legacy / email-link)
+ * Lands here after OAuth, email confirmation, or password recovery. Three
+ * URL shapes can arrive (all *inside* the hash because HoopUp uses
+ * HashRouter):
+ *   - PKCE:   #/auth/callback?code=...
+ *   - OTP:    #/auth/callback?token_hash=...&type=signup
+ *   - Legacy: #access_token=...&refresh_token=... (auto-handled by
+ *             detectSessionInUrl before this component renders)
  *
- * The Supabase client's detectSessionInUrl handles the fragment case
- * automatically. We call exchangeCodeForSession explicitly for the PKCE
- * case because HashRouter shoves the code inside our route hash, where
- * the implicit handler sometimes misses it.
+ * The hash placement is what makes this fiddly — window.location.search is
+ * empty, so we parse the query suffix from window.location.hash ourselves.
  */
+function readAuthParams(): URLSearchParams {
+  const search = window.location.search.replace(/^\?/, '');
+  if (search) return new URLSearchParams(search);
+  const hash = window.location.hash;
+  const qIndex = hash.indexOf('?');
+  if (qIndex === -1) return new URLSearchParams();
+  return new URLSearchParams(hash.substring(qIndex + 1));
+}
+
 export default function AuthCallbackPage() {
   const navigate = useNavigate();
   const { session, loading } = useAuth();
   const [error, setError] = useState<string | null>(null);
+  const ranRef = useRef(false);
 
   useEffect(() => {
-    const url = window.location.href;
-    if (url.includes('code=')) {
-      supabase.auth.exchangeCodeForSession(url).catch((e: unknown) => {
-        setError(friendlyMessage(e instanceof Error ? e : null));
-      });
-    }
-  }, []);
+    if (ranRef.current) return;
+    ranRef.current = true;
 
+    // If a session already exists when we land here (e.g. user re-opens the
+    // confirmation link after already verifying), just go home.
+    if (!loading && session) {
+      navigate('/', { replace: true });
+      return;
+    }
+
+    const params = readAuthParams();
+    const code = params.get('code');
+    const tokenHash = params.get('token_hash');
+    const typeParam = params.get('type');
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+
+    async function run() {
+      if (code) {
+        const { error: e } = await supabase.auth.exchangeCodeForSession(code);
+        if (e) throw e;
+        return;
+      }
+      if (tokenHash && typeParam && OTP_TYPES.has(typeParam as EmailOtpType)) {
+        const { error: e } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: typeParam as EmailOtpType,
+        });
+        if (e) throw e;
+        return;
+      }
+      if (accessToken && refreshToken) {
+        const { error: e } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        if (e) throw e;
+        return;
+      }
+      throw new Error(
+        'No verification token found in the link. Try signing in or request a new link.'
+      );
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setError(
+        "We couldn't finish signing you in within 20 seconds. Try signing in directly or request a new link."
+      );
+    }, TIMEOUT_MS);
+
+    run()
+      .catch((e: unknown) => {
+        console.error('[HoopUp] Auth callback failed:', e);
+        const message = e instanceof Error ? e.message : String(e ?? '');
+        setError(message || friendlyMessage(null));
+      })
+      .finally(() => {
+        window.clearTimeout(timeoutId);
+      });
+
+    return () => window.clearTimeout(timeoutId);
+  }, [loading, session, navigate]);
+
+  // Once a session is established, clean the URL and head home.
   useEffect(() => {
     if (!loading && session) {
+      window.history.replaceState({}, '', `${import.meta.env.BASE_URL}#/`);
       navigate('/', { replace: true });
     }
   }, [loading, session, navigate]);
@@ -48,6 +127,20 @@ export default function AuthCallbackPage() {
           >
             {error}
           </p>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Link
+              to="/login"
+              className="rounded-full bg-[var(--color-court)] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90"
+            >
+              Sign in
+            </Link>
+            <Link
+              to="/"
+              className="rounded-full border border-[var(--color-ink)]/20 px-5 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+            >
+              Go home
+            </Link>
+          </div>
         </div>
       </main>
     );
