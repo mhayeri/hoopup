@@ -17,14 +17,14 @@ Live: https://mhayeri.github.io/hoopup/
 
 ```
 src/
-  components/         Shared UI (NavBar, RequireAuth, OAuthButtons)
+  components/         Shared UI (NavBar, RequireAuth, OAuthButtons, Modal)
   providers/          AuthProvider + useAuth hook
   lib/                supabase client, database.types.ts, errors.ts, env.ts, leaflet.ts
   routes/             Page-level components (one per route)
   features/
     map/              MapPage, useCourtsInView, useOverpassSync
-    sessions/         SessionForm/Modal/ListItem, useSession, useSessionsByCourt, createSession, formatTime
-    profiles/         ProfileEditForm, ChangePasswordForm, AvatarUpload, useProfile
+    sessions/         SessionForm/Modal/ListItem, useSession, useSessionsByCourt, useUserActiveSessions, createSession, formatTime
+    profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, ActiveSessionsList, AvatarUpload, useProfile
 supabase/
   migrations/         SQL migrations (applied to live project)
   config.toml         Supabase CLI config
@@ -71,3 +71,4 @@ npm run format:check # Prettier check (CI uses this)
 7. ~~RSVP system (roster UI, waitlist, session-full handling)~~ — PR #8
 8. **Design polish** — in progress (PR #9)
 9. ~~Password change + friendly error messages~~ — PR #13
+10. ~~Active Sessions on profile + reusable Modal shell~~ — PR #14
