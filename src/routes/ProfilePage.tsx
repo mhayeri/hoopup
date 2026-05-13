@@ -4,6 +4,7 @@ import { useProfile } from '../features/profiles/useProfile';
 import ProfileEditForm from '../features/profiles/ProfileEditForm';
 import AvatarUpload from '../features/profiles/AvatarUpload';
 import ChangePasswordModal from '../features/profiles/ChangePasswordModal';
+import DeleteAccountModal from '../features/profiles/DeleteAccountModal';
 import ActiveSessionsList from '../features/profiles/ActiveSessionsList';
 
 export default function ProfilePage() {
@@ -11,6 +12,7 @@ export default function ProfilePage() {
   const { profile, loading, error, updateProfile, refresh } = useProfile(user?.id);
   const [editing, setEditing] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const hasEmailAuth =
     (user?.app_metadata?.providers as string[] | undefined)?.includes('email') ?? false;
 
@@ -77,9 +79,29 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      <div className="mt-8 rounded-3xl border border-red-300 bg-red-50/40 p-8 shadow-sm">
+        <h2 className="text-xl font-black uppercase tracking-tight text-red-800">Danger zone</h2>
+        <p className="mt-2 text-sm text-red-900/80">
+          Permanently delete your account and all of your sessions, RSVPs, and profile data. This
+          cannot be undone.
+        </p>
+        <button
+          type="button"
+          onClick={() => setDeleteOpen(true)}
+          className="mt-4 rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700"
+        >
+          Delete account
+        </button>
+      </div>
+
       {hasEmailAuth ? (
         <ChangePasswordModal open={passwordOpen} onClose={() => setPasswordOpen(false)} />
       ) : null}
+      <DeleteAccountModal
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        username={profile.username}
+      />
     </main>
   );
 }
