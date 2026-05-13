@@ -22,7 +22,7 @@ src/
   lib/                supabase client, database.types.ts, errors.ts, env.ts, leaflet.ts
   routes/             Page-level components (one per route)
   features/
-    map/              MapPage, useCourtsInView, useOverpassSync
+    map/              MapPage, SessionPanel, SessionCard, useCourtsInView, useOverpassSync, useActiveCourts, useUpcomingSessions
     sessions/         SessionForm/Modal/ListItem, PlayerRow, PlayerHoverCard, RosterSection, useSession, useSessionRsvps, useSessionsByCourt, useUserActiveSessions, createSession, formatTime
     profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, DeleteAccountForm, DeleteAccountModal, ActiveSessionsList, AvatarUpload, useProfile
 supabase/
@@ -79,3 +79,4 @@ npm run format:check # Prettier check (CI uses this)
 12. ~~Fix: email verification callback no longer hangs (parses hash params, dispatches PKCE/OTP, adds timeout + error UI)~~ — PR #16
 13. ~~Account deletion via danger zone + edge function (typed username confirmation, service-role hard delete, storage cleanup)~~ — PR #17
 14. ~~Profile page redesign: sidebar identity + tabbed activity panel (Sessions / Friends / Settings); danger zone absorbed into Settings~~ — PR #18
+15. Map session panel: "Find a game" sidebar with upcoming-sessions list + filter toggle (sessions vs all courts); click a card to fly the map to that court

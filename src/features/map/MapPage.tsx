@@ -148,11 +148,7 @@ export default function MapPage() {
           />
           <RecenterOnUser />
           <OverpassSync />
-          <CourtMarkers
-            filter={filter}
-            selectedCourtId={selectedCourtId}
-            markerRefs={markerRefs}
-          />
+          <CourtMarkers filter={filter} selectedCourtId={selectedCourtId} markerRefs={markerRefs} />
           <FlyToSelected entry={selectedEntry} />
         </MapContainer>
       </div>
