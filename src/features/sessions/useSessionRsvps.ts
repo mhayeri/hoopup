@@ -54,7 +54,11 @@ export function useSessionRsvps(sessionId: string | null | undefined): Result {
     }
     const { data, error: queryError } = await supabase
       .from('session_rsvps')
-      .select('*, profile:profiles!session_rsvps_user_id_fkey ( id, username, avatar_url )')
+      .select(
+        `*, profile:profiles!session_rsvps_user_id_fkey (
+           id, username, avatar_url, bio, skill_level, preferred_position, years_playing
+         )`
+      )
       .eq('session_id', sessionId)
       .neq('status', 'cancelled')
       .order('created_at', { ascending: true })
