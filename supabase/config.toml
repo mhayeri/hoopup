@@ -44,3 +44,6 @@ file_size_limit = "5MiB"
 
 [storage.image_transformation]
 enabled = true
+
+[functions.delete-account]
+verify_jwt = true

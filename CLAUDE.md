@@ -24,9 +24,10 @@ src/
   features/
     map/              MapPage, useCourtsInView, useOverpassSync
     sessions/         SessionForm/Modal/ListItem, PlayerRow, PlayerHoverCard, RosterSection, useSession, useSessionRsvps, useSessionsByCourt, useUserActiveSessions, createSession, formatTime
-    profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, ActiveSessionsList, AvatarUpload, useProfile
+    profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, DeleteAccountForm, DeleteAccountModal, ActiveSessionsList, AvatarUpload, useProfile
 supabase/
   migrations/         SQL migrations (applied to live project)
+  functions/          Edge functions (Deno) — delete-account uses service role to wipe auth.users + storage
   config.toml         Supabase CLI config
 ```
 
@@ -49,6 +50,7 @@ supabase/
 - **PG error codes** — `P0001` = SESSION_FULL, `P0002` = SESSION_NOT_AVAILABLE, `P0003` = USERNAME_GENERATION_FAILED.
 - **Centralized error mapping** — `friendlyMessage()` in `src/lib/errors.ts` converts raw Supabase/Postgres errors to user-friendly strings. All error call sites use this instead of `error.message`.
 - **SECURITY DEFINER triggers** — `enforce_session_cap()` and `upsert_osm_courts()` run as function owner to bypass RLS for cross-table locks/writes. Always paired with `SET search_path = public`.
+- **Edge Functions for admin-only auth ops** — `supabase/functions/delete-account` uses the service-role key to call `auth.admin.deleteUser()` (not callable from Postgres/RLS). JWT is verified at the gateway (`verify_jwt = true`) and re-resolved in-function. Storage avatars are removed before the cascade fires.
 
 ## Commands
 
@@ -74,3 +76,4 @@ npm run format:check # Prettier check (CI uses this)
 10. ~~Active Sessions on profile + reusable Modal shell~~ — PR #14
 11. ~~Roster redesign with player stat pills + hover profile card~~ — PR #15
 12. ~~Fix: email verification callback no longer hangs (parses hash params, dispatches PKCE/OTP, adds timeout + error UI)~~ — PR #16
+13. ~~Account deletion via danger zone + edge function (typed username confirmation, service-role hard delete, storage cleanup)~~ — PR #17
