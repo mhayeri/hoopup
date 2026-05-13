@@ -75,7 +75,6 @@ export default function ProfilePage() {
                 <ReadView
                   profile={profile}
                   onEdit={() => setEditing(true)}
-                  onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
                   email={user?.email ?? null}
                 />
               )}
@@ -102,26 +101,12 @@ export default function ProfilePage() {
                 <p className="text-sm text-[var(--color-ink)]/60">Friends — coming soon.</p>
               ) : null}
               {tab === 'settings' ? (
-                <p className="text-sm text-[var(--color-ink)]/60">Settings — coming soon.</p>
+                <SettingsPanel
+                  onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
+                  onDeleteAccount={() => setDeleteOpen(true)}
+                />
               ) : null}
             </div>
-          </div>
-
-          <div className="rounded-3xl border border-red-300 bg-red-50/40 p-8 shadow-sm">
-            <h2 className="text-xl font-black uppercase tracking-tight text-red-800">
-              Danger zone
-            </h2>
-            <p className="mt-2 text-sm text-red-900/80">
-              Permanently delete your account and all of your sessions, RSVPs, and profile data.
-              This cannot be undone.
-            </p>
-            <button
-              type="button"
-              onClick={() => setDeleteOpen(true)}
-              className="mt-4 rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700"
-            >
-              Delete account
-            </button>
           </div>
         </section>
       </div>
@@ -142,12 +127,10 @@ function ReadView({
   profile,
   email,
   onEdit,
-  onChangePassword,
 }: {
   profile: NonNullable<ReturnType<typeof useProfile>['profile']>;
   email: string | null;
   onEdit: () => void;
-  onChangePassword: (() => void) | null;
 }) {
   return (
     <div>
@@ -155,24 +138,13 @@ function ReadView({
         <h1 className="text-3xl font-black tracking-tight text-[var(--color-court)]">
           @{profile.username}
         </h1>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={onEdit}
-            className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-          >
-            Edit
-          </button>
-          {onChangePassword ? (
-            <button
-              type="button"
-              onClick={onChangePassword}
-              className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-            >
-              Change password
-            </button>
-          ) : null}
-        </div>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+        >
+          Edit
+        </button>
       </div>
       {email ? <p className="mt-1 text-sm text-[var(--color-ink)]/60">{email}</p> : null}
 
@@ -203,6 +175,51 @@ function Item({ label, value }: { label: string; value: string | null }) {
         {label}
       </dt>
       <dd className="mt-0.5 text-[var(--color-ink)]">{value ?? '—'}</dd>
+    </div>
+  );
+}
+
+function SettingsPanel({
+  onChangePassword,
+  onDeleteAccount,
+}: {
+  onChangePassword: (() => void) | null;
+  onDeleteAccount: () => void;
+}) {
+  return (
+    <div className="space-y-6">
+      {onChangePassword ? (
+        <div className="rounded-2xl border border-[var(--color-ink)]/10 p-5">
+          <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-hardwood)]">
+            Security
+          </h3>
+          <p className="mt-2 text-sm text-[var(--color-ink)]/70">
+            Update the password you use to sign in.
+          </p>
+          <button
+            type="button"
+            onClick={onChangePassword}
+            className="mt-3 rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+          >
+            Change password
+          </button>
+        </div>
+      ) : null}
+
+      <div className="rounded-2xl border border-red-300 bg-red-50/40 p-5">
+        <h3 className="text-sm font-black uppercase tracking-widest text-red-800">Account</h3>
+        <p className="mt-2 text-sm text-red-900/80">
+          Permanently delete your account and all of your sessions, RSVPs, and profile data. This
+          cannot be undone.
+        </p>
+        <button
+          type="button"
+          onClick={onDeleteAccount}
+          className="mt-3 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700"
+        >
+          Delete account
+        </button>
+      </div>
     </div>
   );
 }
