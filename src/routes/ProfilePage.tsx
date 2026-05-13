@@ -6,6 +6,15 @@ import AvatarUpload from '../features/profiles/AvatarUpload';
 import ChangePasswordModal from '../features/profiles/ChangePasswordModal';
 import DeleteAccountModal from '../features/profiles/DeleteAccountModal';
 import ActiveSessionsList from '../features/profiles/ActiveSessionsList';
+import Tabs, { type TabItem } from '../components/Tabs';
+
+type TabId = 'sessions' | 'friends' | 'settings';
+
+const TAB_ITEMS: TabItem[] = [
+  { id: 'sessions', label: 'Sessions' },
+  { id: 'friends', label: 'Friends' },
+  { id: 'settings', label: 'Settings' },
+];
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -13,6 +22,7 @@ export default function ProfilePage() {
   const [editing, setEditing] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [tab, setTab] = useState<TabId>('sessions');
   const hasEmailAuth =
     (user?.app_metadata?.providers as string[] | undefined)?.includes('email') ?? false;
 
@@ -35,63 +45,68 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-12">
-      <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
-        <AvatarUpload
-          userId={profile.id}
-          currentUrl={profile.avatar_url}
-          onUploaded={async (url) => {
-            await updateProfile({ avatar_url: url });
-          }}
-        />
-
-        <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
-          {editing ? (
-            <ProfileEditForm
-              profile={profile}
-              onSubmit={async (patch) => {
-                const result = await updateProfile(patch);
-                if (!result.error) {
-                  setEditing(false);
-                  void refresh();
-                }
-                return result;
+    <main className="mx-auto max-w-5xl px-6 py-10">
+      <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+        <aside className="lg:col-span-5">
+          <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
+            <AvatarUpload
+              userId={profile.id}
+              currentUrl={profile.avatar_url}
+              onUploaded={async (url) => {
+                await updateProfile({ avatar_url: url });
               }}
-              onCancel={() => setEditing(false)}
             />
-          ) : (
-            <ReadView
-              profile={profile}
-              onEdit={() => setEditing(true)}
-              onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
-              email={user?.email ?? null}
+
+            <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
+              {editing ? (
+                <ProfileEditForm
+                  profile={profile}
+                  onSubmit={async (patch) => {
+                    const result = await updateProfile(patch);
+                    if (!result.error) {
+                      setEditing(false);
+                      void refresh();
+                    }
+                    return result;
+                  }}
+                  onCancel={() => setEditing(false)}
+                />
+              ) : (
+                <ReadView
+                  profile={profile}
+                  onEdit={() => setEditing(true)}
+                  email={user?.email ?? null}
+                />
+              )}
+            </div>
+          </div>
+        </aside>
+
+        <section className="mt-6 space-y-6 lg:col-span-7 lg:mt-0">
+          <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
+            <Tabs
+              items={TAB_ITEMS}
+              value={tab}
+              onChange={(id) => setTab(id as TabId)}
+              ariaLabel="Profile sections"
             />
-          )}
-        </div>
-      </div>
-
-      <div className="mt-8 rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
-        <h2 className="text-xl font-black uppercase tracking-tight text-[var(--color-ink)]">
-          Active sessions
-        </h2>
-        <div className="mt-4">
-          <ActiveSessionsList userId={profile.id} />
-        </div>
-      </div>
-
-      <div className="mt-8 rounded-3xl border border-red-300 bg-red-50/40 p-8 shadow-sm">
-        <h2 className="text-xl font-black uppercase tracking-tight text-red-800">Danger zone</h2>
-        <p className="mt-2 text-sm text-red-900/80">
-          Permanently delete your account and all of your sessions, RSVPs, and profile data. This
-          cannot be undone.
-        </p>
-        <button
-          type="button"
-          onClick={() => setDeleteOpen(true)}
-          className="mt-4 rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700"
-        >
-          Delete account
-        </button>
+            <div
+              role="tabpanel"
+              id={`tabpanel-${tab}`}
+              aria-labelledby={`tab-${tab}`}
+              className="mt-6"
+            >
+              {tab === 'sessions' ? <ActiveSessionsList userId={profile.id} /> : null}
+              {tab === 'friends' ? <FriendsPlaceholder /> : null}
+              {tab === 'settings' ? (
+                <SettingsPanel
+                  onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
+                  onDeleteAccount={() => setDeleteOpen(true)}
+                />
+              ) : null}
+            </div>
+          </div>
+        </section>
       </div>
 
       {hasEmailAuth ? (
@@ -110,12 +125,10 @@ function ReadView({
   profile,
   email,
   onEdit,
-  onChangePassword,
 }: {
   profile: NonNullable<ReturnType<typeof useProfile>['profile']>;
   email: string | null;
   onEdit: () => void;
-  onChangePassword: (() => void) | null;
 }) {
   return (
     <div>
@@ -123,24 +136,13 @@ function ReadView({
         <h1 className="text-3xl font-black tracking-tight text-[var(--color-court)]">
           @{profile.username}
         </h1>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={onEdit}
-            className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-          >
-            Edit
-          </button>
-          {onChangePassword ? (
-            <button
-              type="button"
-              onClick={onChangePassword}
-              className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-            >
-              Change password
-            </button>
-          ) : null}
-        </div>
+        <button
+          type="button"
+          onClick={onEdit}
+          className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+        >
+          Edit
+        </button>
       </div>
       {email ? <p className="mt-1 text-sm text-[var(--color-ink)]/60">{email}</p> : null}
 
@@ -171,6 +173,68 @@ function Item({ label, value }: { label: string; value: string | null }) {
         {label}
       </dt>
       <dd className="mt-0.5 text-[var(--color-ink)]">{value ?? '—'}</dd>
+    </div>
+  );
+}
+
+function FriendsPlaceholder() {
+  return (
+    <div className="rounded-2xl border border-dashed border-[var(--color-ink)]/20 p-8 text-center">
+      <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
+        Coming soon
+      </p>
+      <h3 className="mt-2 text-lg font-black tracking-tight text-[var(--color-ink)]">
+        Find your regulars
+      </h3>
+      <p className="mx-auto mt-2 max-w-sm text-sm text-[var(--color-ink)]/70">
+        Add players you meet at sessions and keep tabs on the courts they run. Friends is on the
+        way.
+      </p>
+    </div>
+  );
+}
+
+function SettingsPanel({
+  onChangePassword,
+  onDeleteAccount,
+}: {
+  onChangePassword: (() => void) | null;
+  onDeleteAccount: () => void;
+}) {
+  return (
+    <div className="space-y-6">
+      {onChangePassword ? (
+        <div className="rounded-2xl border border-[var(--color-ink)]/10 p-5">
+          <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-hardwood)]">
+            Security
+          </h3>
+          <p className="mt-2 text-sm text-[var(--color-ink)]/70">
+            Update the password you use to sign in.
+          </p>
+          <button
+            type="button"
+            onClick={onChangePassword}
+            className="mt-3 rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+          >
+            Change password
+          </button>
+        </div>
+      ) : null}
+
+      <div className="rounded-2xl border border-red-300 bg-red-50/40 p-5">
+        <h3 className="text-sm font-black uppercase tracking-widest text-red-800">Account</h3>
+        <p className="mt-2 text-sm text-red-900/80">
+          Permanently delete your account and all of your sessions, RSVPs, and profile data. This
+          cannot be undone.
+        </p>
+        <button
+          type="button"
+          onClick={onDeleteAccount}
+          className="mt-3 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700"
+        >
+          Delete account
+        </button>
+      </div>
     </div>
   );
 }
