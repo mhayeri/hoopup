@@ -73,3 +73,4 @@ npm run format:check # Prettier check (CI uses this)
 9. ~~Password change + friendly error messages~~ — PR #13
 10. ~~Active Sessions on profile + reusable Modal shell~~ — PR #14
 11. ~~Roster redesign with player stat pills + hover profile card~~ — PR #15
+12. ~~Fix: email verification callback no longer hangs (parses hash params, dispatches PKCE/OTP, adds timeout + error UI)~~ — PR #16
