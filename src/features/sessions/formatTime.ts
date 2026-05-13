@@ -75,3 +75,27 @@ export function formatAbsoluteDateTime(iso: string): string {
     minute: '2-digit',
   }).format(new Date(iso));
 }
+
+/**
+ * Short day-aware label for session list rows: "Today · 6:30 PM",
+ * "Tomorrow · 5:30 PM", or "Sat · 10:00 AM" for anything else. The day
+ * comparison uses local-time calendar dates so a session at 11pm today and
+ * one at 1am tomorrow render as different days, matching user expectation.
+ */
+export function formatPanelTime(iso: string, now: Date = new Date()): string {
+  const when = new Date(iso);
+  const timeFmt = new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+  const time = timeFmt.format(when);
+
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const target = new Date(when.getFullYear(), when.getMonth(), when.getDate());
+  const dayDelta = Math.round((target.getTime() - today.getTime()) / (24 * 60 * 60 * 1000));
+
+  if (dayDelta === 0) return `Today · ${time}`;
+  if (dayDelta === 1) return `Tomorrow · ${time}`;
+  const weekday = new Intl.DateTimeFormat(undefined, { weekday: 'short' }).format(when);
+  return `${weekday} · ${time}`;
+}
