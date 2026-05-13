@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../providers/useAuth';
 import { useSessionRsvps, SESSION_CAP } from './useSessionRsvps';
 import type { RsvpWithProfile } from '../../lib/database.types';
+import PlayerRow from './PlayerRow';
 
 type Props = {
   sessionId: string;
@@ -19,6 +20,25 @@ export default function RosterSection({ sessionId, cancelled, startsAt }: Props)
   const [actionError, setActionError] = useState<string | null>(null);
   const [showFullPrompt, setShowFullPrompt] = useState(false);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [openUserId, setOpenUserId] = useState<string | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!openUserId) return;
+    function onMouseDown(e: MouseEvent) {
+      if (!sectionRef.current) return;
+      if (!sectionRef.current.contains(e.target as Node)) setOpenUserId(null);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpenUserId(null);
+    }
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onMouseDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [openUserId]);
 
   const startsInPast = new Date(startsAt).getTime() <= Date.now();
   const myRsvp: RsvpWithProfile | undefined = user
@@ -67,7 +87,7 @@ export default function RosterSection({ sessionId, cancelled, startsAt }: Props)
   }
 
   return (
-    <section className="mt-12">
+    <section ref={sectionRef} className="mt-12">
       <div className="flex items-center gap-3">
         <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-ink)]">
           Roster
@@ -177,7 +197,12 @@ export default function RosterSection({ sessionId, cancelled, startsAt }: Props)
           {goingList.length > 0 ? (
             <ul className="mt-4 space-y-2">
               {goingList.map((r) => (
-                <PlayerRow key={r.user_id} rsvp={r} />
+                <PlayerRow
+                  key={r.user_id}
+                  rsvp={r}
+                  open={openUserId === r.user_id}
+                  onOpenChange={(next) => setOpenUserId(next ? r.user_id : null)}
+                />
               ))}
             </ul>
           ) : null}
@@ -195,7 +220,12 @@ export default function RosterSection({ sessionId, cancelled, startsAt }: Props)
               {waitlistOpen ? (
                 <ul className="mt-2 space-y-2">
                   {waitlist.map((r) => (
-                    <PlayerRow key={r.user_id} rsvp={r} />
+                    <PlayerRow
+                      key={r.user_id}
+                      rsvp={r}
+                      open={openUserId === r.user_id}
+                      onOpenChange={(next) => setOpenUserId(next ? r.user_id : null)}
+                    />
                   ))}
                 </ul>
               ) : null}
@@ -204,24 +234,5 @@ export default function RosterSection({ sessionId, cancelled, startsAt }: Props)
         </>
       )}
     </section>
-  );
-}
-
-function PlayerRow({ rsvp }: { rsvp: RsvpWithProfile }) {
-  if (!rsvp.profile) return null;
-  const { profile } = rsvp;
-  return (
-    <li className="flex items-center gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-court)]/20 bg-[var(--color-net)]">
-        {profile.avatar_url ? (
-          <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
-        ) : (
-          <span className="text-[10px] font-bold uppercase text-[var(--color-hardwood)]/60">
-            {profile.username.charAt(0)}
-          </span>
-        )}
-      </div>
-      <span className="text-sm font-semibold text-[var(--color-ink)]">@{profile.username}</span>
-    </li>
   );
 }
