@@ -147,7 +147,15 @@ export type RsvpWithProfile = {
   user_id: string;
   status: RsvpStatus;
   created_at: string;
-  profile: { id: string; username: string; avatar_url: string | null } | null;
+  profile: {
+    id: string;
+    username: string;
+    avatar_url: string | null;
+    bio: string | null;
+    skill_level: SkillLevel | null;
+    preferred_position: Position | null;
+    years_playing: number | null;
+  } | null;
 };
 
 // Postgres error codes we throw from triggers
