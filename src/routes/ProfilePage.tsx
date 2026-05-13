@@ -6,6 +6,15 @@ import AvatarUpload from '../features/profiles/AvatarUpload';
 import ChangePasswordModal from '../features/profiles/ChangePasswordModal';
 import DeleteAccountModal from '../features/profiles/DeleteAccountModal';
 import ActiveSessionsList from '../features/profiles/ActiveSessionsList';
+import Tabs, { type TabItem } from '../components/Tabs';
+
+type TabId = 'sessions' | 'friends' | 'settings';
+
+const TAB_ITEMS: TabItem[] = [
+  { id: 'sessions', label: 'Sessions' },
+  { id: 'friends', label: 'Friends' },
+  { id: 'settings', label: 'Settings' },
+];
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -13,6 +22,7 @@ export default function ProfilePage() {
   const [editing, setEditing] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [tab, setTab] = useState<TabId>('sessions');
   const hasEmailAuth =
     (user?.app_metadata?.providers as string[] | undefined)?.includes('email') ?? false;
 
@@ -75,11 +85,25 @@ export default function ProfilePage() {
 
         <section className="mt-6 space-y-6 lg:col-span-7 lg:mt-0">
           <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
-            <h2 className="text-xl font-black uppercase tracking-tight text-[var(--color-ink)]">
-              Active sessions
-            </h2>
-            <div className="mt-4">
-              <ActiveSessionsList userId={profile.id} />
+            <Tabs
+              items={TAB_ITEMS}
+              value={tab}
+              onChange={(id) => setTab(id as TabId)}
+              ariaLabel="Profile sections"
+            />
+            <div
+              role="tabpanel"
+              id={`tabpanel-${tab}`}
+              aria-labelledby={`tab-${tab}`}
+              className="mt-6"
+            >
+              {tab === 'sessions' ? <ActiveSessionsList userId={profile.id} /> : null}
+              {tab === 'friends' ? (
+                <p className="text-sm text-[var(--color-ink)]/60">Friends — coming soon.</p>
+              ) : null}
+              {tab === 'settings' ? (
+                <p className="text-sm text-[var(--color-ink)]/60">Settings — coming soon.</p>
+              ) : null}
             </div>
           </div>
 
