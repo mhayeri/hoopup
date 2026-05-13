@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import type { SessionRow } from './useSessionsByCourt';
 import { formatSessionRange, relativeTime } from './formatTime';
 
-type Role = 'host' | 'going' | 'waitlist';
+type Role = 'going' | 'waitlist';
 
 type Props = {
   session: SessionRow;
@@ -11,13 +11,11 @@ type Props = {
 };
 
 const ROLE_PILL_CLASS: Record<Role, string> = {
-  host: 'bg-[var(--color-court)]/10 text-[var(--color-court)]',
   going: 'bg-green-100 text-green-700',
   waitlist: 'bg-amber-100 text-amber-700',
 };
 
 const ROLE_LABEL: Record<Role, string> = {
-  host: 'Host',
   going: 'Going',
   waitlist: 'Waitlist',
 };

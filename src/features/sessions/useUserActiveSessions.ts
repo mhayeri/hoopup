@@ -11,7 +11,7 @@ export type ActiveSessionCourt = {
   address: string | null;
 };
 
-export type ActiveSessionRole = 'host' | 'going' | 'waitlist';
+export type ActiveSessionRole = 'going' | 'waitlist';
 
 export type ActiveSessionEntry = {
   session: SessionRow;
@@ -27,9 +27,8 @@ type Result = {
 };
 
 const ROLE_PRIORITY: Record<ActiveSessionRole, number> = {
-  host: 0,
-  going: 1,
-  waitlist: 2,
+  going: 0,
+  waitlist: 1,
 };
 
 type HostedRow = SessionRow & { court: ActiveSessionCourt | null };
@@ -41,9 +40,9 @@ type RsvpJoinedRow = {
 
 /**
  * Lists active (upcoming or in-progress, not cancelled) sessions the user is
- * part of — either as host or via an RSVP with status 'going' or 'waitlist'.
- * Issues two parallel queries and merges them; if the user is both host and
- * has an RSVP row for the same session, the host role wins.
+ * part of — either as host (counted as 'going') or via an RSVP with status
+ * 'going' or 'waitlist'. Issues two parallel queries and merges them; 'going'
+ * wins over 'waitlist' on collision.
  */
 export function useUserActiveSessions(userId: string | null | undefined): Result {
   const [entries, setEntries] = useState<ActiveSessionEntry[]>([]);
@@ -112,7 +111,7 @@ export function useUserActiveSessions(userId: string | null | undefined): Result
 
     for (const row of hostedRes.data ?? []) {
       const { court, ...session } = row;
-      byId.set(session.id, { session, court, role: 'host' });
+      byId.set(session.id, { session, court, role: 'going' });
     }
 
     for (const row of rsvpRes.data ?? []) {
