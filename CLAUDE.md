@@ -17,7 +17,7 @@ Live: https://mhayeri.github.io/hoopup/
 
 ```
 src/
-  components/         Shared UI (NavBar, RequireAuth, OAuthButtons, Modal)
+  components/         Shared UI (NavBar, RequireAuth, OAuthButtons, Modal, Tabs)
   providers/          AuthProvider + useAuth hook
   lib/                supabase client, database.types.ts, errors.ts, env.ts, leaflet.ts
   routes/             Page-level components (one per route)
@@ -51,6 +51,7 @@ supabase/
 - **Centralized error mapping** — `friendlyMessage()` in `src/lib/errors.ts` converts raw Supabase/Postgres errors to user-friendly strings. All error call sites use this instead of `error.message`.
 - **SECURITY DEFINER triggers** — `enforce_session_cap()` and `upsert_osm_courts()` run as function owner to bypass RLS for cross-table locks/writes. Always paired with `SET search_path = public`.
 - **Edge Functions for admin-only auth ops** — `supabase/functions/delete-account` uses the service-role key to call `auth.admin.deleteUser()` (not callable from Postgres/RLS). JWT is verified at the gateway (`verify_jwt = true`) and re-resolved in-function. Storage avatars are removed before the cascade fires.
+- **Reusable Tabs primitive** — `src/components/Tabs.tsx` is an ARIA-correct tab strip (roles, `aria-selected`, Left/Right arrow nav, pill styling). Caller owns panel content. Profile page is the first consumer; pattern is ready for future tabbed surfaces.
 
 ## Commands
 
@@ -77,3 +78,4 @@ npm run format:check # Prettier check (CI uses this)
 11. ~~Roster redesign with player stat pills + hover profile card~~ — PR #15
 12. ~~Fix: email verification callback no longer hangs (parses hash params, dispatches PKCE/OTP, adds timeout + error UI)~~ — PR #16
 13. ~~Account deletion via danger zone + edge function (typed username confirmation, service-role hard delete, storage cleanup)~~ — PR #17
+14. ~~Profile page redesign: sidebar identity + tabbed activity panel (Sessions / Friends / Settings); danger zone absorbed into Settings~~ — PR #18
