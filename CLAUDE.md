@@ -49,7 +49,8 @@ supabase/
 - **Optimistic UI** — useProfile applies updates optimistically, reverts on error.
 - **PG error codes** — `P0001` = SESSION_FULL, `P0002` = SESSION_NOT_AVAILABLE, `P0003` = USERNAME_GENERATION_FAILED.
 - **Centralized error mapping** — `friendlyMessage()` in `src/lib/errors.ts` converts raw Supabase/Postgres errors to user-friendly strings. All error call sites use this instead of `error.message`.
-- **SECURITY DEFINER triggers** — `enforce_session_cap()` and `upsert_osm_courts()` run as function owner to bypass RLS for cross-table locks/writes. Always paired with `SET search_path = public`.
+- **SECURITY DEFINER triggers** — `enforce_session_cap()`, `upsert_osm_courts()`, `add_host_to_session_rsvps()`, and `cancel_session_if_host_alone()` run as function owner to bypass RLS for cross-table locks/writes. Always paired with `SET search_path = public`.
+- **Host is always a player** — DB triggers keep `sessions.host_id` in sync with `session_rsvps`. On session INSERT the host is auto-added with status='going'; if the host's RSVP transitions to 'cancelled' (or is deleted) and no other 'going' rows remain, the session auto-cancels.
 - **Edge Functions for admin-only auth ops** — `supabase/functions/delete-account` uses the service-role key to call `auth.admin.deleteUser()` (not callable from Postgres/RLS). JWT is verified at the gateway (`verify_jwt = true`) and re-resolved in-function. Storage avatars are removed before the cascade fires.
 - **Reusable Tabs primitive** — `src/components/Tabs.tsx` is an ARIA-correct tab strip (roles, `aria-selected`, Left/Right arrow nav, pill styling). Caller owns panel content. Profile page is the first consumer; pattern is ready for future tabbed surfaces.
 
@@ -79,4 +80,5 @@ npm run format:check # Prettier check (CI uses this)
 12. ~~Fix: email verification callback no longer hangs (parses hash params, dispatches PKCE/OTP, adds timeout + error UI)~~ — PR #16
 13. ~~Account deletion via danger zone + edge function (typed username confirmation, service-role hard delete, storage cleanup)~~ — PR #17
 14. ~~Profile page redesign: sidebar identity + tabbed activity panel (Sessions / Friends / Settings); danger zone absorbed into Settings~~ — PR #18
-15. Map session panel: "Find a game" sidebar with upcoming-sessions list + filter toggle (sessions vs all courts); click a card to fly the map to that court
+15. ~~Map session panel: "Find a game" sidebar with upcoming-sessions list + filter toggle (sessions vs all courts); click a card to fly the map to that court~~ — PR #20
+16. Host auto-RSVP on session creation + solo-host-leaves auto-cancels the session (DB triggers + roster refresh wiring)
