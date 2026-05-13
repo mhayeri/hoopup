@@ -9,9 +9,15 @@ type Props = {
   sessionId: string;
   cancelled: boolean;
   startsAt: string;
+  /**
+   * Called after a successful leave so the parent can refresh the session
+   * row — necessary because the solo-host-leaves trigger may have just set
+   * `cancelled_at`, and the cached session needs to reflect that.
+   */
+  onAfterLeave?: () => Promise<void> | void;
 };
 
-export default function RosterSection({ sessionId, cancelled, startsAt }: Props) {
+export default function RosterSection({ sessionId, cancelled, startsAt, onAfterLeave }: Props) {
   const { user } = useAuth();
   const { rsvps, goingCount, waitlistCount, loading, error, rsvp, joinWaitlist, leave } =
     useSessionRsvps(sessionId);
@@ -82,6 +88,9 @@ export default function RosterSection({ sessionId, cancelled, startsAt }: Props)
     setActionError(null);
     setShowFullPrompt(false);
     const { error: leaveErr } = await leave(user.id);
+    if (!leaveErr && onAfterLeave) {
+      await onAfterLeave();
+    }
     setBusy(false);
     if (leaveErr) setActionError(leaveErr);
   }

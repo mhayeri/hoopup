@@ -13,7 +13,7 @@ export default function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const validId = id && UUID_RE.test(id) ? id : null;
-  const { session, loading, error, update, cancel } = useSession(validId);
+  const { session, loading, error, update, cancel, refresh } = useSession(validId);
   const courtDisplayName = useCourtAddress(session?.court ?? null);
   const [editOpen, setEditOpen] = useState(false);
   const [cancelling, setCancelling] = useState(false);
@@ -164,7 +164,12 @@ export default function SessionDetailPage() {
         </p>
       ) : null}
 
-      <RosterSection sessionId={session.id} cancelled={cancelled} startsAt={session.starts_at} />
+      <RosterSection
+        sessionId={session.id}
+        cancelled={cancelled}
+        startsAt={session.starts_at}
+        onAfterLeave={refresh}
+      />
 
       {isHost ? (
         <SessionModal
