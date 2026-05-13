@@ -52,7 +52,7 @@ export default function PlayerHoverCard({ profile, createdAt }: Props) {
           ) : null}
           {profile.years_playing != null ? (
             <p className="mt-1 text-xs text-[var(--color-ink)]/60">
-              {profile.years_playing} yrs playing
+              {profile.years_playing} {profile.years_playing === 1 ? 'yr' : 'yrs'} playing
             </p>
           ) : null}
         </div>

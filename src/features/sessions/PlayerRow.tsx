@@ -70,12 +70,7 @@ export default function PlayerRow({ rsvp, open, onOpenChange }: Props) {
           clearTimers();
           onOpenChange(!open);
         }}
-        onFocus={() => {
-          clearTimers();
-          onOpenChange(true);
-        }}
-        onBlur={() => onOpenChange(false)}
-        className="flex w-full items-start justify-between gap-3 text-left outline-none"
+        className="flex w-full items-start justify-between gap-3 rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-court)]/40"
       >
         <div className="flex min-w-0 items-start gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-court)]/20 bg-[var(--color-net)]">
@@ -105,7 +100,7 @@ export default function PlayerRow({ rsvp, open, onOpenChange }: Props) {
                 ) : null}
                 {profile.years_playing != null ? (
                   <span className="rounded-full bg-[var(--color-ink)]/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ink)]/70">
-                    {profile.years_playing} yrs
+                    {profile.years_playing} {profile.years_playing === 1 ? 'yr' : 'yrs'}
                   </span>
                 ) : null}
               </div>
