@@ -23,7 +23,7 @@ src/
   routes/             Page-level components (one per route)
   features/
     map/              MapPage, useCourtsInView, useOverpassSync
-    sessions/         SessionForm/Modal/ListItem, useSession, useSessionsByCourt, useUserActiveSessions, createSession, formatTime
+    sessions/         SessionForm/Modal/ListItem, PlayerRow, PlayerHoverCard, RosterSection, useSession, useSessionRsvps, useSessionsByCourt, useUserActiveSessions, createSession, formatTime
     profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, ActiveSessionsList, AvatarUpload, useProfile
 supabase/
   migrations/         SQL migrations (applied to live project)
@@ -72,3 +72,4 @@ npm run format:check # Prettier check (CI uses this)
 8. **Design polish** — in progress (PR #9)
 9. ~~Password change + friendly error messages~~ — PR #13
 10. ~~Active Sessions on profile + reusable Modal shell~~ — PR #14
+11. ~~Roster redesign with player stat pills + hover profile card~~ — PR #15
