@@ -28,12 +28,29 @@ const OTP_TYPES: ReadonlySet<EmailOtpType> = new Set([
  * empty, so we parse the query suffix from window.location.hash ourselves.
  */
 function readAuthParams(): URLSearchParams {
+  const merged = new URLSearchParams();
+  const add = (raw: string) => {
+    const p = new URLSearchParams(raw);
+    p.forEach((v, k) => {
+      if (!merged.has(k)) merged.set(k, v);
+    });
+  };
+
   const search = window.location.search.replace(/^\?/, '');
-  if (search) return new URLSearchParams(search);
+  if (search) add(search);
+
   const hash = window.location.hash;
   const qIndex = hash.indexOf('?');
-  if (qIndex === -1) return new URLSearchParams();
-  return new URLSearchParams(hash.substring(qIndex + 1));
+  if (qIndex !== -1) add(hash.substring(qIndex + 1));
+
+  // Implicit-grant tokens land after a SECOND `#` inside the hash, e.g.
+  //   /#/auth/callback#access_token=...&refresh_token=...&token_type=bearer
+  // Browsers treat everything after the first `#` as one fragment, so the
+  // tokens end up inside window.location.hash with no `?` separating them.
+  const secondHash = hash.indexOf('#', 1);
+  if (secondHash !== -1) add(hash.substring(secondHash + 1));
+
+  return merged;
 }
 
 export default function AuthCallbackPage() {
