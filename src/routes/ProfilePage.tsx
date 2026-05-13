@@ -97,9 +97,7 @@ export default function ProfilePage() {
               className="mt-6"
             >
               {tab === 'sessions' ? <ActiveSessionsList userId={profile.id} /> : null}
-              {tab === 'friends' ? (
-                <p className="text-sm text-[var(--color-ink)]/60">Friends — coming soon.</p>
-              ) : null}
+              {tab === 'friends' ? <FriendsPlaceholder /> : null}
               {tab === 'settings' ? (
                 <SettingsPanel
                   onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
@@ -175,6 +173,23 @@ function Item({ label, value }: { label: string; value: string | null }) {
         {label}
       </dt>
       <dd className="mt-0.5 text-[var(--color-ink)]">{value ?? '—'}</dd>
+    </div>
+  );
+}
+
+function FriendsPlaceholder() {
+  return (
+    <div className="rounded-2xl border border-dashed border-[var(--color-ink)]/20 p-8 text-center">
+      <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
+        Coming soon
+      </p>
+      <h3 className="mt-2 text-lg font-black tracking-tight text-[var(--color-ink)]">
+        Find your regulars
+      </h3>
+      <p className="mx-auto mt-2 max-w-sm text-sm text-[var(--color-ink)]/70">
+        Add players you meet at sessions and keep tabs on the courts they run. Friends is on the
+        way.
+      </p>
     </div>
   );
 }
