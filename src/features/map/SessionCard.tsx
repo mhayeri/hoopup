@@ -1,19 +1,22 @@
 import type { UpcomingSession } from './useUpcomingSessions';
-import { formatPanelTime } from '../sessions/formatTime';
+import { formatPanelTime, formatTimeUntilEnd } from '../sessions/formatTime';
+import { useNow } from '../../lib/useNow';
 
 const SESSION_CAP = 15;
 
 type Props = {
   entry: UpcomingSession;
   selected: boolean;
+  live?: boolean;
   onSelect: () => void;
 };
 
-export default function SessionCard({ entry, selected, onSelect }: Props) {
+export default function SessionCard({ entry, selected, live = false, onSelect }: Props) {
   const { session, court, host, goingCount } = entry;
   const courtLabel = court?.name ?? court?.address ?? 'Basketball Court';
   const hostLabel = host ? `@${host.username}` : 'Unknown host';
   const initial = host?.username.charAt(0).toUpperCase() ?? '?';
+  const now = useNow();
 
   return (
     <button
@@ -23,15 +26,24 @@ export default function SessionCard({ entry, selected, onSelect }: Props) {
       className={`flex w-full flex-col gap-2 rounded-xl border bg-white px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-court)]/40 ${
         selected
           ? 'border-[var(--color-court)] bg-[var(--color-court)]/6 shadow-sm'
-          : 'border-[var(--color-ink)]/10 hover:border-[var(--color-court)]/40'
+          : live
+            ? 'border-emerald-400/60 hover:border-emerald-500'
+            : 'border-[var(--color-ink)]/10 hover:border-[var(--color-court)]/40'
       }`}
     >
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-bold text-[var(--color-ink)]">{courtLabel}</p>
       </div>
-      <span className="inline-flex w-fit items-center rounded-full bg-[var(--color-ink)] px-2 py-0.5 text-[11px] font-bold text-white">
-        {formatPanelTime(session.starts_at)}
-      </span>
+      {live ? (
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-500 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+          Currently Hooping · {formatTimeUntilEnd(session.ends_at, now)}
+        </span>
+      ) : (
+        <span className="inline-flex w-fit items-center rounded-full bg-[var(--color-ink)] px-2 py-0.5 text-[11px] font-bold text-white">
+          {formatPanelTime(session.starts_at)}
+        </span>
+      )}
       <div className="flex items-center gap-2 text-xs">
         <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-court)]/20 bg-[var(--color-net)]">
           {host?.avatar_url ? (

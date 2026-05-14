@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
@@ -7,7 +7,9 @@ import { useSessionsByCourt } from '../features/sessions/useSessionsByCourt';
 import SessionListItem from '../features/sessions/SessionListItem';
 import SessionModal from '../features/sessions/SessionModal';
 import { createSession } from '../features/sessions/createSession';
+import { getSessionStatus } from '../features/sessions/formatTime';
 import { useCourtAddress } from '../features/map/useCourtAddress';
+import { useNow } from '../lib/useNow';
 import { friendlyMessage } from '../lib/errors';
 
 type Court = Database['public']['Tables']['courts']['Row'];
@@ -28,6 +30,21 @@ export default function CourtDetailPage() {
     error: sessionsError,
     refresh: refreshSessions,
   } = useSessionsByCourt(court?.id);
+
+  const now = useNow();
+  const { liveSessions, upcomingSessions } = useMemo(() => {
+    const live: typeof sessions = [];
+    const upcoming: typeof sessions = [];
+    for (const s of sessions) {
+      const status = getSessionStatus(s, now);
+      if (status === 'active') live.push(s);
+      // Cancelled-but-not-ended rows are intentionally returned by the
+      // hook so RSVPed users see the cancellation; group them with
+      // upcoming so they render with the Cancelled pill in the list.
+      else if (status === 'upcoming' || status === 'cancelled') upcoming.push(s);
+    }
+    return { liveSessions: live, upcomingSessions: upcoming };
+  }, [sessions, now]);
 
   useEffect(() => {
     if (!id) return;
@@ -134,6 +151,27 @@ export default function CourtDetailPage() {
         ))}
       </dl>
 
+      {liveSessions.length > 0 ? (
+        <section className="mt-12">
+          <div className="flex items-center gap-3">
+            <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-emerald-700">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
+              Currently Hooping
+            </h2>
+            <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-emerald-700">
+              {liveSessions.length}
+            </span>
+          </div>
+          <ul className="mt-4 space-y-3">
+            {liveSessions.map((s) => (
+              <li key={s.id}>
+                <SessionListItem session={s} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       <section className="mt-12">
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-ink)]">
@@ -166,13 +204,15 @@ export default function CourtDetailPage() {
           </p>
         ) : sessionsLoading ? (
           <p className="mt-4 text-sm text-[var(--color-ink)]/60">Loading sessions…</p>
-        ) : sessions.length === 0 ? (
+        ) : upcomingSessions.length === 0 ? (
           <p className="mt-4 text-[var(--color-ink)]/70">
-            No upcoming sessions. Be the first to host one.
+            {liveSessions.length > 0
+              ? 'No future sessions scheduled yet.'
+              : 'No upcoming sessions. Be the first to host one.'}
           </p>
         ) : (
           <ul className="mt-4 space-y-3">
-            {sessions.map((s) => (
+            {upcomingSessions.map((s) => (
               <li key={s.id}>
                 <SessionListItem session={s} />
               </li>

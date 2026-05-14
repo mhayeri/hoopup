@@ -1,6 +1,12 @@
 import { Link } from 'react-router-dom';
 import type { SessionRow } from './useSessionsByCourt';
-import { formatSessionRange, relativeTime } from './formatTime';
+import {
+  formatSessionRange,
+  formatTimeUntilEnd,
+  getSessionStatus,
+  relativeTime,
+} from './formatTime';
+import { useNow } from '../../lib/useNow';
 
 type Role = 'going' | 'waitlist';
 
@@ -21,11 +27,18 @@ const ROLE_LABEL: Record<Role, string> = {
 };
 
 export default function SessionListItem({ session, courtName, role }: Props) {
-  const cancelled = session.cancelled_at != null;
+  const now = useNow();
+  const status = getSessionStatus(session, now);
+  const cancelled = status === 'cancelled';
+  const active = status === 'active';
   return (
     <Link
       to={`/sessions/${session.id}`}
-      className="block rounded-lg border border-[var(--color-ink)]/10 bg-white px-4 py-3 transition hover:border-[var(--color-court)]/50 hover:shadow-sm"
+      className={`block rounded-lg border bg-white px-4 py-3 transition hover:shadow-sm ${
+        active
+          ? 'border-emerald-400/60 hover:border-emerald-500'
+          : 'border-[var(--color-ink)]/10 hover:border-[var(--color-court)]/50'
+      }`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
@@ -57,9 +70,14 @@ export default function SessionListItem({ session, courtName, role }: Props) {
             <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold uppercase tracking-widest text-red-700">
               Cancelled
             </span>
+          ) : active ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold uppercase tracking-widest text-emerald-700">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+              Currently Hooping · {formatTimeUntilEnd(session.ends_at, now)}
+            </span>
           ) : (
             <span className="rounded-full bg-[var(--color-court)]/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-widest text-[var(--color-court)]">
-              {relativeTime(session.starts_at)}
+              {relativeTime(session.starts_at, now)}
             </span>
           )}
         </div>

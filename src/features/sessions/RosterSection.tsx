@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../providers/useAuth';
 import { useSessionRsvps, SESSION_CAP } from './useSessionRsvps';
 import type { RsvpWithProfile } from '../../lib/database.types';
+import { useNow } from '../../lib/useNow';
+import { formatTimeUntilEnd } from './formatTime';
 import PlayerRow from './PlayerRow';
 
 type Props = {
   sessionId: string;
   cancelled: boolean;
   startsAt: string;
+  endsAt: string;
   /**
    * Called after a successful leave so the parent can refresh the session
    * row — necessary because the solo-host-leaves trigger may have just set
@@ -17,7 +20,13 @@ type Props = {
   onAfterLeave?: () => Promise<void> | void;
 };
 
-export default function RosterSection({ sessionId, cancelled, startsAt, onAfterLeave }: Props) {
+export default function RosterSection({
+  sessionId,
+  cancelled,
+  startsAt,
+  endsAt,
+  onAfterLeave,
+}: Props) {
   const { user } = useAuth();
   const { rsvps, goingCount, waitlistCount, loading, error, rsvp, joinWaitlist, leave } =
     useSessionRsvps(sessionId);
@@ -46,7 +55,11 @@ export default function RosterSection({ sessionId, cancelled, startsAt, onAfterL
     };
   }, [openUserId]);
 
-  const startsInPast = new Date(startsAt).getTime() <= Date.now();
+  const now = useNow();
+  const startMs = new Date(startsAt).getTime();
+  const endMs = new Date(endsAt).getTime();
+  const startsInPast = startMs <= now.getTime();
+  const inProgress = !cancelled && startMs <= now.getTime() && now.getTime() < endMs;
   const myRsvp: RsvpWithProfile | undefined = user
     ? rsvps.find((r) => r.user_id === user.id)
     : undefined;
@@ -105,6 +118,13 @@ export default function RosterSection({ sessionId, cancelled, startsAt, onAfterL
           {goingCount} / {SESSION_CAP}
         </span>
       </div>
+
+      {inProgress ? (
+        <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-emerald-700">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+          Game in progress · {formatTimeUntilEnd(endsAt, now)} · RSVPs locked
+        </p>
+      ) : null}
 
       {/* Action area */}
       {canAct ? (

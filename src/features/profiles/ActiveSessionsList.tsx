@@ -1,6 +1,9 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import SessionListItem from '../sessions/SessionListItem';
 import { useUserActiveSessions } from '../sessions/useUserActiveSessions';
+import { getSessionStatus } from '../sessions/formatTime';
+import { useNow } from '../../lib/useNow';
 
 type Props = {
   userId: string;
@@ -8,6 +11,14 @@ type Props = {
 
 export default function ActiveSessionsList({ userId }: Props) {
   const { entries, loading, error } = useUserActiveSessions(userId);
+  const now = useNow();
+  // The hook filters by `ends_at >= now` at fetch time; sessions can pass
+  // their end while the user sits on the page. Drop ended rows live so they
+  // disappear without needing a refetch.
+  const visibleEntries = useMemo(
+    () => entries.filter((e) => getSessionStatus(e.session, now) !== 'ended'),
+    [entries, now]
+  );
 
   if (loading) {
     return (
@@ -26,7 +37,7 @@ export default function ActiveSessionsList({ userId }: Props) {
     );
   }
 
-  if (entries.length === 0) {
+  if (visibleEntries.length === 0) {
     return (
       <div className="flex flex-col items-start gap-3">
         <p className="text-[var(--color-ink)]/70">
@@ -44,7 +55,7 @@ export default function ActiveSessionsList({ userId }: Props) {
 
   return (
     <ul className="space-y-2">
-      {entries.map(({ session, court, role }) => (
+      {visibleEntries.map(({ session, court, role }) => (
         <li key={session.id}>
           <SessionListItem
             session={session}
