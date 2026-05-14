@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import SessionCard from './SessionCard';
 import type { UpcomingSession } from './useUpcomingSessions';
+import { getSessionStatus } from '../sessions/formatTime';
+import { useNow } from '../../lib/useNow';
 
 export type MapFilter = 'sessions' | 'all';
 
@@ -28,6 +30,17 @@ export default function SessionPanel({
   // always expanded; this only affects the `md:` and below layout.
   const [mobileExpanded, setMobileExpanded] = useState(false);
   const count = sessions.length;
+  const now = useNow();
+  const { liveSessions, upcomingSessions } = useMemo(() => {
+    const live: UpcomingSession[] = [];
+    const upcoming: UpcomingSession[] = [];
+    for (const entry of sessions) {
+      const status = getSessionStatus(entry.session, now);
+      if (status === 'active') live.push(entry);
+      else if (status === 'upcoming') upcoming.push(entry);
+    }
+    return { liveSessions: live, upcomingSessions: upcoming };
+  }, [sessions, now]);
 
   return (
     <aside
@@ -79,26 +92,22 @@ export default function SessionPanel({
       <div
         className={`flex-col md:flex md:flex-1 md:min-h-0 ${mobileExpanded ? 'flex max-h-[50vh]' : 'hidden'}`}
       >
-        <p className="px-5 pt-4 pb-2 text-[11px] font-bold tracking-[0.12em] text-[var(--color-ink)]/55 uppercase">
-          Upcoming · {count} {count === 1 ? 'session' : 'sessions'}
-        </p>
-
-        <div className="flex flex-1 flex-col gap-2 overflow-y-auto px-4 pb-4">
+        <div className="flex flex-1 flex-col overflow-y-auto pb-4">
           {loading && sessions.length === 0 ? (
-            <>
+            <div className="flex flex-col gap-2 px-4 pt-4">
               <SkeletonCard />
               <SkeletonCard />
               <SkeletonCard />
-            </>
+            </div>
           ) : error ? (
             <p
               role="alert"
-              className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+              className="mx-4 mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
             >
               {error}
             </p>
           ) : sessions.length === 0 ? (
-            <div className="flex flex-col items-start gap-3 px-1 py-4">
+            <div className="flex flex-col items-start gap-3 px-5 py-6">
               <p className="text-sm text-[var(--color-ink)]/70">
                 No upcoming sessions yet. Be the first to host one — click a court on the map.
               </p>
@@ -110,14 +119,45 @@ export default function SessionPanel({
               </Link>
             </div>
           ) : (
-            sessions.map((entry) => (
-              <SessionCard
-                key={entry.session.id}
-                entry={entry}
-                selected={selectedSessionId === entry.session.id}
-                onSelect={() => onSelectSession(entry)}
-              />
-            ))
+            <>
+              {liveSessions.length > 0 ? (
+                <section>
+                  <p className="flex items-center gap-1.5 px-5 pt-4 pb-2 text-[11px] font-bold tracking-[0.12em] text-emerald-600 uppercase">
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                    Currently Hooping · {liveSessions.length}
+                  </p>
+                  <div className="flex flex-col gap-2 px-4">
+                    {liveSessions.map((entry) => (
+                      <SessionCard
+                        key={entry.session.id}
+                        entry={entry}
+                        live
+                        selected={selectedSessionId === entry.session.id}
+                        onSelect={() => onSelectSession(entry)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+              {upcomingSessions.length > 0 ? (
+                <section>
+                  <p className="px-5 pt-4 pb-2 text-[11px] font-bold tracking-[0.12em] text-[var(--color-ink)]/55 uppercase">
+                    Upcoming · {upcomingSessions.length}{' '}
+                    {upcomingSessions.length === 1 ? 'session' : 'sessions'}
+                  </p>
+                  <div className="flex flex-col gap-2 px-4">
+                    {upcomingSessions.map((entry) => (
+                      <SessionCard
+                        key={entry.session.id}
+                        entry={entry}
+                        selected={selectedSessionId === entry.session.id}
+                        onSelect={() => onSelectSession(entry)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+            </>
           )}
         </div>
       </div>
