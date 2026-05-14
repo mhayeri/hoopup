@@ -2,6 +2,40 @@ const MINUTE_MS = 60 * 1000;
 const HOUR_MS = 60 * MINUTE_MS;
 const DAY_MS = 24 * HOUR_MS;
 
+export type SessionStatus = 'cancelled' | 'active' | 'upcoming' | 'ended';
+
+/**
+ * Single source of truth for whether a session is upcoming, in-progress,
+ * already over, or cancelled. Pair with `useNow()` at the call site if you
+ * want the status to flip without a page refresh.
+ */
+export function getSessionStatus(
+  s: { starts_at: string; ends_at: string; cancelled_at: string | null },
+  now: Date = new Date()
+): SessionStatus {
+  if (s.cancelled_at) return 'cancelled';
+  const t = now.getTime();
+  if (t < new Date(s.starts_at).getTime()) return 'upcoming';
+  if (t < new Date(s.ends_at).getTime()) return 'active';
+  return 'ended';
+}
+
+/**
+ * Short label for how much game is left: "ends in 35m", "ends in 1h 20m",
+ * or "ending now" once we're inside the last minute. Returns "ended" if the
+ * end time has already passed — callers should normally guard with
+ * `getSessionStatus` first, but the fallback keeps the label safe.
+ */
+export function formatTimeUntilEnd(endsAt: string, now: Date = new Date()): string {
+  const delta = new Date(endsAt).getTime() - now.getTime();
+  if (delta <= 0) return 'ended';
+  if (delta < MINUTE_MS) return 'ending now';
+  if (delta < HOUR_MS) return `ends in ${Math.round(delta / MINUTE_MS)}m`;
+  const hours = Math.floor(delta / HOUR_MS);
+  const minutes = Math.round((delta - hours * HOUR_MS) / MINUTE_MS);
+  return minutes === 0 ? `ends in ${hours}h` : `ends in ${hours}h ${minutes}m`;
+}
+
 /**
  * Returns a short relative label like "in 2h", "in 35m", "starting now",
  * or "ended 1d ago". Re-evaluate at the call site if you need it to tick;
