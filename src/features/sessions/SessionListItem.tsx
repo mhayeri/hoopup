@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
 import type { SessionRow } from './useSessionsByCourt';
-import { formatSessionRange, formatTimeUntilEnd, getSessionStatus, relativeTime } from './formatTime';
+import {
+  formatSessionRange,
+  formatTimeUntilEnd,
+  getSessionStatus,
+  relativeTime,
+} from './formatTime';
 import { useNow } from '../../lib/useNow';
 
 type Role = 'going' | 'waitlist';

@@ -21,6 +21,7 @@ export default function SessionDetailPage() {
   const validId = id && UUID_RE.test(id) ? id : null;
   const { session, loading, error, update, cancel, refresh } = useSession(validId);
   const courtDisplayName = useCourtAddress(session?.court ?? null);
+  const now = useNow();
   const [editOpen, setEditOpen] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
@@ -86,7 +87,6 @@ export default function SessionDetailPage() {
     );
   }
 
-  const now = useNow();
   const status = getSessionStatus(session, now);
   const cancelled = status === 'cancelled';
   const active = status === 'active';
