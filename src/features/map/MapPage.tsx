@@ -6,7 +6,7 @@ import { useOverpassSync } from './useOverpassSync';
 import { useCourtsInView } from './useCourtsInView';
 import { useActiveCourts } from './useActiveCourts';
 import { useUpcomingSessions, type UpcomingSession } from './useUpcomingSessions';
-import { defaultCourtIcon, activeCourtIcon } from './courtMarkerIcons';
+import { defaultCourtIcon, activeCourtIcon, liveCourtIcon } from './courtMarkerIcons';
 import SessionPanel, { type MapFilter } from './SessionPanel';
 
 const DEFAULT_CENTER: [number, number] = [32.7849, -117.1611];
@@ -47,7 +47,7 @@ type CourtMarkersProps = {
 
 function CourtMarkers({ filter, selectedCourtId, markerRefs }: CourtMarkersProps) {
   const { courts, error } = useCourtsInView();
-  const activeCourts = useActiveCourts();
+  const { liveCourtIds, upcomingCourtIds } = useActiveCourts();
 
   // When a session card is clicked, the parent updates selectedCourtId and the
   // map flies to it. Once the new courts load into view, this effect opens the
@@ -60,7 +60,9 @@ function CourtMarkers({ filter, selectedCourtId, markerRefs }: CourtMarkersProps
   }, [selectedCourtId, courts, markerRefs]);
 
   const visibleCourts =
-    filter === 'sessions' ? courts.filter((c) => activeCourts.has(c.id)) : courts;
+    filter === 'sessions'
+      ? courts.filter((c) => liveCourtIds.has(c.id) || upcomingCourtIds.has(c.id))
+      : courts;
 
   return (
     <>
@@ -76,7 +78,13 @@ function CourtMarkers({ filter, selectedCourtId, markerRefs }: CourtMarkersProps
         <Marker
           key={c.id}
           position={[c.lat, c.lng]}
-          icon={activeCourts.has(c.id) ? activeCourtIcon : defaultCourtIcon}
+          icon={
+            liveCourtIds.has(c.id)
+              ? liveCourtIcon
+              : upcomingCourtIds.has(c.id)
+                ? activeCourtIcon
+                : defaultCourtIcon
+          }
           ref={(instance) => {
             if (instance) markerRefs.current.set(c.id, instance);
             else markerRefs.current.delete(c.id);
