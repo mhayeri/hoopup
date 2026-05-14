@@ -182,6 +182,7 @@ export default function SessionDetailPage() {
         sessionId={session.id}
         cancelled={cancelled}
         startsAt={session.starts_at}
+        endsAt={session.ends_at}
         onAfterLeave={refresh}
       />
 
