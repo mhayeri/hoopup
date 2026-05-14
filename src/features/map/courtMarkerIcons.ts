@@ -22,3 +22,14 @@ export const activeCourtIcon = new L.DivIcon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
 });
+
+// Used for courts with a session that's currently in-progress (now between
+// starts_at and ends_at). Distinct from `activeCourtIcon`, which marks
+// courts with any not-yet-ended session (live or upcoming).
+export const liveCourtIcon = new L.DivIcon({
+  className: '',
+  html: markerSvg('#10B981'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
