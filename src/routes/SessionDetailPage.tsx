@@ -2,10 +2,16 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
 import { useSession } from '../features/sessions/useSession';
-import { formatSessionRange, relativeTime } from '../features/sessions/formatTime';
+import {
+  formatSessionRange,
+  formatTimeUntilEnd,
+  getSessionStatus,
+  relativeTime,
+} from '../features/sessions/formatTime';
 import SessionModal from '../features/sessions/SessionModal';
 import RosterSection from '../features/sessions/RosterSection';
 import { useCourtAddress } from '../features/map/useCourtAddress';
+import { useNow } from '../lib/useNow';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -80,11 +86,14 @@ export default function SessionDetailPage() {
     );
   }
 
-  const cancelled = session.cancelled_at != null;
+  const now = useNow();
+  const status = getSessionStatus(session, now);
+  const cancelled = status === 'cancelled';
+  const active = status === 'active';
   const courtName = courtDisplayName;
   const hostName = session.host?.username ?? 'Unknown host';
   const isHost = user?.id === session.host_id;
-  const startsInPast = new Date(session.starts_at).getTime() <= Date.now();
+  const startsInPast = new Date(session.starts_at).getTime() <= now.getTime();
 
   async function onCancel() {
     if (!confirm('Cancel this session? Attendees will see it as cancelled.')) return;
@@ -112,9 +121,14 @@ export default function SessionDetailPage() {
           <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-red-700">
             Cancelled
           </span>
+        ) : active ? (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-emerald-700">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+            Currently Hooping · {formatTimeUntilEnd(session.ends_at, now)}
+          </span>
         ) : (
           <span className="rounded-full bg-[var(--color-court)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-court)]">
-            {relativeTime(session.starts_at)}
+            {relativeTime(session.starts_at, now)}
           </span>
         )}
       </div>
