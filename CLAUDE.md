@@ -81,4 +81,5 @@ npm run format:check # Prettier check (CI uses this)
 13. ~~Account deletion via danger zone + edge function (typed username confirmation, service-role hard delete, storage cleanup)~~ — PR #17
 14. ~~Profile page redesign: sidebar identity + tabbed activity panel (Sessions / Friends / Settings); danger zone absorbed into Settings~~ — PR #18
 15. ~~Map session panel: "Find a game" sidebar with upcoming-sessions list + filter toggle (sessions vs all courts); click a card to fly the map to that court~~ — PR #20
-16. Host auto-RSVP on session creation + solo-host-leaves auto-cancels the session (DB triggers + roster refresh wiring)
+16. ~~Host auto-RSVP on session creation + solo-host-leaves auto-cancels the session (DB triggers + roster refresh wiring)~~ — PR #21
+17. "Currently Hooping" status surfaced across map markers, Find a game panel, court detail page, session detail header, roster, and profile sessions list (ticked live via `useNow`)
