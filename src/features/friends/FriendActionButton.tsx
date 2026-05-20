@@ -29,11 +29,7 @@ type Props = {
  *
  * Unauthenticated viewers see a sign-in CTA that returns them after login.
  */
-export default function FriendActionButton({
-  otherUserId,
-  username,
-  variant = 'primary',
-}: Props) {
+export default function FriendActionButton({ otherUserId, username, variant = 'primary' }: Props) {
   const { user } = useAuth();
   const { relation, loading, send, accept, decline, cancel, remove } =
     useFriendshipWithUser(otherUserId);

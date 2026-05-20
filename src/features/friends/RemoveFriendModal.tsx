@@ -39,8 +39,8 @@ export default function RemoveFriendModal({ open, onClose, username, onConfirm }
     <Modal title="Remove friend?" open={open} onClose={handleClose}>
       <div className="space-y-4">
         <p className="text-sm text-[var(--color-ink)]">
-          Are you sure you want to remove{' '}
-          <span className="font-semibold">@{username}</span> from your friends?
+          Are you sure you want to remove <span className="font-semibold">@{username}</span> from
+          your friends?
         </p>
         <p className="text-xs text-[var(--color-ink)]/70">
           You'll need to re-add them to become friends again.

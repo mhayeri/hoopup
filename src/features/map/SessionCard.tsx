@@ -69,11 +69,7 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
         </div>
         <span className="truncate font-semibold text-[var(--color-ink)]/80">{hostLabel}</span>
         {host ? (
-          <FriendActionButton
-            otherUserId={host.id}
-            username={host.username}
-            variant="icon"
-          />
+          <FriendActionButton otherUserId={host.id} username={host.username} variant="icon" />
         ) : null}
         <span className="ml-auto whitespace-nowrap font-semibold text-[var(--color-ink)]/60">
           <span className="text-[var(--color-court)]">{goingCount}</span>/{SESSION_CAP} going
