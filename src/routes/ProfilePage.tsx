@@ -97,7 +97,11 @@ export default function ProfilePage() {
 
             {showAddFriendButton ? (
               <div className="mt-6">
-                <FriendActionButton otherUserId={profile.id} variant="primary" />
+                <FriendActionButton
+                  otherUserId={profile.id}
+                  username={profile.username}
+                  variant="primary"
+                />
               </div>
             ) : null}
 

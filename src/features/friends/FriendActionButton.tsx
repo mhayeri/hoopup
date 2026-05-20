@@ -2,11 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../providers/useAuth';
 import { useFriendshipWithUser } from './useFriendshipWithUser';
+import RemoveFriendModal from './RemoveFriendModal';
 
 type Variant = 'primary' | 'compact' | 'icon';
 
 type Props = {
   otherUserId: string;
+  /**
+   * Username of the other user — shown in the remove-friend confirmation
+   * modal. Required so we can render a recognisable "@name" in the prompt;
+   * the `icon` variant never reaches the remove flow but still needs the
+   * prop satisfied at the type level.
+   */
+  username: string;
   variant?: Variant;
 };
 
@@ -21,12 +29,13 @@ type Props = {
  *
  * Unauthenticated viewers see a sign-in CTA that returns them after login.
  */
-export default function FriendActionButton({ otherUserId, variant = 'primary' }: Props) {
+export default function FriendActionButton({ otherUserId, username, variant = 'primary' }: Props) {
   const { user } = useAuth();
   const { relation, loading, send, accept, decline, cancel, remove } =
     useFriendshipWithUser(otherUserId);
   const [busy, setBusy] = useState(false);
   const [removeMenuOpen, setRemoveMenuOpen] = useState(false);
+  const [removeOpen, setRemoveOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const menuWrapperRef = useRef<HTMLDivElement | null>(null);
 
@@ -211,7 +220,7 @@ export default function FriendActionButton({ otherUserId, variant = 'primary' }:
             onClick={(e) => {
               stop(e);
               setRemoveMenuOpen(false);
-              void run(remove);
+              setRemoveOpen(true);
             }}
             className="block w-full px-4 py-2 text-left text-sm font-semibold text-red-700 transition hover:bg-red-50"
           >
@@ -220,6 +229,12 @@ export default function FriendActionButton({ otherUserId, variant = 'primary' }:
         </div>
       ) : null}
       {error ? <p className="mt-2 text-xs text-red-700">{error}</p> : null}
+      <RemoveFriendModal
+        open={removeOpen}
+        onClose={() => setRemoveOpen(false)}
+        username={username}
+        onConfirm={remove}
+      />
     </div>
   );
 }

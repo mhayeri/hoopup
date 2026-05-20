@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { FriendshipWithProfiles, PublicProfile, SkillLevel } from '../../lib/database.types';
 import { otherProfile } from './friendsApi';
+import RemoveFriendModal from './RemoveFriendModal';
 
 const SKILL_LABEL: Record<SkillLevel, string> = {
   beginner: 'Beginner',
@@ -41,6 +42,7 @@ export default function FriendRow({
   const profile = otherProfile(friendship, viewerId);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [removeOpen, setRemoveOpen] = useState(false);
 
   if (!profile) return null;
 
@@ -120,13 +122,21 @@ export default function FriendRow({
             aria-label={`Remove @${profile.username}`}
             title="Remove friend"
             disabled={busy}
-            onClick={() => void run(onRemove)}
+            onClick={() => setRemoveOpen(true)}
             className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-ink)]/15 text-[var(--color-ink)]/60 transition hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-60"
           >
             <span aria-hidden>✕</span>
           </button>
         ) : null}
       </div>
+      {variant === 'accepted' && onRemove ? (
+        <RemoveFriendModal
+          open={removeOpen}
+          onClose={() => setRemoveOpen(false)}
+          username={profile.username}
+          onConfirm={() => onRemove(profile.id)}
+        />
+      ) : null}
     </li>
   );
 }
