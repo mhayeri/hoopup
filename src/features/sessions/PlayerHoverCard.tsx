@@ -1,5 +1,6 @@
 import type { RsvpWithProfile } from '../../lib/database.types';
 import { formatAbsoluteDateTime } from './formatTime';
+import FriendActionButton from '../friends/FriendActionButton';
 
 type Profile = NonNullable<RsvpWithProfile['profile']>;
 
@@ -67,6 +68,10 @@ export default function PlayerHoverCard({ profile, createdAt }: Props) {
       <p className="mt-3 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
         RSVP'd {formatAbsoluteDateTime(createdAt)}
       </p>
+
+      <div className="mt-3 border-t border-[var(--color-ink)]/10 pt-3">
+        <FriendActionButton otherUserId={profile.id} variant="compact" />
+      </div>
     </div>
   );
 }
