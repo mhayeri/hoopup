@@ -25,7 +25,7 @@ src/
     map/              MapPage, SessionPanel, SessionCard, useCourtsInView, useOverpassSync, useActiveCourts, useUpcomingSessions
     sessions/         SessionForm/Modal/ListItem, PlayerRow, PlayerHoverCard, RosterSection, useSession, useSessionRsvps, useSessionsByCourt, useUserActiveSessions, createSession, formatTime
     profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, DeleteAccountForm, DeleteAccountModal, ActiveSessionsList, AvatarUpload, useProfile, useProfileByUsername
-    friends/          FriendsTab, FriendRow, FriendActionButton, friendsApi, useFriendships, useFriendshipWithUser
+    friends/          FriendsTab, FriendRow, FriendActionButton, RemoveFriendModal, friendsApi, useFriendships, useFriendshipWithUser
 supabase/
   migrations/         SQL migrations (applied to live project)
   functions/          Edge functions (Deno) — delete-account uses service role to wipe auth.users + storage
@@ -85,4 +85,5 @@ npm run format:check # Prettier check (CI uses this)
 15. ~~Map session panel: "Find a game" sidebar with upcoming-sessions list + filter toggle (sessions vs all courts); click a card to fly the map to that court~~ — PR #20
 16. ~~Host auto-RSVP on session creation + solo-host-leaves auto-cancels the session (DB triggers + roster refresh wiring)~~ — PR #21
 17. ~~"Currently Hooping" status surfaced across map markers, Find a game panel, court detail page, session detail header, roster, and profile sessions list (ticked live via `useNow`)~~ — PR #22
-18. Friends v1: request/accept friendship graph (`friendships` table + RLS + triggers), public `/u/:username` route, Friends tab (incoming callout / accepted / collapsed sent), quick-add affordances on PlayerHoverCard + map SessionCard host + SessionDetailPage host link
+18. ~~Friends v1: request/accept friendship graph (`friendships` table + RLS + triggers), public `/u/:username` route, Friends tab (incoming callout / accepted / collapsed sent), quick-add affordances on PlayerHoverCard + map SessionCard host + SessionDetailPage host link~~ — PR #23
+19. Remove-friend confirmation: gate the destructive "Remove friend" action (FriendRow ✕ and FriendActionButton dropdown) behind a Yes/Cancel modal so accepted friendships aren't dropped by a misclick — decline-incoming and cancel-sent-request stay one-click
