@@ -6,6 +6,7 @@
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'pro';
 export type Position = 'PG' | 'SG' | 'SF' | 'PF' | 'C';
 export type RsvpStatus = 'going' | 'waitlist' | 'cancelled';
+export type FriendshipStatus = 'pending' | 'accepted';
 
 export type Database = {
   public: {
@@ -111,6 +112,26 @@ export type Database = {
         };
         Relationships: [];
       };
+      friendships: {
+        Row: {
+          requester_id: string;
+          addressee_id: string;
+          status: FriendshipStatus;
+          created_at: string;
+          accepted_at: string | null;
+        };
+        Insert: {
+          requester_id: string;
+          addressee_id: string;
+          status?: FriendshipStatus;
+        };
+        // Only `status` is mutable (a BEFORE UPDATE trigger blocks parties +
+        // illegal transitions; the addressee-only RLS narrows that further).
+        Update: {
+          status?: FriendshipStatus;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -141,21 +162,35 @@ export type OsmCourtUpsert = {
   lit?: 'yes' | 'no' | null;
 };
 
+/** Public-readable subset of a profile — used wherever one user is shown to another. */
+export type PublicProfile = {
+  id: string;
+  username: string;
+  avatar_url: string | null;
+  bio: string | null;
+  skill_level: SkillLevel | null;
+  preferred_position: Position | null;
+  years_playing: number | null;
+};
+
 /** RSVP row joined with the player's public profile (PostgREST embed). */
 export type RsvpWithProfile = {
   session_id: string;
   user_id: string;
   status: RsvpStatus;
   created_at: string;
-  profile: {
-    id: string;
-    username: string;
-    avatar_url: string | null;
-    bio: string | null;
-    skill_level: SkillLevel | null;
-    preferred_position: Position | null;
-    years_playing: number | null;
-  } | null;
+  profile: PublicProfile | null;
+};
+
+/** Friendship row joined with both parties' public profiles (PostgREST embed). */
+export type FriendshipWithProfiles = {
+  requester_id: string;
+  addressee_id: string;
+  status: FriendshipStatus;
+  created_at: string;
+  accepted_at: string | null;
+  requester: PublicProfile | null;
+  addressee: PublicProfile | null;
 };
 
 // Postgres error codes we throw from triggers
@@ -163,4 +198,7 @@ export const PG_ERROR_CODES = {
   SESSION_FULL: 'P0001',
   SESSION_NOT_AVAILABLE: 'P0002',
   USERNAME_GENERATION_FAILED: 'P0003',
+  FRIENDSHIP_SELF: 'P0004',
+  FRIENDSHIP_DUPLICATE: 'P0005',
+  FRIENDSHIP_IMMUTABLE: 'P0006',
 } as const;

@@ -46,6 +46,11 @@ export function friendlyMessage(
   if (code === PG_ERROR_CODES.SESSION_NOT_AVAILABLE) return 'This session is no longer available.';
   if (code === PG_ERROR_CODES.USERNAME_GENERATION_FAILED)
     return 'Could not generate a username. Please try again.';
+  if (code === PG_ERROR_CODES.FRIENDSHIP_SELF) return 'You cannot add yourself as a friend.';
+  if (code === PG_ERROR_CODES.FRIENDSHIP_DUPLICATE)
+    return 'They already sent you a friend request — check your incoming requests.';
+  if (code === PG_ERROR_CODES.FRIENDSHIP_IMMUTABLE)
+    return 'This friend request can no longer be changed.';
 
   // 2. Unique constraint violation — extract constraint name for specifics
   if (code === PG_UNIQUE_VIOLATION) {
