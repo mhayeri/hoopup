@@ -1,6 +1,8 @@
+import type { KeyboardEvent } from 'react';
 import type { UpcomingSession } from './useUpcomingSessions';
 import { formatPanelTime, formatTimeUntilEnd } from '../sessions/formatTime';
 import { useNow } from '../../lib/useNow';
+import FriendActionButton from '../friends/FriendActionButton';
 
 const SESSION_CAP = 15;
 
@@ -18,12 +20,23 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
   const initial = host?.username.charAt(0).toUpperCase() ?? '?';
   const now = useNow();
 
+  // The outer "select this card" target is a div, not a button, so the
+  // inner FriendActionButton doesn't become a nested-interactive element.
+  function handleKey(e: KeyboardEvent<HTMLDivElement>) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onSelect();
+    }
+  }
+
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onSelect}
+      onKeyDown={handleKey}
       aria-pressed={selected}
-      className={`flex w-full flex-col gap-2 rounded-xl border bg-white px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-court)]/40 ${
+      className={`flex w-full cursor-pointer flex-col gap-2 rounded-xl border bg-white px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-court)]/40 ${
         selected
           ? 'border-[var(--color-court)] bg-[var(--color-court)]/6 shadow-sm'
           : live
@@ -55,10 +68,11 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
           )}
         </div>
         <span className="truncate font-semibold text-[var(--color-ink)]/80">{hostLabel}</span>
+        {host ? <FriendActionButton otherUserId={host.id} variant="icon" /> : null}
         <span className="ml-auto whitespace-nowrap font-semibold text-[var(--color-ink)]/60">
           <span className="text-[var(--color-court)]">{goingCount}</span>/{SESSION_CAP} going
         </span>
       </div>
-    </button>
+    </div>
   );
 }
