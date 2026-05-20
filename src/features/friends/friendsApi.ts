@@ -1,7 +1,8 @@
 import type { FriendshipWithProfiles, PublicProfile } from '../../lib/database.types';
 
 /** Public-profile fields to embed when joining friendships → profiles. */
-const PROFILE_FIELDS = 'id, username, avatar_url, bio, skill_level, preferred_position, years_playing';
+const PROFILE_FIELDS =
+  'id, username, avatar_url, bio, skill_level, preferred_position, years_playing';
 
 /**
  * PostgREST select string that joins both parties' profiles onto a friendship.
@@ -21,7 +22,10 @@ export type FriendshipRelation =
 
 /** Reduce a friendship row + the viewer's id into a single relation kind. */
 export function relationFromRow(
-  row: Pick<FriendshipWithProfiles, 'requester_id' | 'addressee_id' | 'status' | 'created_at' | 'accepted_at'>,
+  row: Pick<
+    FriendshipWithProfiles,
+    'requester_id' | 'addressee_id' | 'status' | 'created_at' | 'accepted_at'
+  >,
   viewerId: string
 ): FriendshipRelation {
   if (row.status === 'accepted') {
