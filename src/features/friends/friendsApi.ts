@@ -1,5 +1,19 @@
 import type { FriendshipWithProfiles, PublicProfile } from '../../lib/database.types';
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Defense-in-depth: assert that values destined for PostgREST filter strings
+ * are well-formed UUIDs before interpolation. Today both id sources are
+ * Supabase-issued so this never trips — the guard exists to prevent a future
+ * code change from accidentally passing user-controllable text into a filter.
+ */
+export function assertUuid(value: string, label: string): void {
+  if (!UUID_RE.test(value)) {
+    throw new Error(`${label} is not a UUID: ${value}`);
+  }
+}
+
 /** Public-profile fields to embed when joining friendships → profiles. */
 const PROFILE_FIELDS =
   'id, username, avatar_url, bio, skill_level, preferred_position, years_playing';

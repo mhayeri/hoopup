@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import type { FriendshipWithProfiles } from '../../lib/database.types';
 import { friendlyMessage } from '../../lib/errors';
-import { FRIENDSHIP_SELECT } from './friendsApi';
+import { assertUuid, FRIENDSHIP_SELECT } from './friendsApi';
 
 type Buckets = {
   accepted: FriendshipWithProfiles[];
@@ -76,6 +76,7 @@ export function useFriendships(userId: string | null | undefined): Result {
       setLoading(true);
       setError(null);
     }
+    assertUuid(userId, 'userId');
     const { data, error: queryError } = await supabase
       .from('friendships')
       .select(FRIENDSHIP_SELECT)

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../providers/useAuth';
 import { friendlyMessage } from '../../lib/errors';
-import { type FriendshipRelation, relationFromRow } from './friendsApi';
+import { assertUuid, type FriendshipRelation, relationFromRow } from './friendsApi';
 
 type FriendshipRow = {
   requester_id: string;
@@ -78,13 +78,17 @@ export function useFriendshipWithUser(otherUserId: string | null | undefined): R
       setLoading(true);
       setError(null);
     }
-    // One of the two directional rows could exist; query both.
+    assertUuid(viewerId, 'viewerId');
+    assertUuid(otherUserId, 'otherUserId');
+    // At most one of (viewer,other) or (other,viewer) exists due to the
+    // unordered-pair UNIQUE index. .in() + .in() expresses that cross-product
+    // safely without relying on PostgREST nested-and-or filter parsing.
+    const pair = [viewerId, otherUserId];
     const { data, error: queryError } = await supabase
       .from('friendships')
       .select('requester_id, addressee_id, status, created_at, accepted_at')
-      .or(
-        `and(requester_id.eq.${viewerId},addressee_id.eq.${otherUserId}),and(requester_id.eq.${otherUserId},addressee_id.eq.${viewerId})`
-      )
+      .in('requester_id', pair)
+      .in('addressee_id', pair)
       .returns<FriendshipRow[]>()
       .maybeSingle();
     if (!mountedRef.current) return;
@@ -115,7 +119,7 @@ export function useFriendshipWithUser(otherUserId: string | null | undefined): R
       status: 'pending',
     });
     if (insertError) {
-      setRelation(previous);
+      if (mountedRef.current) setRelation(previous);
       // P0005 (reverse) means the OTHER user already sent us a request — refresh
       // so the button morphs to Accept/Decline instead of staying on "Add".
       if (insertError.code === 'P0005') {
@@ -136,7 +140,7 @@ export function useFriendshipWithUser(otherUserId: string | null | undefined): R
       .eq('requester_id', otherUserId)
       .eq('addressee_id', viewerId);
     if (updateError) {
-      setRelation(previous);
+      if (mountedRef.current) setRelation(previous);
       return { error: friendlyMessage(updateError) };
     }
     return { error: null };
@@ -144,17 +148,20 @@ export function useFriendshipWithUser(otherUserId: string | null | undefined): R
 
   const removeRow = useCallback(async (): Promise<{ error: string | null }> => {
     if (!viewerId || !otherUserId) return { error: 'Not signed in' };
+    assertUuid(viewerId, 'viewerId');
+    assertUuid(otherUserId, 'otherUserId');
     const previous = relation;
     setRelation({ kind: 'none' });
-    // The row exists in exactly one direction; delete by the matching pair.
+    // The row exists in exactly one direction (the unordered-pair UNIQUE
+    // index ensures that). .in() + .in() matches at most that one row safely.
+    const pair = [viewerId, otherUserId];
     const { error: deleteError } = await supabase
       .from('friendships')
       .delete()
-      .or(
-        `and(requester_id.eq.${viewerId},addressee_id.eq.${otherUserId}),and(requester_id.eq.${otherUserId},addressee_id.eq.${viewerId})`
-      );
+      .in('requester_id', pair)
+      .in('addressee_id', pair);
     if (deleteError) {
-      setRelation(previous);
+      if (mountedRef.current) setRelation(previous);
       return { error: friendlyMessage(deleteError) };
     }
     return { error: null };
