@@ -70,7 +70,11 @@ export default function PlayerHoverCard({ profile, createdAt }: Props) {
       </p>
 
       <div className="mt-3 border-t border-[var(--color-ink)]/10 pt-3">
-        <FriendActionButton otherUserId={profile.id} variant="compact" />
+        <FriendActionButton
+          otherUserId={profile.id}
+          username={profile.username}
+          variant="compact"
+        />
       </div>
     </div>
   );
