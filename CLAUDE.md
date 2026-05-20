@@ -24,7 +24,8 @@ src/
   features/
     map/              MapPage, SessionPanel, SessionCard, useCourtsInView, useOverpassSync, useActiveCourts, useUpcomingSessions
     sessions/         SessionForm/Modal/ListItem, PlayerRow, PlayerHoverCard, RosterSection, useSession, useSessionRsvps, useSessionsByCourt, useUserActiveSessions, createSession, formatTime
-    profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, DeleteAccountForm, DeleteAccountModal, ActiveSessionsList, AvatarUpload, useProfile
+    profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, DeleteAccountForm, DeleteAccountModal, ActiveSessionsList, AvatarUpload, useProfile, useProfileByUsername
+    friends/          FriendsTab, FriendRow, FriendActionButton, friendsApi, useFriendships, useFriendshipWithUser
 supabase/
   migrations/         SQL migrations (applied to live project)
   functions/          Edge functions (Deno) — delete-account uses service role to wipe auth.users + storage
@@ -39,6 +40,7 @@ supabase/
 | `courts`        | id (bigserial), osm_id, name, lat, lng, surface, hoops, lit, geom (PostGIS)                                   | Read-only for clients. Upserted via `upsert_osm_courts()` SECURITY DEFINER RPC.                                                         |
 | `sessions`      | id (uuid), court_id, host_id, starts_at, ends_at, notes, cancelled_at                                         | Host-only writes via RLS. DB triggers block post-start edits and un-cancellation.                                                       |
 | `session_rsvps` | session_id + user_id (composite PK), status ('going'\|'waitlist'\|'cancelled')                                | User-only writes via RLS. 15-player cap enforced atomically by `enforce_session_cap()` SECURITY DEFINER trigger with row-level locking. |
+| `friendships`   | requester_id + addressee_id (composite PK), status ('pending'\|'accepted'), accepted_at                       | Directional pair so we know who asked whom. Unordered-pair UNIQUE index blocks A→B/B→A coexistence. RLS: anon SELECT of accepted rows powers public friend lists; only addressee can flip pending→accepted; either party can DELETE. Triggers: P0004/P0005/P0006 + accepted_at auto-stamp + party immutability. |
 
 ## Key patterns
 
@@ -47,9 +49,9 @@ supabase/
 - **Debounced Overpass sync** — map pan/zoom fetches courts from Overpass, upserts via RPC, per-bbox cache prevents duplicate queries.
 - **Sanitized client-to-server** — Overpass data validated + truncated before RPC call.
 - **Optimistic UI** — useProfile applies updates optimistically, reverts on error.
-- **PG error codes** — `P0001` = SESSION_FULL, `P0002` = SESSION_NOT_AVAILABLE, `P0003` = USERNAME_GENERATION_FAILED.
+- **PG error codes** — `P0001` = SESSION_FULL, `P0002` = SESSION_NOT_AVAILABLE, `P0003` = USERNAME_GENERATION_FAILED, `P0004` = FRIENDSHIP_SELF, `P0005` = FRIENDSHIP_DUPLICATE (reverse pair exists), `P0006` = FRIENDSHIP_IMMUTABLE.
 - **Centralized error mapping** — `friendlyMessage()` in `src/lib/errors.ts` converts raw Supabase/Postgres errors to user-friendly strings. All error call sites use this instead of `error.message`.
-- **SECURITY DEFINER triggers** — `enforce_session_cap()`, `upsert_osm_courts()`, `add_host_to_session_rsvps()`, and `cancel_session_if_host_alone()` run as function owner to bypass RLS for cross-table locks/writes. Always paired with `SET search_path = public`.
+- **SECURITY DEFINER triggers** — `enforce_session_cap()`, `upsert_osm_courts()`, `add_host_to_session_rsvps()`, `cancel_session_if_host_alone()`, `friendships_before_insert()`, and `friendships_before_update()` run as function owner to bypass RLS for cross-table locks/writes. Always paired with `SET search_path = public`.
 - **Host is always a player** — DB triggers keep `sessions.host_id` in sync with `session_rsvps`. On session INSERT the host is auto-added with status='going'; if the host's RSVP transitions to 'cancelled' (or is deleted) and no other 'going' rows remain, the session auto-cancels.
 - **Edge Functions for admin-only auth ops** — `supabase/functions/delete-account` uses the service-role key to call `auth.admin.deleteUser()` (not callable from Postgres/RLS). JWT is verified at the gateway (`verify_jwt = true`) and re-resolved in-function. Storage avatars are removed before the cascade fires.
 - **Reusable Tabs primitive** — `src/components/Tabs.tsx` is an ARIA-correct tab strip (roles, `aria-selected`, Left/Right arrow nav, pill styling). Caller owns panel content. Profile page is the first consumer; pattern is ready for future tabbed surfaces.
@@ -82,4 +84,5 @@ npm run format:check # Prettier check (CI uses this)
 14. ~~Profile page redesign: sidebar identity + tabbed activity panel (Sessions / Friends / Settings); danger zone absorbed into Settings~~ — PR #18
 15. ~~Map session panel: "Find a game" sidebar with upcoming-sessions list + filter toggle (sessions vs all courts); click a card to fly the map to that court~~ — PR #20
 16. ~~Host auto-RSVP on session creation + solo-host-leaves auto-cancels the session (DB triggers + roster refresh wiring)~~ — PR #21
-17. "Currently Hooping" status surfaced across map markers, Find a game panel, court detail page, session detail header, roster, and profile sessions list (ticked live via `useNow`)
+17. ~~"Currently Hooping" status surfaced across map markers, Find a game panel, court detail page, session detail header, roster, and profile sessions list (ticked live via `useNow`)~~ — PR #22
+18. Friends v1: request/accept friendship graph (`friendships` table + RLS + triggers), public `/u/:username` route, Friends tab (incoming callout / accepted / collapsed sent), quick-add affordances on PlayerHoverCard + map SessionCard host + SessionDetailPage host link
