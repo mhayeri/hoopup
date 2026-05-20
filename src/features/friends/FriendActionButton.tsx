@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../providers/useAuth';
 import { useFriendshipWithUser } from './useFriendshipWithUser';
@@ -28,6 +28,30 @@ export default function FriendActionButton({ otherUserId, variant = 'primary' }:
   const [busy, setBusy] = useState(false);
   const [removeMenuOpen, setRemoveMenuOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const menuWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  // Close the Remove-friend menu on outside-click or Escape.
+  useEffect(() => {
+    if (!removeMenuOpen) return;
+    function onDocPointer(e: MouseEvent) {
+      if (
+        menuWrapperRef.current &&
+        e.target instanceof Node &&
+        !menuWrapperRef.current.contains(e.target)
+      ) {
+        setRemoveMenuOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setRemoveMenuOpen(false);
+    }
+    document.addEventListener('mousedown', onDocPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [removeMenuOpen]);
 
   if (relation.kind === 'self') return null;
   if (loading) return null;
@@ -158,7 +182,7 @@ export default function FriendActionButton({ otherUserId, variant = 'primary' }:
 
   // relation.kind === 'friends'
   return (
-    <div className="relative w-full">
+    <div ref={menuWrapperRef} className="relative w-full">
       <button
         type="button"
         disabled={busy}
