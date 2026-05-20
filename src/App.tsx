@@ -32,6 +32,7 @@ export default function App() {
               </RequireAuth>
             }
           />
+          <Route path="/u/:username" element={<ProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
