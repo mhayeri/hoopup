@@ -1,30 +1,63 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
 import { useProfile } from '../features/profiles/useProfile';
+import { useProfileByUsername } from '../features/profiles/useProfileByUsername';
 import ProfileEditForm from '../features/profiles/ProfileEditForm';
 import AvatarUpload from '../features/profiles/AvatarUpload';
 import ChangePasswordModal from '../features/profiles/ChangePasswordModal';
 import DeleteAccountModal from '../features/profiles/DeleteAccountModal';
 import ActiveSessionsList from '../features/profiles/ActiveSessionsList';
 import Tabs, { type TabItem } from '../components/Tabs';
+import FriendsTab from '../features/friends/FriendsTab';
+import FriendActionButton from '../features/friends/FriendActionButton';
+import type { Database } from '../lib/database.types';
 
 type TabId = 'sessions' | 'friends' | 'settings';
 
-const TAB_ITEMS: TabItem[] = [
-  { id: 'sessions', label: 'Sessions' },
-  { id: 'friends', label: 'Friends' },
-  { id: 'settings', label: 'Settings' },
-];
+type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
 export default function ProfilePage() {
   const { user } = useAuth();
-  const { profile, loading, error, updateProfile, refresh } = useProfile(user?.id);
+  const { username: slug } = useParams<{ username?: string }>();
+  const isPublicRoute = !!slug;
+
+  // Branch the data source: by username on /u/:username, by user id on /profile.
+  // We call both hooks unconditionally and feed the inactive one a null arg,
+  // which the hook treats as "do nothing" (loading=false, profile=null).
+  const ownHook = useProfile(isPublicRoute ? null : (user?.id ?? null));
+  const publicHook = useProfileByUsername(isPublicRoute ? (slug ?? null) : null);
+
+  const profile = isPublicRoute ? publicHook.profile : ownHook.profile;
+  const loading = isPublicRoute ? publicHook.loading : ownHook.loading;
+  const error = isPublicRoute ? publicHook.error : ownHook.error;
+  const refresh = isPublicRoute ? publicHook.refresh : ownHook.refresh;
+  const updateProfile = isPublicRoute ? null : ownHook.updateProfile;
+
   const [editing, setEditing] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [tab, setTab] = useState<TabId>('sessions');
+
   const hasEmailAuth =
     (user?.app_metadata?.providers as string[] | undefined)?.includes('email') ?? false;
+
+  // The self route (/profile) is always self. The public route is never
+  // "self-mode" even when you happen to be looking at your own /u/:username —
+  // showing pending-request sections to a visitor there would be confusing.
+  const isSelf = !isPublicRoute && !!profile;
+  const isOwnUser = !!profile && !!user && profile.id === user.id;
+
+  const tabItems: TabItem[] = isSelf
+    ? [
+        { id: 'sessions', label: 'Sessions' },
+        { id: 'friends', label: 'Friends' },
+        { id: 'settings', label: 'Settings' },
+      ]
+    : [
+        { id: 'sessions', label: 'Sessions' },
+        { id: 'friends', label: 'Friends' },
+      ];
 
   if (loading) {
     return (
@@ -49,16 +82,26 @@ export default function ProfilePage() {
       <div className="lg:grid lg:grid-cols-12 lg:gap-8">
         <aside className="lg:col-span-5">
           <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
-            <AvatarUpload
-              userId={profile.id}
-              currentUrl={profile.avatar_url}
-              onUploaded={async (url) => {
-                await updateProfile({ avatar_url: url });
-              }}
-            />
+            {isSelf && updateProfile ? (
+              <AvatarUpload
+                userId={profile.id}
+                currentUrl={profile.avatar_url}
+                onUploaded={async (url) => {
+                  await updateProfile({ avatar_url: url });
+                }}
+              />
+            ) : (
+              <ReadOnlyAvatar url={profile.avatar_url} username={profile.username} />
+            )}
+
+            {!isSelf && !isOwnUser ? (
+              <div className="mt-6">
+                <FriendActionButton otherUserId={profile.id} variant="primary" />
+              </div>
+            ) : null}
 
             <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
-              {editing ? (
+              {isSelf && editing && updateProfile ? (
                 <ProfileEditForm
                   profile={profile}
                   onSubmit={async (patch) => {
@@ -74,8 +117,8 @@ export default function ProfilePage() {
               ) : (
                 <ReadView
                   profile={profile}
-                  onEdit={() => setEditing(true)}
-                  email={user?.email ?? null}
+                  email={isSelf ? (user?.email ?? null) : null}
+                  onEdit={isSelf ? () => setEditing(true) : null}
                 />
               )}
             </div>
@@ -85,7 +128,7 @@ export default function ProfilePage() {
         <section className="mt-6 space-y-6 lg:col-span-7 lg:mt-0">
           <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
             <Tabs
-              items={TAB_ITEMS}
+              items={tabItems}
               value={tab}
               onChange={(id) => setTab(id as TabId)}
               ariaLabel="Profile sections"
@@ -97,8 +140,10 @@ export default function ProfilePage() {
               className="mt-6"
             >
               {tab === 'sessions' ? <ActiveSessionsList userId={profile.id} /> : null}
-              {tab === 'friends' ? <FriendsPlaceholder /> : null}
-              {tab === 'settings' ? (
+              {tab === 'friends' ? (
+                <FriendsTab userId={profile.id} viewerId={isSelf ? (user?.id ?? null) : null} />
+              ) : null}
+              {tab === 'settings' && isSelf ? (
                 <SettingsPanel
                   onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
                   onDeleteAccount={() => setDeleteOpen(true)}
@@ -109,15 +154,33 @@ export default function ProfilePage() {
         </section>
       </div>
 
-      {hasEmailAuth ? (
+      {isSelf && hasEmailAuth ? (
         <ChangePasswordModal open={passwordOpen} onClose={() => setPasswordOpen(false)} />
       ) : null}
-      <DeleteAccountModal
-        open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
-        username={profile.username}
-      />
+      {isSelf ? (
+        <DeleteAccountModal
+          open={deleteOpen}
+          onClose={() => setDeleteOpen(false)}
+          username={profile.username}
+        />
+      ) : null}
     </main>
+  );
+}
+
+function ReadOnlyAvatar({ url, username }: { url: string | null; username: string }) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-court)]/30 bg-[var(--color-net)]">
+        {url ? (
+          <img src={url} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <span className="text-sm font-bold uppercase text-[var(--color-hardwood)]/70">
+            {username.charAt(0)}
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -126,9 +189,9 @@ function ReadView({
   email,
   onEdit,
 }: {
-  profile: NonNullable<ReturnType<typeof useProfile>['profile']>;
+  profile: ProfileRow;
   email: string | null;
-  onEdit: () => void;
+  onEdit: (() => void) | null;
 }) {
   return (
     <div>
@@ -136,13 +199,15 @@ function ReadView({
         <h1 className="text-3xl font-black tracking-tight text-[var(--color-court)]">
           @{profile.username}
         </h1>
-        <button
-          type="button"
-          onClick={onEdit}
-          className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-        >
-          Edit
-        </button>
+        {onEdit ? (
+          <button
+            type="button"
+            onClick={onEdit}
+            className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+          >
+            Edit
+          </button>
+        ) : null}
       </div>
       {email ? <p className="mt-1 text-sm text-[var(--color-ink)]/60">{email}</p> : null}
 
@@ -173,23 +238,6 @@ function Item({ label, value }: { label: string; value: string | null }) {
         {label}
       </dt>
       <dd className="mt-0.5 text-[var(--color-ink)]">{value ?? '—'}</dd>
-    </div>
-  );
-}
-
-function FriendsPlaceholder() {
-  return (
-    <div className="rounded-2xl border border-dashed border-[var(--color-ink)]/20 p-8 text-center">
-      <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
-        Coming soon
-      </p>
-      <h3 className="mt-2 text-lg font-black tracking-tight text-[var(--color-ink)]">
-        Find your regulars
-      </h3>
-      <p className="mx-auto mt-2 max-w-sm text-sm text-[var(--color-ink)]/70">
-        Add players you meet at sessions and keep tabs on the courts they run. Friends is on the
-        way.
-      </p>
     </div>
   );
 }
