@@ -35,7 +35,7 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
       tabIndex={0}
       onClick={onSelect}
       onKeyDown={handleKey}
-      aria-pressed={selected}
+      aria-current={selected ? 'true' : undefined}
       className={`flex w-full cursor-pointer flex-col gap-2 rounded-xl border bg-white px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-court)]/40 ${
         selected
           ? 'border-[var(--color-court)] bg-[var(--color-court)]/6 shadow-sm'
