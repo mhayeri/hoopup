@@ -11,11 +11,9 @@ import ActiveSessionsList from '../features/profiles/ActiveSessionsList';
 import Tabs, { type TabItem } from '../components/Tabs';
 import FriendsTab from '../features/friends/FriendsTab';
 import FriendActionButton from '../features/friends/FriendActionButton';
-import type { Database } from '../lib/database.types';
+import type { PublicProfileRow } from '../features/profiles/useProfileByUsername';
 
 type TabId = 'sessions' | 'friends' | 'settings';
-
-type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -46,7 +44,10 @@ export default function ProfilePage() {
   // "self-mode" even when you happen to be looking at your own /u/:username —
   // showing pending-request sections to a visitor there would be confusing.
   const isSelf = !isPublicRoute && !!profile;
-  const isOwnUser = !!profile && !!user && profile.id === user.id;
+  // On the public route, render the Add-friend button for everyone except
+  // the profile owner themselves (who, while signed in, sees the same page
+  // they'd see from `/profile` — but without the button).
+  const showAddFriendButton = isPublicRoute && !!profile && profile.id !== (user?.id ?? '');
 
   const tabItems: TabItem[] = isSelf
     ? [
@@ -94,16 +95,16 @@ export default function ProfilePage() {
               <ReadOnlyAvatar url={profile.avatar_url} username={profile.username} />
             )}
 
-            {!isSelf && !isOwnUser ? (
+            {showAddFriendButton ? (
               <div className="mt-6">
                 <FriendActionButton otherUserId={profile.id} variant="primary" />
               </div>
             ) : null}
 
             <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
-              {isSelf && editing && updateProfile ? (
+              {isSelf && editing && updateProfile && ownHook.profile ? (
                 <ProfileEditForm
-                  profile={profile}
+                  profile={ownHook.profile}
                   onSubmit={async (patch) => {
                     const result = await updateProfile(patch);
                     if (!result.error) {
@@ -189,7 +190,9 @@ function ReadView({
   email,
   onEdit,
 }: {
-  profile: ProfileRow;
+  // Accepts both the full owner row and the narrower public-route row —
+  // ProfileRow is structurally assignable to PublicProfileRow.
+  profile: PublicProfileRow;
   email: string | null;
   onEdit: (() => void) | null;
 }) {

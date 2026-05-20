@@ -5,8 +5,23 @@ import { friendlyMessage } from '../../lib/errors';
 
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
+/** Subset of `profiles` exposed to public viewers. Narrower than `ProfileRow` so
+ *  fields like `created_at` / `updated_at` aren't accidentally serialized to
+ *  unauthenticated clients. */
+export type PublicProfileRow = Pick<
+  ProfileRow,
+  | 'id'
+  | 'username'
+  | 'avatar_url'
+  | 'bio'
+  | 'skill_level'
+  | 'preferred_position'
+  | 'years_playing'
+  | 'home_court_id'
+>;
+
 type Result = {
-  profile: ProfileRow | null;
+  profile: PublicProfileRow | null;
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
@@ -22,7 +37,7 @@ type Result = {
  * lowercases inputs, so we canonicalize the URL slug to match.
  */
 export function useProfileByUsername(username: string | null | undefined): Result {
-  const [profile, setProfile] = useState<ProfileRow | null>(null);
+  const [profile, setProfile] = useState<PublicProfileRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mountedRef = useRef(true);
@@ -46,9 +61,14 @@ export function useProfileByUsername(username: string | null | undefined): Resul
       setLoading(true);
       setError(null);
     }
+    // Public route fetches an explicit subset rather than `*` so that any
+    // future sensitive column added to `profiles` isn't auto-exposed to
+    // unauthenticated viewers. RLS controls row access; this guards columns.
     const { data, error: queryError } = await supabase
       .from('profiles')
-      .select('*')
+      .select(
+        'id, username, avatar_url, bio, skill_level, preferred_position, years_playing, home_court_id'
+      )
       .eq('username', username.toLowerCase())
       .maybeSingle();
     if (!mountedRef.current) return;
