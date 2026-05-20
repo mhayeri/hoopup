@@ -137,7 +137,17 @@ export default function SessionDetailPage() {
         {formatSessionRange(session.starts_at, session.ends_at)}
       </p>
       <p className="mt-1 text-sm text-[var(--color-ink)]/70">
-        Hosted by <span className="font-semibold text-[var(--color-ink)]">@{hostName}</span>
+        Hosted by{' '}
+        {session.host?.username ? (
+          <Link
+            to={`/u/${session.host.username}`}
+            className="font-semibold text-[var(--color-ink)] hover:text-[var(--color-court)]"
+          >
+            @{hostName}
+          </Link>
+        ) : (
+          <span className="font-semibold text-[var(--color-ink)]">@{hostName}</span>
+        )}
       </p>
 
       {session.notes ? (
