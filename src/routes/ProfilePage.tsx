@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
 import { useProfile } from '../features/profiles/useProfile';
 import { useProfileByUsername } from '../features/profiles/useProfileByUsername';
@@ -40,14 +40,12 @@ export default function ProfilePage() {
   const hasEmailAuth =
     (user?.app_metadata?.providers as string[] | undefined)?.includes('email') ?? false;
 
-  // The self route (/profile) is always self. The public route is never
-  // "self-mode" even when you happen to be looking at your own /u/:username —
-  // showing pending-request sections to a visitor there would be confusing.
+  // Self lives at /profile. If the public route resolved to the signed-in
+  // user (e.g. clicked through a friend-of-friend chain back to yourself),
+  // redirect — see the guard below. So everything past that point treats
+  // isPublicRoute as "someone else's page".
   const isSelf = !isPublicRoute && !!profile;
-  // On the public route, render the Add-friend button for everyone except
-  // the profile owner themselves (who, while signed in, sees the same page
-  // they'd see from `/profile` — but without the button).
-  const showAddFriendButton = isPublicRoute && !!profile && profile.id !== (user?.id ?? '');
+  const showAddFriendButton = isPublicRoute && !!profile;
 
   const tabItems: TabItem[] = isSelf
     ? [
@@ -66,6 +64,10 @@ export default function ProfilePage() {
         <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-hardwood)]">Loading…</p>
       </main>
     );
+  }
+
+  if (isPublicRoute && user && publicHook.profile?.id === user.id) {
+    return <Navigate to="/profile" replace />;
   }
 
   if (error || !profile) {
