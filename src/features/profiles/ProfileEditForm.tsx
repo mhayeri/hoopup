@@ -64,7 +64,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
     }
 
     const patch: ProfileUpdate = {
-      username: username.trim(),
+      username: username.trim().toLowerCase(),
       bio: bio.trim() || null,
       skill_level: skillLevel === '' ? null : (skillLevel as (typeof SKILL_LEVELS)[number]),
       preferred_position: position === '' ? null : (position as (typeof POSITIONS)[number]),
@@ -84,13 +84,13 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
         <input
           type="text"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value.toLowerCase())}
           minLength={3}
           maxLength={20}
           required
           className={inputClass}
         />
-        <Hint>3–20 characters. Must be unique.</Hint>
+        <Hint>3–20 characters, lowercase. Must be unique.</Hint>
       </Field>
 
       <Field label="Bio">

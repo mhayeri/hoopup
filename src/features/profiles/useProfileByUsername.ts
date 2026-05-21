@@ -33,8 +33,9 @@ type Result = {
  * empty state. No write methods are exposed here; the owner uses `useProfile`
  * on `/profile` for that.
  *
- * Usernames are stored case-sensitively in Postgres but the signup flow
- * lowercases inputs, so we canonicalize the URL slug to match.
+ * Usernames are stored lowercase (enforced by the
+ * profiles_username_lowercase CHECK constraint), so we lowercase the URL slug
+ * to be tolerant of mixed-case links shared in the wild.
  */
 export function useProfileByUsername(username: string | null | undefined): Result {
   const [profile, setProfile] = useState<PublicProfileRow | null>(null);
