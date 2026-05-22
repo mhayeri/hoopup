@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useDebouncedValue } from '../../lib/useDebouncedValue';
 import { MIN_QUERY_LENGTH, useProfileSearch } from './useProfileSearch';
 import PlayerSearchResult from './PlayerSearchResult';
@@ -77,12 +78,20 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
   const trimmed = query.trim();
   const tooShort = trimmed.length < MIN_QUERY_LENGTH;
 
-  return (
+  // Portal to <body>: the NavBar's <header> uses backdrop-blur, and a
+  // backdrop-filter makes that element the containing block for `position:
+  // fixed` descendants — which would clamp this overlay to the navbar's box
+  // instead of the viewport. Rendering at body level escapes that.
+  //
+  // z-[2000] (below): the overlay can open over the Leaflet map, whose panes
+  // and controls reach z-index 1000 and aren't confined to their own stacking
+  // context — a plain z-50 renders behind the map tiles.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-label="Find players"
-      className="fixed inset-0 z-50 flex flex-col bg-[var(--color-chalk)] sm:bg-[var(--color-ink)]/40 sm:p-4 sm:pt-16"
+      className="fixed inset-0 z-[2000] flex flex-col bg-[var(--color-chalk)] sm:bg-[var(--color-ink)]/40 sm:p-4 sm:pt-16"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -152,6 +161,7 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
