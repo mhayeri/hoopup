@@ -46,6 +46,8 @@ export default function FriendRow({
 
   if (!profile) return null;
 
+  const stackOnMobile = variant === 'incoming' || variant === 'outgoing';
+
   async function run(fn?: (id: string) => Promise<{ error: string | null }>) {
     if (!fn || !profile) return;
     setBusy(true);
@@ -56,43 +58,53 @@ export default function FriendRow({
   }
 
   return (
-    <li className="flex items-center gap-3 rounded-xl border border-[var(--color-ink)]/10 bg-white px-4 py-3">
-      <ProfileAvatar profile={profile} />
-      <div className="min-w-0 flex-1">
-        <Link
-          to={`/u/${profile.username}`}
-          className="block truncate text-sm font-semibold text-[var(--color-ink)] hover:text-[var(--color-court)]"
-        >
-          @{profile.username}
-        </Link>
-        <div className="mt-1 flex flex-wrap gap-1">
-          {profile.skill_level ? (
-            <span className="rounded-full bg-[var(--color-court)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-court)]">
-              {SKILL_LABEL[profile.skill_level]}
-            </span>
-          ) : null}
-          {profile.preferred_position ? (
-            <span className="rounded-full bg-[var(--color-hardwood)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
-              {profile.preferred_position}
-            </span>
-          ) : null}
-          {profile.years_playing != null ? (
-            <span className="rounded-full bg-[var(--color-ink)]/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ink)]/70">
-              {profile.years_playing} {profile.years_playing === 1 ? 'yr' : 'yrs'}
-            </span>
-          ) : null}
+    <li
+      className={`flex gap-3 rounded-xl border border-[var(--color-ink)]/10 bg-white px-4 py-3 ${
+        stackOnMobile ? 'flex-col sm:flex-row sm:items-center' : 'items-center'
+      }`}
+    >
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <ProfileAvatar profile={profile} />
+        <div className="min-w-0 flex-1">
+          <Link
+            to={`/u/${profile.username}`}
+            className="block truncate text-sm font-semibold text-[var(--color-ink)] hover:text-[var(--color-court)]"
+          >
+            @{profile.username}
+          </Link>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {profile.skill_level ? (
+              <span className="rounded-full bg-[var(--color-court)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-court)]">
+                {SKILL_LABEL[profile.skill_level]}
+              </span>
+            ) : null}
+            {profile.preferred_position ? (
+              <span className="rounded-full bg-[var(--color-hardwood)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
+                {profile.preferred_position}
+              </span>
+            ) : null}
+            {profile.years_playing != null ? (
+              <span className="rounded-full bg-[var(--color-ink)]/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ink)]/70">
+                {profile.years_playing} {profile.years_playing === 1 ? 'yr' : 'yrs'}
+              </span>
+            ) : null}
+          </div>
+          {error ? <p className="mt-1 text-xs text-red-700">{error}</p> : null}
         </div>
-        {error ? <p className="mt-1 text-xs text-red-700">{error}</p> : null}
       </div>
 
-      <div className="flex shrink-0 gap-2">
+      <div
+        className={`flex gap-2 ${
+          stackOnMobile ? 'w-full sm:w-auto sm:shrink-0' : 'shrink-0'
+        }${variant === 'outgoing' ? ' justify-end' : ''}`}
+      >
         {variant === 'incoming' ? (
           <>
             <button
               type="button"
               disabled={busy}
               onClick={() => void run(onAccept)}
-              className="rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md shadow-emerald-600/30 transition hover:bg-emerald-700 disabled:opacity-60"
+              className="flex-1 sm:flex-none rounded-full bg-emerald-600 px-3 py-2 sm:py-1.5 text-xs font-semibold text-white shadow-md shadow-emerald-600/30 transition hover:bg-emerald-700 disabled:opacity-60"
             >
               Accept
             </button>
@@ -100,7 +112,7 @@ export default function FriendRow({
               type="button"
               disabled={busy}
               onClick={() => void run(onDecline)}
-              className="rounded-full border border-[var(--color-ink)]/20 px-3 py-1.5 text-xs font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5 disabled:opacity-60"
+              className="flex-1 sm:flex-none rounded-full border border-[var(--color-ink)]/20 px-3 py-2 sm:py-1.5 text-xs font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5 disabled:opacity-60"
             >
               Decline
             </button>
