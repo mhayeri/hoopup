@@ -19,13 +19,13 @@ Live: https://mhayeri.github.io/hoopup/
 src/
   components/         Shared UI (NavBar, RequireAuth, OAuthButtons, Modal, Tabs)
   providers/          AuthProvider + useAuth hook
-  lib/                supabase client, database.types.ts, errors.ts, env.ts, leaflet.ts
+  lib/                supabase client, database.types.ts, errors.ts, env.ts, leaflet.ts, useNow, useDebouncedValue
   routes/             Page-level components (one per route)
   features/
     map/              MapPage, SessionPanel, SessionCard, useCourtsInView, useOverpassSync, useActiveCourts, useUpcomingSessions
     sessions/         SessionForm/Modal/ListItem, PlayerRow, PlayerHoverCard, RosterSection, useSession, useSessionRsvps, useSessionsByCourt, useUserActiveSessions, createSession, formatTime
     profiles/         ProfileEditForm, ChangePasswordForm, ChangePasswordModal, DeleteAccountForm, DeleteAccountModal, ActiveSessionsList, AvatarUpload, useProfile, useProfileByUsername
-    friends/          FriendsTab, FriendRow, FriendActionButton, RemoveFriendModal, friendsApi, useFriendships, useFriendshipWithUser
+    friends/          FriendsTab, FriendRow, FriendActionButton, RemoveFriendModal, ProfileIdentity, PlayerSearchOverlay, PlayerSearchResult, friendsApi, useFriendships, useFriendshipWithUser, useProfileSearch
 supabase/
   migrations/         SQL migrations (applied to live project)
   functions/          Edge functions (Deno) — delete-account uses service role to wipe auth.users + storage
@@ -55,6 +55,11 @@ supabase/
 - **Host is always a player** — DB triggers keep `sessions.host_id` in sync with `session_rsvps`. On session INSERT the host is auto-added with status='going'; if the host's RSVP transitions to 'cancelled' (or is deleted) and no other 'going' rows remain, the session auto-cancels.
 - **Edge Functions for admin-only auth ops** — `supabase/functions/delete-account` uses the service-role key to call `auth.admin.deleteUser()` (not callable from Postgres/RLS). JWT is verified at the gateway (`verify_jwt = true`) and re-resolved in-function. Storage avatars are removed before the cascade fires.
 - **Reusable Tabs primitive** — `src/components/Tabs.tsx` is an ARIA-correct tab strip (roles, `aria-selected`, Left/Right arrow nav, pill styling). Caller owns panel content. Profile page is the first consumer; pattern is ready for future tabbed surfaces.
+- **Player search** — navbar search icon (auth-only) opens `PlayerSearchOverlay` (full-screen on mobile, centered panel on desktop, modeled on `Modal`'s a11y). `useProfileSearch` runs a debounced (`useDebouncedValue`), self-excluding, capped (8) **prefix** query: `username LIKE 'q%'` on a lowercased query, backed by the `profiles_username_prefix_idx` (`text_pattern_ops`) btree — relies on the existing `profiles_select_all` RLS, no RPC. Each result reuses the morphing `FriendActionButton`; the avatar + pills block is the shared `ProfileIdentity` (also used by `FriendRow`). LIKE wildcards in the query are escaped.
+
+## Design workflow
+
+- **HTML mockups before UI plans** — when planning how a feature looks (layout, placement, new screens), produce a self-contained HTML mockup under `design-mockups/` first, rendered in the real app theme (color tokens, fonts, pill/button styles), so layout choices can be reviewed visually before any plan is finalized or code is written. One file per feature (e.g. `design-mockups/friend-search.html`); show the realistic states, not just empty shells.
 
 ## Commands
 
@@ -90,3 +95,4 @@ npm run format:check # Prettier check (CI uses this)
 20. ~~Fix: `/u/:username` public profile route resolved "Profile not found." for mixed-case usernames (ProfileEditForm was persisting raw input while the lookup lowercased). Normalize at storage: backfill migration + `username = lower(username)` CHECK constraint + form lowercases on edit/submit~~ — PR #25
 21. `/u/<self>` redirects to `/profile` so a signed-in user following a friend-of-friend chain back to themselves lands on the editable owner view (Edit / Replace photo / Settings / email) instead of the stripped public view — PR #26
 22. Mobile-first responsive `FriendRow`: on narrow screens the request/sent rows stack (avatar + full username + pills on top, action buttons below) so the incoming Accept/Decline render as a full-width 50/50 split instead of cramming the username down to `@..`; collapses back to the original single line at `sm:`+. Accepted (✕) and public rows unchanged. — PR #27
+23. Friend search: navbar search icon (auth-only) opens a `PlayerSearchOverlay` (full-screen mobile / centered desktop) with debounced search-as-you-type prefix matching on username, backed by a new `text_pattern_ops` index (`profiles_username_prefix_idx`); results exclude self, are capped at 8, and reuse the morphing `FriendActionButton` + a shared `ProfileIdentity` block (extracted from `FriendRow`). HTML mockup at `design-mockups/friend-search.html`. — PR #28
