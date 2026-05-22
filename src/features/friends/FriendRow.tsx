@@ -1,15 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import type { FriendshipWithProfiles, PublicProfile, SkillLevel } from '../../lib/database.types';
+import type { FriendshipWithProfiles } from '../../lib/database.types';
 import { otherProfile } from './friendsApi';
+import ProfileIdentity from './ProfileIdentity';
 import RemoveFriendModal from './RemoveFriendModal';
-
-const SKILL_LABEL: Record<SkillLevel, string> = {
-  beginner: 'Beginner',
-  intermediate: 'Intermediate',
-  advanced: 'Advanced',
-  pro: 'Pro',
-};
 
 export type FriendRowVariant = 'incoming' | 'outgoing' | 'accepted' | 'public-accepted';
 
@@ -63,35 +56,10 @@ export default function FriendRow({
         stackOnMobile ? 'flex-col sm:flex-row sm:items-center' : 'items-center'
       }`}
     >
-      <div className="flex min-w-0 flex-1 items-center gap-3">
-        <ProfileAvatar profile={profile} />
-        <div className="min-w-0 flex-1">
-          <Link
-            to={`/u/${profile.username}`}
-            className="block truncate text-sm font-semibold text-[var(--color-ink)] hover:text-[var(--color-court)]"
-          >
-            @{profile.username}
-          </Link>
-          <div className="mt-1 flex flex-wrap gap-1">
-            {profile.skill_level ? (
-              <span className="rounded-full bg-[var(--color-court)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-court)]">
-                {SKILL_LABEL[profile.skill_level]}
-              </span>
-            ) : null}
-            {profile.preferred_position ? (
-              <span className="rounded-full bg-[var(--color-hardwood)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
-                {profile.preferred_position}
-              </span>
-            ) : null}
-            {profile.years_playing != null ? (
-              <span className="rounded-full bg-[var(--color-ink)]/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ink)]/70">
-                {profile.years_playing} {profile.years_playing === 1 ? 'yr' : 'yrs'}
-              </span>
-            ) : null}
-          </div>
-          {error ? <p className="mt-1 text-xs text-red-700">{error}</p> : null}
-        </div>
-      </div>
+      <ProfileIdentity
+        profile={profile}
+        footer={error ? <p className="mt-1 text-xs text-red-700">{error}</p> : null}
+      />
 
       <div
         className={`flex gap-2 ${
@@ -150,19 +118,5 @@ export default function FriendRow({
         />
       ) : null}
     </li>
-  );
-}
-
-function ProfileAvatar({ profile }: { profile: PublicProfile }) {
-  return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-court)]/20 bg-[var(--color-net)]">
-      {profile.avatar_url ? (
-        <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
-      ) : (
-        <span className="text-xs font-bold uppercase text-[var(--color-hardwood)]/60">
-          {profile.username.charAt(0)}
-        </span>
-      )}
-    </div>
   );
 }

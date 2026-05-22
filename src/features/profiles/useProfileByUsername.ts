@@ -7,7 +7,8 @@ type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
 /** Subset of `profiles` exposed to public viewers. Narrower than `ProfileRow` so
  *  fields like `created_at` / `updated_at` aren't accidentally serialized to
- *  unauthenticated clients. */
+ *  unauthenticated clients. Reused by the friend-search hook so search results
+ *  expose exactly the same columns as the public `/u/:username` page. */
 export type PublicProfileRow = Pick<
   ProfileRow,
   | 'id'
