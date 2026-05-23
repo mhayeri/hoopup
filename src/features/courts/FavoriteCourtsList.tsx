@@ -45,7 +45,7 @@ export default function FavoriteCourtsList({ userId }: Props) {
           No saved courts yet. Tap the star on any court to save it here.
         </p>
         <Link
-          to="/"
+          to="/map"
           className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
         >
           Open map
