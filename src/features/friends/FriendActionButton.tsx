@@ -24,7 +24,7 @@ type Props = {
  *   none      → "+ Add friend"        (send request)
  *   outgoing  → "Request sent · Cancel"
  *   incoming  → [Accept] [Decline]
- *   friends   → "Friends ✓ ▾"         (menu → Remove)
+ *   friends   → "Friends ▾"           (menu → Remove)
  *   self      → nothing
  *
  * Unauthenticated viewers see a sign-in CTA that returns them after login.
@@ -203,7 +203,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
         aria-expanded={removeMenuOpen}
         className={`${primaryShell} rounded-full border border-emerald-600/40 bg-emerald-50 font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:opacity-60`}
       >
-        ✓ Friends
+        Friends
         <span className="ml-1" aria-hidden>
           ▾
         </span>
