@@ -1,20 +1,16 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { FavoriteCourtRow } from '../../lib/database.types';
 import { useCourtAddress } from '../map/useCourtAddress';
-import RemoveFavoriteCourtModal from './RemoveFavoriteCourtModal';
 
 type Props = {
   favorite: FavoriteCourtRow;
-  onRemove: (courtId: number) => Promise<{ error: string | null }>;
-  removing: boolean;
+  onRequestRemove: (courtId: number, courtName: string) => void;
 };
 
-/** One saved court: links to the court detail page; the ★ button un-saves inline. */
-export default function FavoriteCourtListItem({ favorite, onRemove, removing }: Props) {
+/** One saved court: links to the court detail page; the ★ button asks to un-save it. */
+export default function FavoriteCourtListItem({ favorite, onRequestRemove }: Props) {
   const court = favorite.court;
   const name = useCourtAddress(court);
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const facts = [
     court?.surface ?? null,
@@ -47,20 +43,13 @@ export default function FavoriteCourtListItem({ favorite, onRemove, removing }: 
       </Link>
       <button
         type="button"
-        onClick={() => setConfirmOpen(true)}
-        disabled={removing}
+        onClick={() => onRequestRemove(favorite.court_id, name)}
         aria-label={`Remove ${name} from favorites`}
         title="Remove from favorites"
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--color-court)]/30 bg-white text-[var(--color-court)] transition hover:bg-[var(--color-court)]/8 disabled:opacity-50"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--color-court)]/30 bg-white text-[var(--color-court)] transition hover:bg-[var(--color-court)]/8"
       >
         ★
       </button>
-      <RemoveFavoriteCourtModal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        courtName={name}
-        onConfirm={() => onRemove(favorite.court_id)}
-      />
     </div>
   );
 }
