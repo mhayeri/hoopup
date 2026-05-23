@@ -73,7 +73,7 @@ export default function SessionListItem({ session, courtName, role }: Props) {
           ) : active ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold uppercase tracking-widest text-emerald-700">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-              Currently Hooping · {formatTimeUntilEnd(session.ends_at, now)}
+              Hooping · {formatTimeUntilEnd(session.ends_at, now)}
             </span>
           ) : (
             <span className="rounded-full bg-[var(--color-court)]/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-widest text-[var(--color-court)]">

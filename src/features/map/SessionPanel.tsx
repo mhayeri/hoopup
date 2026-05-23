@@ -124,7 +124,7 @@ export default function SessionPanel({
                 <section>
                   <p className="flex items-center gap-1.5 px-5 pt-4 pb-2 text-[11px] font-bold tracking-[0.12em] text-emerald-600 uppercase">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-                    Currently Hooping · {liveSessions.length}
+                    Hooping · {liveSessions.length}
                   </p>
                   <div className="flex flex-col gap-2 px-4">
                     {liveSessions.map((entry) => (
