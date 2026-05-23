@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 /**
  * Returns a `Date` that updates on a fixed interval so consumers re-render
- * as time advances. Drives "Currently Hooping" status transitions across
+ * as time advances. Drives "Hooping" status transitions across
  * the app (upcoming → active → ended) without requiring a page refresh.
  *
  * 30s default is fine for minute-resolution display; pass a smaller value

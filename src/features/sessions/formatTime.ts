@@ -133,3 +133,31 @@ export function formatPanelTime(iso: string, now: Date = new Date()): string {
   const weekday = new Intl.DateTimeFormat(undefined, { weekday: 'short' }).format(when);
   return `${weekday} · ${time}`;
 }
+
+/** Look-ahead windows for the map "Find a game" session filters. */
+export type SessionTimeWindow = 'any' | '2h' | 'today' | 'week';
+
+/**
+ * True if a session's start falls within the chosen look-ahead window.
+ * `'any'` always passes; `'2h'` is within the next 2 hours; `'today'` is the
+ * same local calendar date as `now` (matching `formatPanelTime`'s "Today");
+ * `'week'` is within the next 7 days. Past starts fail the bounded windows —
+ * callers apply this to upcoming sessions only.
+ */
+export function isWithinTimeWindow(
+  startsAt: string,
+  window: SessionTimeWindow,
+  now: Date = new Date()
+): boolean {
+  if (window === 'any') return true;
+  const start = new Date(startsAt);
+  if (window === 'today') {
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const target = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    return target.getTime() === today.getTime();
+  }
+  const delta = start.getTime() - now.getTime();
+  if (delta < 0) return false;
+  if (window === '2h') return delta <= 2 * HOUR_MS;
+  return delta <= 7 * DAY_MS;
+}

@@ -160,7 +160,7 @@ export default function CourtDetailPage() {
           <div className="flex items-center gap-3">
             <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-emerald-700">
               <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-              Currently Hooping
+              Hooping
             </h2>
             <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-emerald-700">
               {liveSessions.length}

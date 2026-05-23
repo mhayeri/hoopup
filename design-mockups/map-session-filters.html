@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HoopUp · Map Session Filters — Layout Mockup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-court: oklch(0.62 0.18 45);
+        --color-hardwood: oklch(0.45 0.07 60);
+        --color-chalk: oklch(0.97 0.01 90);
+        --color-net: oklch(0.85 0.02 90);
+        --color-ink: oklch(0.18 0.02 60);
+        --emerald: #059669;
+        --emerald-50: #ecfdf5;
+        --emerald-100: #d1fae5;
+        --emerald-500: #10b981;
+        --emerald-600: #059669;
+        --emerald-700: #047857;
+        --emerald-800: #065f46;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #e7e3da;
+        font-family: 'Inter', system-ui, sans-serif;
+        color: var(--color-ink);
+        -webkit-font-smoothing: antialiased;
+      }
+      .page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+      }
+      .display {
+        font-family: 'Bebas Neue', 'Oswald', system-ui, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+      }
+      header.intro h1 {
+        font-size: 56px;
+        margin: 0 0 6px;
+        color: var(--color-court);
+      }
+      header.intro h1 span {
+        color: var(--color-ink);
+      }
+      header.intro p {
+        margin: 0;
+        max-width: 760px;
+        color: oklch(0.18 0.02 60 / 0.7);
+        line-height: 1.5;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 28px;
+        margin-top: 40px;
+      }
+      @media (min-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      }
+      .grid.two {
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 980px) {
+        .grid.two {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      }
+      .option {
+        background: #fff;
+        border: 1px solid oklch(0.18 0.02 60 / 0.1);
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: 0 12px 30px oklch(0.18 0.02 60 / 0.06);
+      }
+      .option .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-court);
+        background: oklch(0.62 0.18 45 / 0.1);
+        padding: 5px 10px;
+        border-radius: 999px;
+      }
+      .option .badge.rec {
+        color: var(--emerald-800);
+        background: var(--emerald-50);
+      }
+      .option .badge.neutral {
+        color: oklch(0.18 0.02 60 / 0.6);
+        background: oklch(0.18 0.02 60 / 0.07);
+      }
+      .option h2 {
+        font-size: 26px;
+        margin: 12px 0 4px;
+      }
+      .option .note {
+        margin: 0 0 18px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: oklch(0.18 0.02 60 / 0.65);
+      }
+      .option .note strong {
+        color: var(--color-ink);
+      }
+
+      /* ---- stage ---- */
+      .stage {
+        background: linear-gradient(160deg, #f2efe8, #e7e3da);
+        border-radius: 16px;
+        padding: 20px 16px;
+        display: flex;
+        justify-content: center;
+      }
+
+      /* ====================================================================
+         THE PANEL — mirrors src/features/map/SessionPanel.tsx (md:w-[340px])
+         ==================================================================== */
+      .panel {
+        width: 340px;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+        border: 1px solid oklch(0.18 0.02 60 / 0.08);
+      }
+      .panel-head {
+        border-bottom: 1px solid oklch(0.18 0.02 60 / 0.07);
+        padding: 14px 18px 14px;
+      }
+      .panel-title {
+        font-size: 26px;
+        line-height: 1;
+        color: var(--color-ink);
+        margin: 0 0 12px;
+      }
+
+      /* All courts / Sessions toggle (role=tablist) */
+      .toggle {
+        display: inline-flex;
+        gap: 4px;
+        background: oklch(0.18 0.02 60 / 0.05);
+        padding: 4px;
+        border-radius: 999px;
+      }
+      .seg {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 0;
+        background: transparent;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: oklch(0.18 0.02 60 / 0.7);
+        padding: 6px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .seg.on {
+        background: #fff;
+        color: var(--color-ink);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+      .count-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        border-radius: 999px;
+        background: var(--color-court);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+      }
+      .count-badge.filtered {
+        background: var(--emerald-600);
+      }
+
+      /* ---- filter controls (the feature) ---- */
+      .filters {
+        margin-top: 13px;
+        padding-top: 13px;
+        border-top: 1px dashed oklch(0.18 0.02 60 / 0.12);
+      }
+      .filter-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: oklch(0.18 0.02 60 / 0.45);
+        margin: 0 0 6px;
+      }
+      .chip-group {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        background: oklch(0.18 0.02 60 / 0.05);
+        padding: 4px;
+        border-radius: 14px;
+        max-width: 100%;
+      }
+      .chip {
+        border: 0;
+        background: transparent;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: oklch(0.18 0.02 60 / 0.7);
+        padding: 5px 11px;
+        border-radius: 999px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .chip.on {
+        background: #fff;
+        color: var(--color-court);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+      .toggle-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid oklch(0.18 0.02 60 / 0.18);
+        background: #fff;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: oklch(0.18 0.02 60 / 0.75);
+        padding: 6px 12px 6px 9px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .toggle-chip .knob {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1.5px solid oklch(0.18 0.02 60 / 0.3);
+        display: inline-block;
+      }
+      .toggle-chip.on {
+        border-color: oklch(0.62 0.18 45 / 0.45);
+        background: oklch(0.62 0.18 45 / 0.1);
+        color: var(--color-court);
+      }
+      .toggle-chip.on .knob {
+        background: var(--color-court);
+        border-color: var(--color-court);
+        position: relative;
+      }
+      .toggle-chip.on .knob::after {
+        content: '✓';
+        color: #fff;
+        font-size: 9px;
+        position: absolute;
+        top: -1px;
+        left: 2px;
+      }
+      .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 9px;
+      }
+      .filter-row:last-child {
+        margin-bottom: 0;
+      }
+      .clear-btn {
+        border: 0;
+        background: transparent;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--color-court);
+        cursor: pointer;
+        margin-left: auto;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      /* compact dropdown variant */
+      .field {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: oklch(0.18 0.02 60 / 0.5);
+      }
+      .fsel {
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color-ink);
+        background: #fff;
+        border: 1px solid oklch(0.18 0.02 60 / 0.2);
+        border-radius: 999px;
+        padding: 6px 26px 6px 11px;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 9px center;
+      }
+      .fsel.active {
+        border-color: oklch(0.62 0.18 45 / 0.5);
+        color: var(--color-court);
+      }
+
+      /* collapsible drawer variant */
+      .filters-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid oklch(0.18 0.02 60 / 0.18);
+        background: #fff;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        color: oklch(0.18 0.02 60 / 0.8);
+        padding: 6px 13px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .filters-btn.active {
+        border-color: oklch(0.62 0.18 45 / 0.45);
+        background: oklch(0.62 0.18 45 / 0.1);
+        color: var(--color-court);
+      }
+      .filters-btn .pin {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 999px;
+        background: var(--color-court);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+      }
+      .drawer {
+        margin-top: 11px;
+        padding: 12px;
+        border: 1px solid oklch(0.18 0.02 60 / 0.1);
+        border-radius: 12px;
+        background: oklch(0.18 0.02 60 / 0.02);
+      }
+
+      /* ---- session list (mirrors SessionCard.tsx) ---- */
+      .list {
+        padding: 4px 14px 16px;
+      }
+      .sec-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin: 14px 2px 8px;
+      }
+      .sec-label.live {
+        color: var(--emerald-600);
+      }
+      .sec-label.up {
+        color: oklch(0.18 0.02 60 / 0.55);
+      }
+      .sec-label .pulse {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--emerald-500);
+        display: inline-block;
+      }
+      .scard {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: #fff;
+        border: 1px solid oklch(0.18 0.02 60 / 0.1);
+        border-radius: 12px;
+        padding: 11px 14px;
+        margin-bottom: 8px;
+      }
+      .scard.live {
+        border-color: oklch(0.7 0.15 160 / 0.55);
+      }
+      .scard.sel {
+        border-color: var(--color-court);
+        background: oklch(0.62 0.18 45 / 0.06);
+      }
+      .scard .cname {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-ink);
+      }
+      .time-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        width: fit-content;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: var(--color-ink);
+        color: #fff;
+      }
+      .time-pill.live {
+        background: var(--emerald-500);
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+      .time-pill.live .pulse {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #fff;
+        display: inline-block;
+      }
+      .host-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+      }
+      .avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-net);
+        border: 1px solid oklch(0.62 0.18 45 / 0.2);
+        font-size: 10px;
+        font-weight: 800;
+        color: oklch(0.45 0.07 60 / 0.7);
+      }
+      .uname {
+        font-weight: 600;
+        color: oklch(0.18 0.02 60 / 0.8);
+      }
+      .skill-tag {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--color-hardwood);
+        background: oklch(0.45 0.07 60 / 0.1);
+        padding: 2px 6px;
+        border-radius: 999px;
+      }
+      .going {
+        margin-left: auto;
+        font-weight: 600;
+        color: oklch(0.18 0.02 60 / 0.6);
+        white-space: nowrap;
+      }
+      .going b {
+        color: var(--color-court);
+      }
+      .going.full b {
+        color: var(--color-ink);
+      }
+
+      /* filtered-empty state */
+      .filtered-empty {
+        text-align: center;
+        padding: 26px 18px 20px;
+        color: oklch(0.18 0.02 60 / 0.62);
+      }
+      .filtered-empty .big {
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+      .filtered-empty p {
+        margin: 0 0 12px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .clear-pill {
+        display: inline-block;
+        border: 1px solid oklch(0.62 0.18 45 / 0.4);
+        background: oklch(0.62 0.18 45 / 0.08);
+        color: var(--color-court);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 7px 16px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .state-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: oklch(0.18 0.02 60 / 0.45);
+        margin: 18px 0 8px;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        margin-top: 14px;
+        font-size: 12px;
+        color: oklch(0.18 0.02 60 / 0.7);
+        line-height: 1.4;
+      }
+      .legend b {
+        color: var(--color-ink);
+      }
+      .footer-note {
+        margin-top: 48px;
+        font-size: 12px;
+        color: oklch(0.18 0.02 60 / 0.55);
+        text-align: center;
+      }
+      .section-title {
+        font-size: 30px;
+        color: var(--color-ink);
+        margin: 52px 0 4px;
+      }
+      .section-sub {
+        margin: 0 0 8px;
+        font-size: 13px;
+        color: oklch(0.18 0.02 60 / 0.65);
+        max-width: 760px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="intro">
+        <h1 class="display">Hoop<span>Up</span> · Map Session Filters</h1>
+        <p>
+          Filter the "Find a game" panel's upcoming-sessions list by <strong>time window</strong>,
+          <strong>open spots</strong>, and <strong>host skill</strong> — applied client-side over
+          the already-fetched list. Filters appear only on the <strong>Sessions</strong> tab. Below
+          are <strong>three layout candidates</strong> for the controls (the 340px panel is tight),
+          then the key states. Pick a layout and I'll build it.
+        </p>
+      </header>
+
+      <!-- ============================================================ -->
+      <h2 class="section-title display">Layout candidates</h2>
+      <p class="section-sub">
+        Same panel, same data — three ways to fit the controls. All shown in their default
+        (no-filter) state so the list is identical; only the control treatment differs.
+      </p>
+
+      <div class="grid">
+        <!-- ============ A: wrapping chip rows ============ -->
+        <section class="option">
+          <span class="badge rec">Option A · Recommended</span>
+          <h2 class="display">Wrapping chip rows</h2>
+          <p class="note">
+            Reuses the existing pill idiom (the All courts / Sessions toggle). Tappable chips wrap
+            across lines. Everything visible at a glance — no hidden state, no new control type.
+            Costs the most vertical space (~3 rows).
+          </p>
+          <div class="stage">
+            <div class="panel">
+              <div class="panel-head">
+                <h2 class="panel-title display">Find a game</h2>
+                <div class="toggle" role="tablist">
+                  <button class="seg">All courts</button>
+                  <button class="seg on">Sessions <span class="count-badge">5</span></button>
+                </div>
+                <div class="filters">
+                  <div class="filter-row">
+                    <div class="chip-group">
+                      <button class="chip on">Any time</button>
+                      <button class="chip">Next 2h</button>
+                      <button class="chip">Today</button>
+                      <button class="chip">This week</button>
+                    </div>
+                  </div>
+                  <div class="filter-row">
+                    <button class="toggle-chip"><span class="knob"></span> Open spots</button>
+                    <div class="chip-group">
+                      <button class="chip on">Any</button>
+                      <button class="chip">Beginner</button>
+                      <button class="chip">Intermediate</button>
+                      <button class="chip">Advanced</button>
+                      <button class="chip">Pro</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list">
+                <div class="sec-label live"><span class="pulse"></span> Hooping · 1</div>
+                <div class="scard live">
+                  <div class="cname">West 4th Street “The Cage”</div>
+                  <span class="time-pill live"
+                    ><span class="pulse"></span> Hooping · ends in 42m</span
+                  >
+                  <div class="host-row">
+                    <span class="avatar">M</span><span class="uname">@marcus</span>
+                    <span class="skill-tag">Advanced</span>
+                    <span class="going"><b>9</b>/15 going</span>
+                  </div>
+                </div>
+                <div class="sec-label up">Upcoming · 4 sessions</div>
+                <div class="scard">
+                  <div class="cname">Riverside Park Courts</div>
+                  <span class="time-pill">Today · 6:30 PM</span>
+                  <div class="host-row">
+                    <span class="avatar">J</span><span class="uname">@jordan</span>
+                    <span class="skill-tag">Intermediate</span>
+                    <span class="going"><b>6</b>/15 going</span>
+                  </div>
+                </div>
+                <div class="scard">
+                  <div class="cname">Lincoln Rec Center</div>
+                  <span class="time-pill">Tomorrow · 5:30 PM</span>
+                  <div class="host-row">
+                    <span class="avatar">A</span><span class="uname">@aisha</span>
+                    <span class="skill-tag">Beginner</span>
+                    <span class="going"><b>3</b>/15 going</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ B: compact dropdowns ============ -->
+        <section class="option">
+          <span class="badge neutral">Option B</span>
+          <h2 class="display">Compact dropdowns</h2>
+          <p class="note">
+            Time window and skill collapse into small <strong>&lt;select&gt;</strong> menus;
+            open-spots stays a toggle. Saves vertical space (~2 rows) but introduces a dropdown
+            idiom not used elsewhere in the app, and hides the options behind a tap.
+          </p>
+          <div class="stage">
+            <div class="panel">
+              <div class="panel-head">
+                <h2 class="panel-title display">Find a game</h2>
+                <div class="toggle" role="tablist">
+                  <button class="seg">All courts</button>
+                  <button class="seg on">Sessions <span class="count-badge">5</span></button>
+                </div>
+                <div class="filters">
+                  <div class="filter-row">
+                    <span class="field">When</span>
+                    <select class="fsel">
+                      <option>Any time</option>
+                      <option>Next 2h</option>
+                      <option>Today</option>
+                      <option>This week</option>
+                    </select>
+                    <span class="field">Skill</span>
+                    <select class="fsel">
+                      <option>Any</option>
+                      <option>Beginner</option>
+                      <option>Intermediate</option>
+                      <option>Advanced</option>
+                      <option>Pro</option>
+                    </select>
+                  </div>
+                  <div class="filter-row">
+                    <button class="toggle-chip"><span class="knob"></span> Open spots only</button>
+                  </div>
+                </div>
+              </div>
+              <div class="list">
+                <div class="sec-label live"><span class="pulse"></span> Hooping · 1</div>
+                <div class="scard live">
+                  <div class="cname">West 4th Street “The Cage”</div>
+                  <span class="time-pill live"
+                    ><span class="pulse"></span> Hooping · ends in 42m</span
+                  >
+                  <div class="host-row">
+                    <span class="avatar">M</span><span class="uname">@marcus</span>
+                    <span class="skill-tag">Advanced</span>
+                    <span class="going"><b>9</b>/15 going</span>
+                  </div>
+                </div>
+                <div class="sec-label up">Upcoming · 4 sessions</div>
+                <div class="scard">
+                  <div class="cname">Riverside Park Courts</div>
+                  <span class="time-pill">Today · 6:30 PM</span>
+                  <div class="host-row">
+                    <span class="avatar">J</span><span class="uname">@jordan</span>
+                    <span class="skill-tag">Intermediate</span>
+                    <span class="going"><b>6</b>/15 going</span>
+                  </div>
+                </div>
+                <div class="scard">
+                  <div class="cname">Lincoln Rec Center</div>
+                  <span class="time-pill">Tomorrow · 5:30 PM</span>
+                  <div class="host-row">
+                    <span class="avatar">A</span><span class="uname">@aisha</span>
+                    <span class="skill-tag">Beginner</span>
+                    <span class="going"><b>3</b>/15 going</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ C: collapsible drawer ============ -->
+        <section class="option">
+          <span class="badge neutral">Option C</span>
+          <h2 class="display">Collapsible drawer</h2>
+          <p class="note">
+            A single <strong>Filters</strong> button keeps the default panel clean; tapping it
+            reveals the chip rows. A count pin shows how many filters are active. Cleanest at rest,
+            but adds a tap and a piece of expand/collapse state. Shown expanded here.
+          </p>
+          <div class="stage">
+            <div class="panel">
+              <div class="panel-head">
+                <h2 class="panel-title display">Find a game</h2>
+                <div class="toggle" role="tablist">
+                  <button class="seg">All courts</button>
+                  <button class="seg on">Sessions <span class="count-badge">5</span></button>
+                </div>
+                <div class="filters">
+                  <div class="filter-row">
+                    <button class="filters-btn active">⚲ Filters <span class="pin">2</span></button>
+                    <button class="clear-btn">Clear</button>
+                  </div>
+                  <div class="drawer">
+                    <p class="filter-label">When</p>
+                    <div class="chip-group" style="margin-bottom: 10px">
+                      <button class="chip">Any time</button>
+                      <button class="chip on">Next 2h</button>
+                      <button class="chip">Today</button>
+                      <button class="chip">This week</button>
+                    </div>
+                    <p class="filter-label">Skill</p>
+                    <div class="chip-group" style="margin-bottom: 10px">
+                      <button class="chip on">Any</button>
+                      <button class="chip">Beginner</button>
+                      <button class="chip">Intermediate</button>
+                      <button class="chip">Advanced</button>
+                      <button class="chip">Pro</button>
+                    </div>
+                    <button class="toggle-chip on">
+                      <span class="knob"></span> Open spots only
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="list">
+                <div class="sec-label live"><span class="pulse"></span> Hooping · 1</div>
+                <div class="scard live">
+                  <div class="cname">West 4th Street “The Cage”</div>
+                  <span class="time-pill live"
+                    ><span class="pulse"></span> Hooping · ends in 42m</span
+                  >
+                  <div class="host-row">
+                    <span class="avatar">M</span><span class="uname">@marcus</span>
+                    <span class="skill-tag">Advanced</span>
+                    <span class="going"><b>9</b>/15 going</span>
+                  </div>
+                </div>
+                <div class="sec-label up">Upcoming · 1 session</div>
+                <div class="scard">
+                  <div class="cname">Riverside Park Courts</div>
+                  <span class="time-pill">Today · 6:30 PM</span>
+                  <div class="host-row">
+                    <span class="avatar">J</span><span class="uname">@jordan</span>
+                    <span class="skill-tag">Intermediate</span>
+                    <span class="going"><b>6</b>/15 going</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 class="section-title display">Key states</h2>
+      <p class="section-sub">
+        Shown using <strong>Option A</strong> (wrapping chips) for reference. The same states apply
+        whichever layout is chosen.
+      </p>
+
+      <div class="grid two">
+        <!-- STATE: active filters, reduced list -->
+        <section class="option">
+          <span class="badge rec">State · Filters active</span>
+          <h2 class="display">Narrowed list</h2>
+          <p class="note">
+            "Next 2h" + "Open spots" + "Intermediate" selected. The badge turns
+            <strong>emerald</strong> and shows the <strong>filtered count</strong>. A live game
+            stays visible — <strong>live games are exempt from the time window</strong> (they're
+            already hooping) but still obey open-spots &amp; skill.
+          </p>
+          <div class="stage">
+            <div class="panel">
+              <div class="panel-head">
+                <h2 class="panel-title display">Find a game</h2>
+                <div class="toggle" role="tablist">
+                  <button class="seg">All courts</button>
+                  <button class="seg on">
+                    Sessions <span class="count-badge filtered">2</span>
+                  </button>
+                </div>
+                <div class="filters">
+                  <div class="filter-row">
+                    <div class="chip-group">
+                      <button class="chip">Any time</button>
+                      <button class="chip on">Next 2h</button>
+                      <button class="chip">Today</button>
+                      <button class="chip">This week</button>
+                    </div>
+                    <button class="clear-btn">Clear</button>
+                  </div>
+                  <div class="filter-row">
+                    <button class="toggle-chip on"><span class="knob"></span> Open spots</button>
+                    <div class="chip-group">
+                      <button class="chip">Any</button>
+                      <button class="chip">Beginner</button>
+                      <button class="chip on">Intermediate</button>
+                      <button class="chip">Advanced</button>
+                      <button class="chip">Pro</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list">
+                <div class="sec-label live"><span class="pulse"></span> Hooping · 1</div>
+                <div class="scard live">
+                  <div class="cname">Lincoln Rec Center</div>
+                  <span class="time-pill live"
+                    ><span class="pulse"></span> Hooping · ends in 1h 5m</span
+                  >
+                  <div class="host-row">
+                    <span class="avatar">T</span><span class="uname">@tariq</span>
+                    <span class="skill-tag">Intermediate</span>
+                    <span class="going"><b>7</b>/15 going</span>
+                  </div>
+                </div>
+                <div class="sec-label up">Upcoming · 1 session</div>
+                <div class="scard">
+                  <div class="cname">Riverside Park Courts</div>
+                  <span class="time-pill">Today · 6:30 PM</span>
+                  <div class="host-row">
+                    <span class="avatar">J</span><span class="uname">@jordan</span>
+                    <span class="skill-tag">Intermediate</span>
+                    <span class="going"><b>6</b>/15 going</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STATE: filtered-empty -->
+        <section class="option">
+          <span class="badge neutral">State · No matches</span>
+          <h2 class="display">Filtered-empty</h2>
+          <p class="note">
+            Filters exclude everything, but sessions <em>do</em> exist. Distinct from the
+            genuinely-empty "no sessions yet" message — this one offers a one-tap
+            <strong>Clear filters</strong>.
+          </p>
+          <div class="stage">
+            <div class="panel">
+              <div class="panel-head">
+                <h2 class="panel-title display">Find a game</h2>
+                <div class="toggle" role="tablist">
+                  <button class="seg">All courts</button>
+                  <button class="seg on">
+                    Sessions <span class="count-badge filtered">0</span>
+                  </button>
+                </div>
+                <div class="filters">
+                  <div class="filter-row">
+                    <div class="chip-group">
+                      <button class="chip">Any time</button>
+                      <button class="chip on">Next 2h</button>
+                      <button class="chip">Today</button>
+                      <button class="chip">This week</button>
+                    </div>
+                    <button class="clear-btn">Clear</button>
+                  </div>
+                  <div class="filter-row">
+                    <button class="toggle-chip on"><span class="knob"></span> Open spots</button>
+                    <div class="chip-group">
+                      <button class="chip">Any</button>
+                      <button class="chip">Beginner</button>
+                      <button class="chip">Intermediate</button>
+                      <button class="chip">Advanced</button>
+                      <button class="chip on">Pro</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list">
+                <div class="filtered-empty">
+                  <div class="big">🔍</div>
+                  <p>No sessions match your filters.<br />Try widening the time window or skill.</p>
+                  <button class="clear-pill">Clear filters</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STATE: All courts tab -> filters hidden -->
+        <section class="option">
+          <span class="badge neutral">State · All courts tab</span>
+          <h2 class="display">Filters hidden</h2>
+          <p class="note">
+            On the <strong>All courts</strong> tab the filter row disappears entirely — filters only
+            apply to the sessions list, so showing them here would be inert and misleading.
+          </p>
+          <div class="stage">
+            <div class="panel">
+              <div class="panel-head">
+                <h2 class="panel-title display">Find a game</h2>
+                <div class="toggle" role="tablist">
+                  <button class="seg on">All courts</button>
+                  <button class="seg">Sessions <span class="count-badge">5</span></button>
+                </div>
+                <!-- no .filters block here -->
+              </div>
+              <div class="list">
+                <div class="sec-label up" style="margin-top: 16px">Courts near you</div>
+                <div class="scard">
+                  <div class="cname">Riverside Park Courts</div>
+                  <div class="host-row">
+                    <span class="uname">Asphalt · 4 hoops · Lit</span>
+                    <span class="going"><b>2</b> live games</span>
+                  </div>
+                </div>
+                <div class="scard">
+                  <div class="cname">West 4th Street “The Cage”</div>
+                  <div class="host-row">
+                    <span class="uname">Asphalt · 2 hoops</span>
+                  </div>
+                </div>
+                <div class="scard">
+                  <div class="cname">Lincoln Rec Center</div>
+                  <div class="host-row">
+                    <span class="uname">Hardwood · 6 hoops · Lit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="legend">
+        <span
+          ><b>Time window</b> — single-select: Any time / Next 2h / Today / This week. Applies to
+          <b>upcoming</b> only; live games exempt.</span
+        >
+        <span
+          ><b>Open spots</b> — toggle: hides sessions at the 15-player cap (<code
+            >goingCount &lt; 15</code
+          >).</span
+        >
+        <span
+          ><b>Host skill</b> — single-select: Any / Beginner / Intermediate / Advanced / Pro.
+          Sessions with an unknown host skill drop out unless "Any".
+          <em>(Requires adding <code>skill_level</code> to the host query.)</em></span
+        >
+      </div>
+
+      <p class="footer-note">
+        Mockup only — not wired to data. Theme tokens, fonts, and pill/button styles mirror the live
+        app. Open with <code>start design-mockups/map-session-filters.html</code> (Windows) or
+        double-click.
+      </p>
+    </div>
+  </body>
+</html>

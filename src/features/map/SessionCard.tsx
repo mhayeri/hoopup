@@ -50,7 +50,7 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
       {live ? (
         <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-500 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
-          Currently Hooping · {formatTimeUntilEnd(session.ends_at, now)}
+          Hooping · {formatTimeUntilEnd(session.ends_at, now)}
         </span>
       ) : (
         <span className="inline-flex w-fit items-center rounded-full bg-[var(--color-ink)] px-2 py-0.5 text-[11px] font-bold text-white">
