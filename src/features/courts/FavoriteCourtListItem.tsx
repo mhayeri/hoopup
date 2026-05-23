@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { FavoriteCourtRow } from '../../lib/database.types';
 import { useCourtAddress } from '../map/useCourtAddress';
+import RemoveFavoriteCourtModal from './RemoveFavoriteCourtModal';
 
 type Props = {
   favorite: FavoriteCourtRow;
-  onRemove: (courtId: number) => void;
+  onRemove: (courtId: number) => Promise<{ error: string | null }>;
   removing: boolean;
 };
 
@@ -12,6 +14,7 @@ type Props = {
 export default function FavoriteCourtListItem({ favorite, onRemove, removing }: Props) {
   const court = favorite.court;
   const name = useCourtAddress(court);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const facts = [
     court?.surface ?? null,
@@ -44,7 +47,7 @@ export default function FavoriteCourtListItem({ favorite, onRemove, removing }: 
       </Link>
       <button
         type="button"
-        onClick={() => onRemove(favorite.court_id)}
+        onClick={() => setConfirmOpen(true)}
         disabled={removing}
         aria-label={`Remove ${name} from favorites`}
         title="Remove from favorites"
@@ -52,6 +55,12 @@ export default function FavoriteCourtListItem({ favorite, onRemove, removing }: 
       >
         ★
       </button>
+      <RemoveFavoriteCourtModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        courtName={name}
+        onConfirm={() => onRemove(favorite.court_id)}
+      />
     </div>
   );
 }

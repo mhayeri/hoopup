@@ -17,8 +17,9 @@ export default function FavoriteCourtsList({ userId }: Props) {
 
   const handleRemove = async (courtId: number) => {
     setRemovingId(courtId);
-    await remove(courtId);
+    const result = await remove(courtId);
     setRemovingId(null);
+    return result;
   };
 
   if (loading) {
