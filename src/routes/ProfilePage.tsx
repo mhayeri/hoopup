@@ -87,50 +87,72 @@ export default function ProfilePage() {
       <div className="lg:grid lg:grid-cols-12 lg:gap-8">
         <aside className="lg:col-span-5">
           <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
-            {isSelf && updateProfile ? (
-              <AvatarUpload
-                userId={profile.id}
-                currentUrl={profile.avatar_url}
-                onUploaded={async (url) => {
-                  await updateProfile({ avatar_url: url });
-                }}
-              />
-            ) : (
-              <ReadOnlyAvatar url={profile.avatar_url} username={profile.username} />
-            )}
-
-            {showAddFriendButton ? (
-              <div className="mt-6">
-                <FriendActionButton
-                  otherUserId={profile.id}
-                  username={profile.username}
-                  variant="primary"
-                />
-              </div>
-            ) : null}
-
-            <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
-              {isSelf && editing && updateProfile && ownHook.profile ? (
-                <ProfileEditForm
-                  profile={ownHook.profile}
-                  onSubmit={async (patch) => {
-                    const result = await updateProfile(patch);
-                    if (!result.error) {
-                      setEditing(false);
-                      void refresh();
-                    }
-                    return result;
+            {isSelf && editing && updateProfile && ownHook.profile ? (
+              // Edit mode (self): the full avatar uploader on top, the form below.
+              <>
+                <AvatarUpload
+                  userId={profile.id}
+                  currentUrl={profile.avatar_url}
+                  onUploaded={async (url) => {
+                    await updateProfile({ avatar_url: url });
                   }}
-                  onCancel={() => setEditing(false)}
                 />
-              ) : (
-                <ReadView
-                  profile={profile}
-                  email={isSelf ? (user?.email ?? null) : null}
-                  onEdit={isSelf ? () => setEditing(true) : null}
-                />
-              )}
-            </div>
+                <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
+                  <ProfileEditForm
+                    profile={ownHook.profile}
+                    onSubmit={async (patch) => {
+                      const result = await updateProfile(patch);
+                      if (!result.error) {
+                        setEditing(false);
+                        void refresh();
+                      }
+                      return result;
+                    }}
+                    onCancel={() => setEditing(false)}
+                  />
+                </div>
+              </>
+            ) : (
+              // Read mode (self or public): identity sits beside the avatar so the
+              // top of the card isn't blank; the action slot + stats follow below.
+              <>
+                <div className="flex items-start gap-4">
+                  <ReadOnlyAvatar url={profile.avatar_url} username={profile.username} />
+                  <div className="min-w-0 flex-1">
+                    <Identity
+                      profile={profile}
+                      email={isSelf ? (user?.email ?? null) : null}
+                      onEdit={isSelf ? () => setEditing(true) : null}
+                    />
+                  </div>
+                </div>
+
+                {isSelf && updateProfile ? (
+                  <div className="mt-6">
+                    <AvatarUpload
+                      userId={profile.id}
+                      currentUrl={profile.avatar_url}
+                      onUploaded={async (url) => {
+                        await updateProfile({ avatar_url: url });
+                      }}
+                      showAvatar={false}
+                    />
+                  </div>
+                ) : showAddFriendButton ? (
+                  <div className="mt-6">
+                    <FriendActionButton
+                      otherUserId={profile.id}
+                      username={profile.username}
+                      variant="primary"
+                    />
+                  </div>
+                ) : null}
+
+                <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
+                  <ProfileStats profile={profile} />
+                </div>
+              </>
+            )}
           </div>
         </aside>
 
@@ -180,21 +202,20 @@ export default function ProfilePage() {
 
 function ReadOnlyAvatar({ url, username }: { url: string | null; username: string }) {
   return (
-    <div className="flex items-center gap-4">
-      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-court)]/30 bg-[var(--color-net)]">
-        {url ? (
-          <img src={url} alt="" className="h-full w-full object-cover" />
-        ) : (
-          <span className="text-sm font-bold uppercase text-[var(--color-hardwood)]/70">
-            {username.charAt(0)}
-          </span>
-        )}
-      </div>
+    <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-court)]/30 bg-[var(--color-net)]">
+      {url ? (
+        <img src={url} alt="" className="h-full w-full object-cover" />
+      ) : (
+        <span className="text-sm font-bold uppercase text-[var(--color-hardwood)]/70">
+          {username.charAt(0)}
+        </span>
+      )}
     </div>
   );
 }
 
-function ReadView({
+// Username + (self-only Edit + email) + bio. Rendered beside the avatar.
+function Identity({
   profile,
   email,
   onEdit,
@@ -206,9 +227,9 @@ function ReadView({
   onEdit: (() => void) | null;
 }) {
   return (
-    <div>
+    <>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className="text-3xl font-black tracking-tight text-[var(--color-court)]">
+        <h1 className="text-3xl font-black tracking-tight break-words text-[var(--color-court)]">
           @{profile.username}
         </h1>
         {onEdit ? (
@@ -222,24 +243,28 @@ function ReadView({
         ) : null}
       </div>
       {email ? <p className="mt-1 text-sm text-[var(--color-ink)]/60">{email}</p> : null}
-
       {profile.bio ? (
-        <p className="mt-4 whitespace-pre-wrap text-[var(--color-ink)]/80">{profile.bio}</p>
+        <p className="mt-2 whitespace-pre-wrap text-[var(--color-ink)]/80">{profile.bio}</p>
       ) : null}
+    </>
+  );
+}
 
-      <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-        <Item label="Skill" value={profile.skill_level} />
-        <Item label="Position" value={profile.preferred_position} />
-        <Item
-          label="Years playing"
-          value={profile.years_playing != null ? String(profile.years_playing) : null}
-        />
-        <Item
-          label="Home court"
-          value={profile.home_court_id != null ? `#${profile.home_court_id}` : null}
-        />
-      </dl>
-    </div>
+// Skill / Position / Years playing / Home court. Rendered below the divider.
+function ProfileStats({ profile }: { profile: PublicProfileRow }) {
+  return (
+    <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+      <Item label="Skill" value={profile.skill_level} />
+      <Item label="Position" value={profile.preferred_position} />
+      <Item
+        label="Years playing"
+        value={profile.years_playing != null ? String(profile.years_playing) : null}
+      />
+      <Item
+        label="Home court"
+        value={profile.home_court_id != null ? `#${profile.home_court_id}` : null}
+      />
+    </dl>
   );
 }
 
