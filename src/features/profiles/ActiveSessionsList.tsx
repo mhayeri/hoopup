@@ -44,7 +44,7 @@ export default function ActiveSessionsList({ userId }: Props) {
           No upcoming sessions. Find a court on the map to host or join one.
         </p>
         <Link
-          to="/"
+          to="/map"
           className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
         >
           Open map
