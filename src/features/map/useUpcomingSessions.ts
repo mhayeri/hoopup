@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import type { Database } from '../../lib/database.types';
+import type { Database, SkillLevel } from '../../lib/database.types';
 import { friendlyMessage } from '../../lib/errors';
 
 type SessionRow = Database['public']['Tables']['sessions']['Row'];
@@ -17,6 +17,7 @@ export type UpcomingSessionHost = {
   id: string;
   username: string;
   avatar_url: string | null;
+  skill_level: SkillLevel | null;
 };
 
 export type UpcomingSession = {
@@ -69,7 +70,7 @@ export function useUpcomingSessions(): Result {
         .select(
           `*,
            court:courts!sessions_court_id_fkey ( id, name, address, lat, lng ),
-           host:profiles!sessions_host_id_fkey ( id, username, avatar_url )`
+           host:profiles!sessions_host_id_fkey ( id, username, avatar_url, skill_level )`
         )
         .is('cancelled_at', null)
         .gte('ends_at', nowIso)
