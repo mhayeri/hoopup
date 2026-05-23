@@ -8,6 +8,8 @@ type Result = {
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
+  /** Optimistically drops the court from the list, deletes it, reverts on error. */
+  remove: (courtId: number) => Promise<{ error: string | null }>;
 };
 
 /** Embed the whole court row onto each favorite so rows render without a second query. */
@@ -65,5 +67,24 @@ export function useFavoriteCourts(userId: string | null | undefined): Result {
     void load();
   }, [load]);
 
-  return { favorites, loading, error, refresh: load };
+  const remove = useCallback(
+    async (courtId: number): Promise<{ error: string | null }> => {
+      if (!userId) return { error: 'Not signed in' };
+      const previous = favorites;
+      setFavorites((cur) => cur.filter((f) => f.court_id !== courtId)); // optimistic
+      const { error: deleteError } = await supabase
+        .from('court_favorites')
+        .delete()
+        .eq('user_id', userId)
+        .eq('court_id', courtId);
+      if (deleteError) {
+        if (mountedRef.current) setFavorites(previous); // revert
+        return { error: friendlyMessage(deleteError) };
+      }
+      return { error: null };
+    },
+    [userId, favorites]
+  );
+
+  return { favorites, loading, error, refresh: load, remove };
 }
