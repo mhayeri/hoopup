@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HoopUp · Court Favorites — Layout Mockup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-court: oklch(0.62 0.18 45);
+        --color-hardwood: oklch(0.45 0.07 60);
+        --color-chalk: oklch(0.97 0.01 90);
+        --color-net: oklch(0.85 0.02 90);
+        --color-ink: oklch(0.18 0.02 60);
+        --emerald: #059669;
+        --emerald-50: #ecfdf5;
+        --emerald-100: #d1fae5;
+        --emerald-700: #047857;
+        --emerald-800: #065f46;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #e7e3da;
+        font-family: 'Inter', system-ui, sans-serif;
+        color: var(--color-ink);
+        -webkit-font-smoothing: antialiased;
+      }
+      .page {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+      }
+      .display {
+        font-family: 'Bebas Neue', 'Oswald', system-ui, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+      }
+      header.intro h1 {
+        font-size: 56px;
+        margin: 0 0 6px;
+        color: var(--color-court);
+      }
+      header.intro h1 span {
+        color: var(--color-ink);
+      }
+      header.intro p {
+        margin: 0;
+        max-width: 720px;
+        color: oklch(0.18 0.02 60 / 0.7);
+        line-height: 1.5;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 28px;
+        margin-top: 40px;
+      }
+      @media (min-width: 920px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .option {
+        background: #fff;
+        border: 1px solid oklch(0.18 0.02 60 / 0.1);
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: 0 12px 30px oklch(0.18 0.02 60 / 0.06);
+      }
+      .option .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-court);
+        background: oklch(0.62 0.18 45 / 0.1);
+        padding: 5px 10px;
+        border-radius: 999px;
+      }
+      .option .badge.rec {
+        color: var(--emerald-800);
+        background: var(--emerald-50);
+      }
+      .option h2 {
+        font-size: 26px;
+        margin: 12px 0 4px;
+      }
+      .option .note {
+        margin: 0 0 18px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: oklch(0.18 0.02 60 / 0.65);
+      }
+
+      /* ---- device frames ---- */
+      .stage {
+        background: linear-gradient(160deg, #f2efe8, #e7e3da);
+        border-radius: 16px;
+        padding: 22px;
+        display: flex;
+        justify-content: center;
+      }
+      .phone {
+        width: 300px;
+        background: var(--color-chalk);
+        border: 8px solid #1c1c1c;
+        border-radius: 34px;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+      }
+      .browser {
+        width: 100%;
+        max-width: 520px;
+        background: var(--color-chalk);
+        border: 1px solid oklch(0.18 0.02 60 / 0.15);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+      }
+      .browser-bar {
+        background: #ddd8cf;
+        padding: 9px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .browser-bar i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .browser-bar .url {
+        margin-left: 10px;
+        font-size: 11px;
+        color: oklch(0.18 0.02 60 / 0.55);
+        background: #fff;
+        border-radius: 6px;
+        padding: 3px 10px;
+        flex: 1;
+      }
+
+      /* ---- navbar ---- */
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 11px 14px;
+        border-bottom: 1px solid oklch(0.18 0.02 60 / 0.1);
+        background: oklch(0.97 0.01 90 / 0.85);
+      }
+      .brand {
+        font-size: 22px;
+        color: var(--color-court);
+      }
+      .brand span {
+        color: var(--color-ink);
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+      }
+      .nav-link {
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 600;
+        color: var(--color-ink);
+        cursor: default;
+      }
+      svg.ic {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ---- court detail page body ---- */
+      .pagebody {
+        padding: 18px 16px 22px;
+      }
+      .backlink {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color-court);
+      }
+      .court-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .court-head h1.display {
+        font-size: 30px;
+        line-height: 1.05;
+        margin: 0;
+        color: var(--color-court);
+      }
+
+      /* ---- the favorite toggle (the heart of this feature) ---- */
+      .fav-toggle {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: inherit;
+        padding: 8px 14px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      /* unsaved: outline pill */
+      .fav-toggle.off {
+        background: #fff;
+        color: var(--color-ink);
+        border: 1px solid oklch(0.18 0.02 60 / 0.2);
+      }
+      .fav-toggle.off:hover {
+        background: oklch(0.18 0.02 60 / 0.04);
+      }
+      /* saved: warm filled pill */
+      .fav-toggle.on {
+        background: oklch(0.62 0.18 45 / 0.12);
+        color: var(--color-court);
+        border: 1px solid oklch(0.62 0.18 45 / 0.35);
+      }
+      .fav-toggle .star {
+        font-size: 15px;
+        line-height: 1;
+      }
+      .fav-toggle.on .star {
+        color: var(--color-court);
+      }
+      /* signed-out: subtle text link */
+      .fav-signin {
+        flex-shrink: 0;
+        font-size: 12px;
+        font-weight: 600;
+        color: oklch(0.18 0.02 60 / 0.55);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        padding: 8px 2px;
+        white-space: nowrap;
+      }
+
+      /* court fact cards (mirrors CourtDetailPage <dl>) */
+      .facts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .fact {
+        border: 1px solid oklch(0.18 0.02 60 / 0.1);
+        background: #fff;
+        border-radius: 10px;
+        padding: 8px 10px;
+      }
+      .fact dt {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-hardwood);
+        margin: 0;
+      }
+      .fact dd {
+        margin: 3px 0 0;
+        font-size: 13px;
+        color: var(--color-ink);
+      }
+
+      /* ---- profile tabs (mirrors Tabs.tsx pill strip) ---- */
+      .tabs {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        border-bottom: 1px solid oklch(0.18 0.02 60 / 0.1);
+        margin-bottom: 14px;
+      }
+      .tab {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 7px 12px;
+        border-radius: 999px 999px 0 0;
+        color: oklch(0.18 0.02 60 / 0.55);
+      }
+      .tab.on {
+        color: var(--color-court);
+        background: oklch(0.62 0.18 45 / 0.1);
+      }
+
+      /* ---- favorite court rows (the Favorites tab list) ---- */
+      .fav-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .fav-row {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: #fff;
+        border: 1px solid oklch(0.18 0.02 60 / 0.1);
+        border-radius: 12px;
+        padding: 11px 12px;
+      }
+      .court-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        background: oklch(0.62 0.18 45 / 0.1);
+        color: var(--color-court);
+        border: 1px solid oklch(0.62 0.18 45 / 0.2);
+      }
+      .fav-row .meta {
+        min-width: 0;
+        flex: 1;
+      }
+      .fav-row .cname {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-ink);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .fav-row .csub {
+        margin-top: 3px;
+        font-size: 11px;
+        color: oklch(0.18 0.02 60 / 0.6);
+      }
+      .live-dot {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--emerald-700);
+      }
+      .live-dot i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--emerald);
+        display: inline-block;
+      }
+      .unstar {
+        flex-shrink: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1px solid oklch(0.62 0.18 45 / 0.3);
+        background: #fff;
+        color: var(--color-court);
+        font-size: 15px;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .unstar:hover {
+        background: oklch(0.62 0.18 45 / 0.08);
+      }
+
+      /* empty + skeleton states */
+      .empty {
+        text-align: center;
+        padding: 26px 14px;
+        color: oklch(0.18 0.02 60 / 0.6);
+      }
+      .empty .big {
+        font-size: 30px;
+        margin-bottom: 6px;
+      }
+      .empty p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      .skeleton {
+        height: 60px;
+        border-radius: 12px;
+        border: 1px solid oklch(0.18 0.02 60 / 0.08);
+        background: linear-gradient(
+          90deg,
+          oklch(0.18 0.02 60 / 0.03) 25%,
+          oklch(0.18 0.02 60 / 0.07) 37%,
+          oklch(0.18 0.02 60 / 0.03) 63%
+        );
+        background-size: 400% 100%;
+        animation: shimmer 1.4s ease infinite;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 100% 0;
+        }
+        100% {
+          background-position: 0 0;
+        }
+      }
+
+      .state-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: oklch(0.18 0.02 60 / 0.45);
+        margin: 16px 0 8px;
+      }
+      .state-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+      .footer-note {
+        margin-top: 48px;
+        font-size: 12px;
+        color: oklch(0.18 0.02 60 / 0.55);
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="intro">
+        <h1 class="display">Hoop<span>Up</span> · Court Favorites</h1>
+        <p>
+          Bookmark any court with a star, then jump back to your saved courts from a new
+          <strong>Favorites</strong> tab on your profile. Rendered in the live app theme. Two
+          surfaces: the save toggle on the court detail page (with all its states) and the Favorites
+          list with populated / empty / loading states.
+        </p>
+      </header>
+
+      <div class="grid">
+        <!-- ============ SURFACE 1: save toggle on court detail ============ -->
+        <section class="option">
+          <span class="badge rec">Surface 1 · Court detail</span>
+          <h2 class="display">Save toggle on a court</h2>
+          <p class="note">
+            A star pill sits beside the court name. Tap to save / un-save (optimistic — flips
+            instantly, reverts on error). Signed-out viewers see a quiet "Sign in to save" link
+            instead.
+          </p>
+          <div class="stage">
+            <div class="browser">
+              <div class="browser-bar">
+                <i style="background: #ff5f57"></i><i style="background: #febc2e"></i
+                ><i style="background: #28c840"></i>
+                <span class="url">mhayeri.github.io/hoopup/#/courts/42</span>
+              </div>
+              <div class="navbar">
+                <div class="brand display">Hoop<span>Up</span></div>
+                <div class="nav-right">
+                  <span class="nav-link">Map</span><span class="nav-link">Profile</span>
+                </div>
+              </div>
+              <div class="pagebody">
+                <div class="backlink">← Back to map</div>
+                <div class="court-head">
+                  <h1 class="display">Riverside Park Courts</h1>
+                  <button class="fav-toggle on" title="Saved">
+                    <span class="star">★</span> Saved
+                  </button>
+                </div>
+                <dl class="facts">
+                  <div class="fact">
+                    <dt>Surface</dt>
+                    <dd>Asphalt</dd>
+                  </div>
+                  <div class="fact">
+                    <dt>Hoops</dt>
+                    <dd>4</dd>
+                  </div>
+                  <div class="fact">
+                    <dt>Lit at night</dt>
+                    <dd>Yes</dd>
+                  </div>
+                  <div class="fact">
+                    <dt>Coordinates</dt>
+                    <dd>40.80, -73.97</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          <div class="state-label">Toggle states</div>
+          <div class="state-strip">
+            <button class="fav-toggle off"><span class="star">☆</span> Save</button>
+            <button class="fav-toggle on"><span class="star">★</span> Saved</button>
+            <span class="fav-signin">Sign in to save</span>
+          </div>
+        </section>
+
+        <!-- ============ SURFACE 2: Favorites tab on profile ============ -->
+        <section class="option">
+          <span class="badge">Surface 2 · Profile</span>
+          <h2 class="display">Favorites tab (populated)</h2>
+          <p class="note">
+            A self-only <strong>Favorites</strong> tab joins Sessions / Friends / Settings. Each row
+            links to the court; a "Currently Hooping" cue shows when a saved court has a live game.
+            The ✕ un-saves inline.
+          </p>
+          <div class="stage">
+            <div class="phone">
+              <div class="navbar">
+                <div class="brand display">Hoop<span>Up</span></div>
+                <div class="nav-right">
+                  <span class="nav-link">Map</span><span class="nav-link">Profile</span>
+                </div>
+              </div>
+              <div class="pagebody">
+                <div class="tabs">
+                  <span class="tab">Sessions</span><span class="tab">Friends</span
+                  ><span class="tab on">Favorites</span><span class="tab">Settings</span>
+                </div>
+                <div class="fav-list">
+                  <div class="fav-row">
+                    <div class="court-mark">🏀</div>
+                    <div class="meta">
+                      <div class="cname">Riverside Park Courts</div>
+                      <div class="csub">Asphalt · 4 hoops · Lit</div>
+                    </div>
+                    <button class="unstar" title="Remove">★</button>
+                  </div>
+                  <div class="fav-row">
+                    <div class="court-mark">🏀</div>
+                    <div class="meta">
+                      <div class="cname">West 4th Street “The Cage”</div>
+                      <div class="csub">
+                        <span class="live-dot"><i></i> Currently Hooping</span>
+                      </div>
+                    </div>
+                    <button class="unstar" title="Remove">★</button>
+                  </div>
+                  <div class="fav-row">
+                    <div class="court-mark">📍</div>
+                    <div class="meta">
+                      <div class="cname">Basketball Court</div>
+                      <div class="csub">2 hoops</div>
+                    </div>
+                    <button class="unstar" title="Remove">★</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ Empty + loading states ============ -->
+        <section class="option">
+          <span class="badge">Surface 2 · States</span>
+          <h2 class="display">Empty &amp; loading</h2>
+          <p class="note">
+            What the Favorites tab shows before any court is saved, and while the list is loading.
+          </p>
+          <div class="stage">
+            <div class="phone">
+              <div class="navbar">
+                <div class="brand display">Hoop<span>Up</span></div>
+                <div class="nav-right">
+                  <span class="nav-link">Map</span><span class="nav-link">Profile</span>
+                </div>
+              </div>
+              <div class="pagebody">
+                <div class="tabs">
+                  <span class="tab">Sessions</span><span class="tab">Friends</span
+                  ><span class="tab on">Favorites</span><span class="tab">Settings</span>
+                </div>
+                <div class="empty">
+                  <div class="big">⭐</div>
+                  <p>No saved courts yet.<br />Tap the star on any court to save it here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="state-label">Loading</div>
+          <div class="stage" style="padding: 16px">
+            <div class="phone" style="width: 280px">
+              <div class="pagebody" style="padding: 16px">
+                <div class="fav-list">
+                  <div class="skeleton"></div>
+                  <div class="skeleton"></div>
+                  <div class="skeleton"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <p class="footer-note">
+        Mockup only — not wired to data. Theme tokens, fonts, and pill/button styles mirror the live
+        app. Open with <code>start design-mockups/court-favorites.html</code> (Windows) or
+        double-click.
+      </p>
+    </div>
+  </body>
+</html>

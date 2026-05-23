@@ -9,6 +9,7 @@ import SessionModal from '../features/sessions/SessionModal';
 import { createSession } from '../features/sessions/createSession';
 import { getSessionStatus } from '../features/sessions/formatTime';
 import { useCourtAddress } from '../features/map/useCourtAddress';
+import FavoriteCourtButton from '../features/courts/FavoriteCourtButton';
 import { useNow } from '../lib/useNow';
 import { friendlyMessage } from '../lib/errors';
 
@@ -133,9 +134,12 @@ export default function CourtDetailPage() {
       <Link to="/map" className="text-sm font-semibold text-[var(--color-court)] hover:underline">
         ← Back to map
       </Link>
-      <h1 className="mt-3 text-4xl font-black uppercase tracking-tight text-[var(--color-court)]">
-        {courtDisplayName}
-      </h1>
+      <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+        <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-court)]">
+          {courtDisplayName}
+        </h1>
+        <FavoriteCourtButton courtId={court.id} />
+      </div>
 
       <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {facts.map((f) => (

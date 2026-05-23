@@ -10,10 +10,11 @@ import DeleteAccountModal from '../features/profiles/DeleteAccountModal';
 import ActiveSessionsList from '../features/profiles/ActiveSessionsList';
 import Tabs, { type TabItem } from '../components/Tabs';
 import FriendsTab from '../features/friends/FriendsTab';
+import FavoriteCourtsList from '../features/courts/FavoriteCourtsList';
 import FriendActionButton from '../features/friends/FriendActionButton';
 import type { PublicProfileRow } from '../features/profiles/useProfileByUsername';
 
-type TabId = 'sessions' | 'friends' | 'settings';
+type TabId = 'sessions' | 'friends' | 'favorites' | 'settings';
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -51,6 +52,7 @@ export default function ProfilePage() {
     ? [
         { id: 'sessions', label: 'Sessions' },
         { id: 'friends', label: 'Friends' },
+        { id: 'favorites', label: 'Favorites' },
         { id: 'settings', label: 'Settings' },
       ]
     : [
@@ -150,6 +152,7 @@ export default function ProfilePage() {
               {tab === 'friends' ? (
                 <FriendsTab userId={profile.id} viewerId={isSelf ? (user?.id ?? null) : null} />
               ) : null}
+              {tab === 'favorites' && isSelf ? <FavoriteCourtsList userId={profile.id} /> : null}
               {tab === 'settings' && isSelf ? (
                 <SettingsPanel
                   onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
