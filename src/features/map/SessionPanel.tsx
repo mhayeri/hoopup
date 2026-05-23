@@ -20,7 +20,9 @@ const TIME_WINDOWS: [SessionTimeWindow, string][] = [
   ['week', 'This week'],
 ];
 
-const SKILL_OPTIONS: [SkillLevel | 'any', string][] = [
+type SkillFilter = SkillLevel | 'any';
+
+const SKILL_OPTIONS: [SkillFilter, string][] = [
   ['any', 'Any'],
   ['beginner', 'Beginner'],
   ['intermediate', 'Intermediate'],
@@ -54,7 +56,7 @@ export default function SessionPanel({
   // the panel — they narrow the list only and never touch the map markers.
   const [timeWindow, setTimeWindow] = useState<SessionTimeWindow>('any');
   const [openOnly, setOpenOnly] = useState(false);
-  const [skill, setSkill] = useState<SkillLevel | 'any'>('any');
+  const [skill, setSkill] = useState<SkillFilter>('any');
   const filtersActive = timeWindow !== 'any' || openOnly || skill !== 'any';
   const now = useNow();
 
@@ -222,29 +224,36 @@ export default function SessionPanel({
             >
               {error}
             </p>
-          ) : sessions.length === 0 ? (
-            <div className="flex flex-col items-start gap-3 px-5 py-6">
-              <p className="text-sm text-[var(--color-ink)]/70">
-                No upcoming sessions yet. Be the first to host one — click a court on the map.
-              </p>
-              <Link
-                to="/profile"
-                className="rounded-full border border-[var(--color-ink)]/20 px-3 py-1.5 text-xs font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-              >
-                View your sessions
-              </Link>
-            </div>
           ) : count === 0 ? (
-            <div className="flex flex-col items-center gap-3 px-5 py-8 text-center">
-              <p className="text-sm text-[var(--color-ink)]/65">No sessions match your filters.</p>
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="rounded-full border border-[var(--color-court)]/40 bg-[var(--color-court)]/8 px-4 py-1.5 text-xs font-bold text-[var(--color-court)] transition hover:bg-[var(--color-court)]/12"
-              >
-                Clear filters
-              </button>
-            </div>
+            // Empty list. Distinguish "filters hid everything" from "nothing to
+            // show" — the latter also covers the rare case where a fetched
+            // session lapses to 'ended' in the ~30s gap before useNow ticks.
+            filtersActive ? (
+              <div className="flex flex-col items-center gap-3 px-5 py-8 text-center">
+                <p className="text-sm text-[var(--color-ink)]/65">
+                  No sessions match your filters.
+                </p>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="rounded-full border border-[var(--color-court)]/40 bg-[var(--color-court)]/8 px-4 py-1.5 text-xs font-bold text-[var(--color-court)] transition hover:bg-[var(--color-court)]/12"
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-start gap-3 px-5 py-6">
+                <p className="text-sm text-[var(--color-ink)]/70">
+                  No upcoming sessions yet. Be the first to host one — click a court on the map.
+                </p>
+                <Link
+                  to="/profile"
+                  className="rounded-full border border-[var(--color-ink)]/20 px-3 py-1.5 text-xs font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+                >
+                  View your sessions
+                </Link>
+              </div>
+            )
           ) : (
             <>
               {liveSessions.length > 0 ? (
