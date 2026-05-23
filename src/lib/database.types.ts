@@ -132,6 +132,21 @@ export type Database = {
         };
         Relationships: [];
       };
+      court_favorites: {
+        Row: {
+          user_id: string;
+          court_id: number;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          court_id: number;
+        };
+        // Toggle semantics — a favorite either exists or doesn't. No mutable
+        // columns and no UPDATE RLS policy, so updates are never issued.
+        Update: Record<string, never>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -191,6 +206,14 @@ export type FriendshipWithProfiles = {
   accepted_at: string | null;
   requester: PublicProfile | null;
   addressee: PublicProfile | null;
+};
+
+/** Favorite row joined with the full court (PostgREST embed) — powers the Favorites tab. */
+export type FavoriteCourtRow = {
+  user_id: string;
+  court_id: number;
+  created_at: string;
+  court: Database['public']['Tables']['courts']['Row'] | null;
 };
 
 // Postgres error codes we throw from triggers
