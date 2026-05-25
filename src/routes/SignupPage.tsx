@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../providers/useAuth';
 import OAuthButtons from '../components/OAuthButtons';
 import { friendlyMessage } from '../lib/errors';
+import { PASSWORD_HINT, validatePassword } from '../lib/password';
 
 export default function SignupPage() {
   const { user } = useAuth();
@@ -18,8 +19,9 @@ export default function SignupPage() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters.');
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
     setSubmitting(true);
@@ -101,9 +103,7 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20"
             />
-            <span className="mt-1 block text-xs text-[var(--color-ink)]/60">
-              At least 8 characters.
-            </span>
+            <span className="mt-1 block text-xs text-[var(--color-ink)]/60">{PASSWORD_HINT}</span>
           </label>
 
           {error ? (
