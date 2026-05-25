@@ -38,6 +38,9 @@ test-results/
 # Claude / agent helpers (local-only)
 .claude/
 
+# Design mockups — local-only decision-making artifacts, not shipped
+design-mockups/
+
 # Supabase local
 supabase/.branches/
 supabase/.temp/

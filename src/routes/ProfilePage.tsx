@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
 import { useProfile } from '../features/profiles/useProfile';
 import { useProfileByUsername } from '../features/profiles/useProfileByUsername';
@@ -15,6 +15,10 @@ import FriendActionButton from '../features/friends/FriendActionButton';
 import type { PublicProfileRow } from '../features/profiles/useProfileByUsername';
 
 type TabId = 'sessions' | 'friends' | 'favorites' | 'settings';
+
+const ALL_TABS: TabId[] = ['sessions', 'friends', 'favorites', 'settings'];
+// Favorites + Settings only exist on your own profile, never on a public /u/:username.
+const SELF_ONLY_TABS: TabId[] = ['favorites', 'settings'];
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -36,7 +40,18 @@ export default function ProfilePage() {
   const [editing, setEditing] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [tab, setTab] = useState<TabId>('sessions');
+
+  // Deep-link the active tab via ?tab= (e.g. home QuickActions → /profile?tab=favorites).
+  // isPublicRoute is known synchronously, so we can drop self-only tabs on public pages.
+  const [searchParams] = useSearchParams();
+  const requestedTab = searchParams.get('tab') as TabId | null;
+  const initialTab: TabId =
+    requestedTab &&
+    ALL_TABS.includes(requestedTab) &&
+    (!isPublicRoute || !SELF_ONLY_TABS.includes(requestedTab))
+      ? requestedTab
+      : 'sessions';
+  const [tab, setTab] = useState<TabId>(initialTab);
 
   const hasEmailAuth =
     (user?.app_metadata?.providers as string[] | undefined)?.includes('email') ?? false;
