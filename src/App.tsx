@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import HomePage from './routes/HomePage';
 import LoginPage from './routes/LoginPage';
 import SignupPage from './routes/SignupPage';
+import ResetPasswordPage from './routes/ResetPasswordPage';
+import UpdatePasswordPage from './routes/UpdatePasswordPage';
 import AuthCallbackPage from './routes/AuthCallbackPage';
 import ProfilePage from './routes/ProfilePage';
 import MapPage from './features/map/MapPage';
@@ -23,6 +25,8 @@ export default function App() {
           <Route path="/sessions/:id" element={<SessionDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/update-password" element={<UpdatePasswordPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route
             path="/profile"
