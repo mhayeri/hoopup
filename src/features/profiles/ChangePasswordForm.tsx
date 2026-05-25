@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { supabase } from '../../lib/supabase';
 import { friendlyMessage } from '../../lib/errors';
+import { PASSWORD_HINT, validatePassword } from '../../lib/password';
 
 const inputClass =
   'mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20';
@@ -17,8 +18,9 @@ export default function ChangePasswordForm() {
     setError(null);
     setSuccess(false);
 
-    if (newPassword.length < 8) {
-      setError('Password must be at least 8 characters.');
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -57,9 +59,7 @@ export default function ChangePasswordForm() {
           onChange={(e) => setNewPassword(e.target.value)}
           className={inputClass}
         />
-        <span className="mt-1 block text-xs text-[var(--color-ink)]/60">
-          At least 8 characters.
-        </span>
+        <span className="mt-1 block text-xs text-[var(--color-ink)]/60">{PASSWORD_HINT}</span>
       </label>
 
       <label className="block">

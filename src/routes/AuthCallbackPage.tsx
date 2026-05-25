@@ -58,19 +58,26 @@ export default function AuthCallbackPage() {
   const { session, loading } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const ranRef = useRef(false);
+  // Password-recovery links land here too; once the session is established we
+  // send the user to /update-password instead of home. The `flow=recovery`
+  // marker (added by ResetPasswordPage) survives in the route hash regardless
+  // of flow type; `type=recovery` is the implicit-flow fallback.
+  const recoveryRef = useRef(false);
 
   useEffect(() => {
     if (ranRef.current) return;
     ranRef.current = true;
 
+    const params = readAuthParams();
+    recoveryRef.current = params.get('flow') === 'recovery' || params.get('type') === 'recovery';
+
     // If a session already exists when we land here (e.g. user re-opens the
-    // confirmation link after already verifying), just go home.
+    // confirmation link after already verifying), just go on.
     if (!loading && session) {
-      navigate('/', { replace: true });
+      navigate(recoveryRef.current ? '/update-password' : '/', { replace: true });
       return;
     }
 
-    const params = readAuthParams();
     const code = params.get('code');
     const tokenHash = params.get('token_hash');
     const typeParam = params.get('type');
@@ -123,11 +130,12 @@ export default function AuthCallbackPage() {
     return () => window.clearTimeout(timeoutId);
   }, [loading, session, navigate]);
 
-  // Once a session is established, clean the URL and head home.
+  // Once a session is established, clean the URL and head on — to
+  // /update-password for a recovery flow, otherwise home.
   useEffect(() => {
     if (!loading && session) {
       window.history.replaceState({}, '', `${import.meta.env.BASE_URL}#/`);
-      navigate('/', { replace: true });
+      navigate(recoveryRef.current ? '/update-password' : '/', { replace: true });
     }
   }, [loading, session, navigate]);
 

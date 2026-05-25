@@ -2,50 +2,44 @@ import { useState, type FormEvent } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../providers/useAuth';
-import OAuthButtons from '../components/OAuthButtons';
 import { friendlyMessage } from '../lib/errors';
-import { PASSWORD_HINT, validatePassword } from '../lib/password';
 
-export default function SignupPage() {
+// Request a password-reset email. The `flow=recovery` marker survives in the
+// route hash so AuthCallbackPage can route the user to /update-password after
+// the link is verified (see AuthCallbackPage).
+function recoveryRedirect(): string {
+  return `${window.location.origin}${import.meta.env.BASE_URL}#/auth/callback?flow=recovery`;
+}
+
+export default function ResetPasswordPage() {
   const { user } = useAuth();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
 
-  if (user) return <Navigate to="/" replace />;
+  // A signed-in user changes their password from Settings, not here.
+  if (user) return <Navigate to="/profile" replace />;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    const passwordError = validatePassword(password);
-    if (passwordError) {
-      setError(passwordError);
-      return;
-    }
     setSubmitting(true);
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}#/auth/callback`,
-      },
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: recoveryRedirect(),
     });
     setSubmitting(false);
-    if (error) {
-      setError(friendlyMessage(error));
+    // Supabase returns success whether or not the email exists, so this neither
+    // confirms nor denies an account — no enumeration. We only surface genuine
+    // transport / rate-limit errors.
+    if (resetError) {
+      setError(friendlyMessage(resetError));
       return;
     }
-    // If confirmations are enabled, session is null until they click the link.
-    if (!data.session) {
-      setPendingEmail(email);
-    }
-    // If session is already there, AuthProvider picks it up and the home
-    // page will reflect logged-in state; nothing else to do.
+    setSent(true);
   }
 
-  if (pendingEmail) {
+  if (sent) {
     return (
       <main className="flex min-h-full items-center justify-center px-6 py-16">
         <div className="max-w-md text-center">
@@ -53,13 +47,13 @@ export default function SignupPage() {
             Check your email
           </h1>
           <p className="mt-4 text-[var(--color-ink)]/80">
-            We sent a confirmation link to <strong>{pendingEmail}</strong>. Click it to finish
-            creating your account.
+            If an account exists for <strong>{email}</strong>, we've sent a link to reset your
+            password. The link expires shortly, so use it soon.
           </p>
           <p className="mt-6 text-sm text-[var(--color-ink)]/60">
-            Didn't get it? Check spam, or{' '}
-            <Link to="/signup" className="font-semibold text-[var(--color-court)] hover:underline">
-              try a different email
+            Remembered it?{' '}
+            <Link to="/login" className="font-semibold text-[var(--color-court)] hover:underline">
+              Back to sign in
             </Link>
             .
           </p>
@@ -72,9 +66,11 @@ export default function SignupPage() {
     <main className="flex min-h-full items-center justify-center px-6 py-16">
       <div className="w-full max-w-sm">
         <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-court)]">
-          Sign up
+          Reset password
         </h1>
-        <p className="mt-2 text-sm text-[var(--color-ink)]/70">Get on the floor.</p>
+        <p className="mt-2 text-sm text-[var(--color-ink)]/70">
+          Enter your email and we'll send you a reset link.
+        </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
           <label className="block">
@@ -89,21 +85,6 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20"
             />
-          </label>
-          <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
-              Password
-            </span>
-            <input
-              type="password"
-              required
-              autoComplete="new-password"
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20"
-            />
-            <span className="mt-1 block text-xs text-[var(--color-ink)]/60">{PASSWORD_HINT}</span>
           </label>
 
           {error ? (
@@ -120,24 +101,14 @@ export default function SignupPage() {
             disabled={submitting}
             className="w-full rounded-full bg-[var(--color-court)] px-6 py-3 font-semibold text-white shadow-lg shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {submitting ? 'Creating account…' : 'Create account'}
+            {submitting ? 'Sending…' : 'Send reset link'}
           </button>
         </form>
 
-        <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-[var(--color-ink)]/40">
-          <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
-          or
-          <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
-        </div>
-
-        <OAuthButtons />
-
         <p className="mt-6 text-sm text-[var(--color-ink)]/70">
-          Already have one?{' '}
           <Link to="/login" className="font-semibold text-[var(--color-court)] hover:underline">
-            Sign in
+            Back to sign in
           </Link>
-          .
         </p>
       </div>
     </main>
