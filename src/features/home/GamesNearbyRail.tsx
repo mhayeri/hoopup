@@ -84,7 +84,7 @@ export default function GamesNearbyRail({
         <>
           <div className="flex flex-col gap-2.5">
             {visible.map(({ entry, live }) => (
-              <HomeSessionCard key={entry.session.id} entry={entry} live={live} />
+              <HomeSessionCard key={entry.session.id} entry={entry} now={now} live={live} />
             ))}
           </div>
           <Link

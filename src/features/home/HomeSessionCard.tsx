@@ -2,10 +2,11 @@ import { Link } from 'react-router-dom';
 import type { UpcomingSession } from '../map/useUpcomingSessions';
 import { formatPanelTime, formatTimeUntilEnd } from '../sessions/formatTime';
 import { SESSION_CAP } from '../sessions/useSessionRsvps';
-import { useNow } from '../../lib/useNow';
 
 type Props = {
   entry: UpcomingSession;
+  /** Current time, supplied by the parent rail so each card doesn't spin up its own timer. */
+  now: Date;
   /** Render the live "Hooping · ends in …" treatment instead of a start time. */
   live?: boolean;
 };
@@ -16,11 +17,10 @@ type Props = {
  * count) but is a plain navigation link to the session detail page — no map
  * selection state and no inline friend button, so it's safe to show signed-out.
  */
-export default function HomeSessionCard({ entry, live = false }: Props) {
+export default function HomeSessionCard({ entry, now, live = false }: Props) {
   const { session, court, host, goingCount } = entry;
   const courtLabel = court?.name ?? court?.address ?? 'Basketball Court';
   const initial = host?.username.charAt(0).toUpperCase() ?? '?';
-  const now = useNow();
 
   return (
     <Link

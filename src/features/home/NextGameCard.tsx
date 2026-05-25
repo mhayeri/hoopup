@@ -42,9 +42,13 @@ export default function NextGameCard({ entry }: { entry: ActiveSessionEntry }) {
         {label}
       </p>
       <p className="mt-2 text-2xl font-extrabold text-[var(--color-ink)]">{courtLabel}</p>
-      <p className="mt-1 text-sm text-[var(--color-ink)]/70">
-        {formatPanelTime(session.starts_at, now)}
-      </p>
+      {/* When live, the label already carries "ends in …"; showing the (past) start
+          time here would read as a future start, so only show it for upcoming games. */}
+      {!live ? (
+        <p className="mt-1 text-sm text-[var(--color-ink)]/70">
+          {formatPanelTime(session.starts_at, now)}
+        </p>
+      ) : null}
       <div className="mt-4 flex flex-wrap gap-2.5">
         <Link
           to={`/sessions/${session.id}`}

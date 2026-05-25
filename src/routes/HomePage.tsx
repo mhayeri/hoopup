@@ -99,17 +99,16 @@ function StatsStrip({ sessions }: { sessions: UpcomingSession[] }) {
   ];
 
   return (
-    <dl className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-dashed border-[var(--color-ink)]/15 pt-6">
+    <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-dashed border-[var(--color-ink)]/15 pt-6">
       {items.map(([n, label]) => (
         <div key={label}>
-          <dt className="sr-only">{label}</dt>
-          <dd className="font-display text-4xl leading-none text-[var(--color-court)]">{n}</dd>
-          <p className="mt-1 text-[11px] font-bold tracking-[0.1em] text-[var(--color-ink)]/55 uppercase">
+          <div className="font-display text-4xl leading-none text-[var(--color-court)]">{n}</div>
+          <div className="mt-1 text-[11px] font-bold tracking-[0.1em] text-[var(--color-ink)]/55 uppercase">
             {label}
-          </p>
+          </div>
         </div>
       ))}
-    </dl>
+    </div>
   );
 }
 
@@ -147,8 +146,9 @@ function SignedInHome({ userId }: { userId: string }) {
           {nextEntry ? <NextGameCard entry={nextEntry} /> : <EmptyNextRun />}
         </div>
 
-        {/* Live games rail — right on desktop, last on mobile */}
-        <div className="order-3 md:order-none md:col-start-2 md:row-start-1">
+        {/* Live games rail — right on desktop (explicit grid placement overrides
+            the mobile `order`), last on mobile */}
+        <div className="order-3 md:col-start-2 md:row-start-1">
           <GamesNearbyRail
             sessions={sessions}
             loading={loading}
@@ -159,7 +159,7 @@ function SignedInHome({ userId }: { userId: string }) {
         </div>
 
         {/* Quick actions — full-width bottom on desktop, above the rail on mobile */}
-        <div className="order-2 md:order-none md:col-span-2 md:col-start-1 md:row-start-2">
+        <div className="order-2 md:col-span-2 md:col-start-1 md:row-start-2">
           <QuickActions />
         </div>
       </div>
