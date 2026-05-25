@@ -26,13 +26,25 @@ enable_signup = true
 enable_anonymous_sign_ins = false
 enable_manual_linking = false
 minimum_password_length = 8
-password_requirements = ""
+# Require a mix of lower/upper letters and digits (beyond the length minimum).
+password_requirements = "lower_upper_letters_digits"
+
+# Per-IP / per-hour caps on auth endpoints. These pin intent for local dev and,
+# when pushed (`supabase config push`) or mirrored in the Dashboard, for the
+# hosted project. Values track Supabase's conservative defaults.
+[auth.rate_limit]
+email_sent = 10
+sign_in_sign_ups = 30
+token_refresh = 150
+token_verifications = 30
+anonymous_users = 30
 
 [auth.email]
 enable_signup = true
 double_confirm_changes = true
 enable_confirmations = true
-secure_password_change = false
+# Changing a password requires a fresh (recently-authenticated) session.
+secure_password_change = true
 
 [auth.sms]
 enable_signup = false
@@ -47,3 +59,8 @@ enabled = true
 
 [functions.delete-account]
 verify_jwt = true
+
+# Sign-in endpoint: callers are logged out, so no JWT. Auth is enforced inside
+# the function (password check) and abuse is throttled per IP.
+[functions.login]
+verify_jwt = false
