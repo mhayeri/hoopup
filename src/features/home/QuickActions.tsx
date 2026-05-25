@@ -10,8 +10,8 @@ type Tile = {
 const TILES: Tile[] = [
   { to: '/map', icon: '📍', label: 'Find a court', desc: 'Browse the map' },
   { to: '/map', icon: '＋', label: 'Host a game', desc: 'Pick a court & time' },
-  { to: '/profile', icon: '👥', label: 'Friends', desc: 'See your players' },
-  { to: '/profile', icon: '★', label: 'Saved courts', desc: 'Your favorites' },
+  { to: '/profile?tab=friends', icon: '👥', label: 'Friends', desc: 'See your players' },
+  { to: '/profile?tab=favorites', icon: '★', label: 'Saved courts', desc: 'Your favorites' },
 ];
 
 /**
