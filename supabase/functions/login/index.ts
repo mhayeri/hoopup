@@ -36,9 +36,14 @@ function json(body: unknown, status: number): Response {
 }
 
 function clientIp(req: Request): string {
+  // Prefer the platform-injected client IP (callers can't forge it);
+  // x-forwarded-for is client-settable, so only fall back to it. Otherwise an
+  // attacker could rotate a fake XFF per request and sidestep the throttle.
+  const cf = req.headers.get('cf-connecting-ip');
+  if (cf) return cf.trim();
   const fwd = req.headers.get('x-forwarded-for');
   if (fwd) return fwd.split(',')[0].trim();
-  return req.headers.get('cf-connecting-ip') ?? 'unknown';
+  return 'unknown';
 }
 
 Deno.serve(async (req) => {
@@ -81,7 +86,9 @@ Deno.serve(async (req) => {
     console.error('throttle check failed:', throttleErr.message);
     return json({ error: 'Something went wrong. Try again.' }, 500);
   }
-  if (allowed === false) {
+  if (!allowed) {
+    // Fail closed: anything other than an explicit "under the limit" is treated
+    // as over the limit.
     return json({ error: 'Too many attempts. Please wait a few minutes and try again.' }, 429);
   }
 
@@ -101,15 +108,22 @@ Deno.serve(async (req) => {
     email = (data as string | null) ?? null;
   }
 
-  // Unknown username -> same generic error as a wrong password.
-  if (!email) {
-    return json({ error: GENERIC_AUTH_ERROR }, 401);
-  }
-
   // 3. Perform the sign-in server-side and hand back only the session tokens.
   const authClient = createClient(supabaseUrl, anonKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
+
+  // Unknown username: still make one auth round-trip (against a throwaway
+  // address) so the response time matches the wrong-password path — otherwise
+  // the timing difference would let usernames be enumerated.
+  if (!email) {
+    await authClient.auth.signInWithPassword({
+      email: 'nonexistent@hoopup.invalid',
+      password,
+    });
+    return json({ error: GENERIC_AUTH_ERROR }, 401);
+  }
+
   const { data: signIn, error: signInErr } = await authClient.auth.signInWithPassword({
     email,
     password,
@@ -124,6 +138,6 @@ Deno.serve(async (req) => {
       access_token: signIn.session.access_token,
       refresh_token: signIn.session.refresh_token,
     },
-    200,
+    200
   );
 });

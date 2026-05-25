@@ -16,7 +16,7 @@
 -- public /rest/v1/rpc endpoint.
 
 create table if not exists public.auth_throttle (
-  ip           text        not null,
+  ip           varchar(45) not null, -- max length of an IPv6 text representation
   window_start timestamptz not null,
   attempts     int         not null default 0,
   primary key (ip, window_start)
@@ -41,6 +41,9 @@ declare
   );
   v_attempts int;
 begin
+  -- Clamp to the column width; only an oversized (spoofed) header could exceed it.
+  p_ip := left(p_ip, 45);
+
   insert into public.auth_throttle (ip, window_start, attempts)
   values (p_ip, v_window, 1)
   on conflict (ip, window_start)
