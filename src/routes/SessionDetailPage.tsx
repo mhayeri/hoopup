@@ -190,6 +190,7 @@ export default function SessionDetailPage() {
 
       <RosterSection
         sessionId={session.id}
+        hostId={session.host_id}
         cancelled={cancelled}
         startsAt={session.starts_at}
         endsAt={session.ends_at}

@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../providers/useAuth';
-import { useSessionRsvps, SESSION_CAP } from './useSessionRsvps';
+import { useSessionRsvps, SESSION_CAP, FLOOR_SIZE } from './useSessionRsvps';
 import type { RsvpWithProfile } from '../../lib/database.types';
 import { useNow } from '../../lib/useNow';
 import { formatTimeUntilEnd } from './formatTime';
-import PlayerRow from './PlayerRow';
+import PlayerRow, { ROW_GRID } from './PlayerRow';
 
 type Props = {
   sessionId: string;
+  hostId: string;
   cancelled: boolean;
   startsAt: string;
   endsAt: string;
@@ -20,8 +21,28 @@ type Props = {
   onAfterLeave?: () => Promise<void> | void;
 };
 
+/** Section divider label ("On the floor", "Bench") with a trailing rule. */
+function SubLabel({ children }: { children: ReactNode }) {
+  return (
+    <div className="mt-6 mb-2.5 flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-[var(--color-hardwood)]">
+      <span>{children}</span>
+      <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
+    </div>
+  );
+}
+
+/** Horizontal-scroll wrapper so the box-score columns keep alignment on narrow screens. */
+function ScrollX({ children }: { children: ReactNode }) {
+  return (
+    <div className="overflow-x-auto">
+      <div className="min-w-[460px]">{children}</div>
+    </div>
+  );
+}
+
 export default function RosterSection({
   sessionId,
+  hostId,
   cancelled,
   startsAt,
   endsAt,
@@ -35,25 +56,6 @@ export default function RosterSection({
   const [actionError, setActionError] = useState<string | null>(null);
   const [showFullPrompt, setShowFullPrompt] = useState(false);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
-  const [openUserId, setOpenUserId] = useState<string | null>(null);
-  const sectionRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!openUserId) return;
-    function onMouseDown(e: MouseEvent) {
-      if (!sectionRef.current) return;
-      if (!sectionRef.current.contains(e.target as Node)) setOpenUserId(null);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpenUserId(null);
-    }
-    document.addEventListener('mousedown', onMouseDown);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onMouseDown);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [openUserId]);
 
   const now = useNow();
   const startMs = new Date(startsAt).getTime();
@@ -66,8 +68,18 @@ export default function RosterSection({
   const isFull = goingCount >= SESSION_CAP;
   const canAct = !cancelled && !startsInPast;
 
-  const goingList = rsvps.filter((r) => r.status === 'going');
+  // Confirmed (going) players, host pinned first; the hook already returns rows
+  // created_at-ascending and Array.sort is stable, so everyone else keeps RSVP
+  // order. First FLOOR_SIZE are on the floor; the rest (up to the cap) are bench.
+  const goingSorted = [...rsvps]
+    .filter((r) => r.status === 'going')
+    .sort((a, b) => Number(b.user_id === hostId) - Number(a.user_id === hostId));
+  const floor = goingSorted.slice(0, FLOOR_SIZE);
+  const bench = goingSorted.slice(FLOOR_SIZE);
   const waitlist = rsvps.filter((r) => r.status === 'waitlist');
+
+  const isHost = (r: RsvpWithProfile) => r.user_id === hostId;
+  const isYou = (r: RsvpWithProfile) => !!user && r.user_id === user.id;
 
   async function handleRsvp() {
     if (!user) return;
@@ -108,8 +120,22 @@ export default function RosterSection({
     if (leaveErr) setActionError(leaveErr);
   }
 
+  // Box-score column header (rendered once, above the floor list).
+  const columnHeader = (
+    <div
+      className={`${ROW_GRID} rounded-lg bg-[var(--color-hardwood)] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white`}
+    >
+      <span className="text-center">#</span>
+      <span aria-hidden />
+      <span>Player</span>
+      <span className="text-center">Pos</span>
+      <span>Skill</span>
+      <span className="text-center">Yrs</span>
+    </div>
+  );
+
   return (
-    <section ref={sectionRef} className="mt-12">
+    <section className="mt-12">
       <div className="flex items-center gap-3">
         <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-ink)]">
           Roster
@@ -122,7 +148,7 @@ export default function RosterSection({
       {inProgress ? (
         <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-emerald-700">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-          Game in progress · {formatTimeUntilEnd(endsAt, now)} · RSVPs locked
+          Hooping · {formatTimeUntilEnd(endsAt, now)} · RSVPs locked
         </p>
       ) : null}
 
@@ -208,7 +234,7 @@ export default function RosterSection({
         </p>
       ) : null}
 
-      {/* Fetch error */}
+      {/* Fetch error / loading / empty / roster */}
       {error ? (
         <p
           role="alert"
@@ -218,25 +244,52 @@ export default function RosterSection({
         </p>
       ) : loading ? (
         <p className="mt-4 text-sm text-[var(--color-ink)]/60">Loading roster…</p>
-      ) : goingList.length === 0 && waitlist.length === 0 ? (
+      ) : goingSorted.length === 0 && waitlist.length === 0 ? (
         <p className="mt-4 text-[var(--color-ink)]/70">No players yet. Be the first to join.</p>
       ) : (
         <>
-          {/* Going list */}
-          {goingList.length > 0 ? (
-            <ul className="mt-4 space-y-2">
-              {goingList.map((r) => (
-                <PlayerRow
-                  key={r.user_id}
-                  rsvp={r}
-                  open={openUserId === r.user_id}
-                  onOpenChange={(next) => setOpenUserId(next ? r.user_id : null)}
-                />
-              ))}
-            </ul>
+          {/* On the floor (#1–FLOOR_SIZE) */}
+          {floor.length > 0 ? (
+            <>
+              <SubLabel>On the floor · {floor.length}</SubLabel>
+              <ScrollX>
+                {columnHeader}
+                <ul className="mt-1.5 space-y-1.5">
+                  {floor.map((r, i) => (
+                    <PlayerRow
+                      key={r.user_id}
+                      rsvp={r}
+                      isHost={isHost(r)}
+                      isYou={isYou(r)}
+                      jersey={i + 1}
+                    />
+                  ))}
+                </ul>
+              </ScrollX>
+            </>
           ) : null}
 
-          {/* Waitlist */}
+          {/* Bench (#FLOOR_SIZE+1 … cap) */}
+          {bench.length > 0 ? (
+            <>
+              <SubLabel>Bench · {bench.length}</SubLabel>
+              <ScrollX>
+                <ul className="space-y-1.5">
+                  {bench.map((r, i) => (
+                    <PlayerRow
+                      key={r.user_id}
+                      rsvp={r}
+                      isHost={isHost(r)}
+                      isYou={isYou(r)}
+                      jersey={FLOOR_SIZE + i + 1}
+                    />
+                  ))}
+                </ul>
+              </ScrollX>
+            </>
+          ) : null}
+
+          {/* Waitlist (overflow past the cap — collapsible, no jersey number) */}
           {waitlist.length > 0 ? (
             <div className="mt-6">
               <button
@@ -247,16 +300,19 @@ export default function RosterSection({
                 Waitlist ({waitlistCount}) {waitlistOpen ? 'Hide' : 'Show'}
               </button>
               {waitlistOpen ? (
-                <ul className="mt-2 space-y-2">
-                  {waitlist.map((r) => (
-                    <PlayerRow
-                      key={r.user_id}
-                      rsvp={r}
-                      open={openUserId === r.user_id}
-                      onOpenChange={(next) => setOpenUserId(next ? r.user_id : null)}
-                    />
-                  ))}
-                </ul>
+                <ScrollX>
+                  <ul className="mt-2 space-y-1.5">
+                    {waitlist.map((r) => (
+                      <PlayerRow
+                        key={r.user_id}
+                        rsvp={r}
+                        isHost={isHost(r)}
+                        isYou={isYou(r)}
+                        jersey={null}
+                      />
+                    ))}
+                  </ul>
+                </ScrollX>
               ) : null}
             </div>
           ) : null}

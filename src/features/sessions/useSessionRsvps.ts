@@ -6,6 +6,13 @@ import { friendlyMessage } from '../../lib/errors';
 /** Must match the cap in the enforce_session_cap trigger. */
 const SESSION_CAP = 15;
 
+/**
+ * Of the {@link SESSION_CAP} confirmed players, the first FLOOR_SIZE (by RSVP
+ * order, host first) are "on the floor"; the remainder are the bench. Purely a
+ * roster-display split — the server only enforces the overall cap.
+ */
+const FLOOR_SIZE = 10;
+
 type RsvpError = { code: 'SESSION_FULL' | 'SESSION_NOT_AVAILABLE' | 'UNKNOWN'; message: string };
 
 type Result = {
@@ -154,4 +161,4 @@ export function useSessionRsvps(sessionId: string | null | undefined): Result {
   };
 }
 
-export { SESSION_CAP };
+export { SESSION_CAP, FLOOR_SIZE };
