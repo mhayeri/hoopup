@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
 import PlayerSearchOverlay from '../features/friends/PlayerSearchOverlay';
+import MobileNavMenu from './MobileNavMenu';
 
 export default function NavBar() {
   const { session, signOut } = useAuth();
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   async function onSignOut() {
     await signOut();
@@ -22,7 +24,7 @@ export default function NavBar() {
         >
           Hoop<span className="text-[var(--color-ink)]">Up</span>
         </Link>
-        <div className="flex items-center gap-2 text-sm">
+        <div className="hidden items-center gap-2 text-sm sm:flex">
           <Link
             to="/map"
             className="rounded-full px-4 py-2 font-semibold text-[var(--color-ink)] hover:bg-[var(--color-ink)]/5"
@@ -83,7 +85,53 @@ export default function NavBar() {
             </>
           )}
         </div>
+        <button
+          type="button"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label="Menu"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav-menu"
+          className="rounded-full p-2 text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5 sm:hidden"
+        >
+          {menuOpen ? (
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          ) : (
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          )}
+        </button>
       </nav>
+      <MobileNavMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        authed={!!session}
+        onSignOut={onSignOut}
+        onOpenSearch={() => setSearchOpen(true)}
+      />
       {session ? (
         <PlayerSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
       ) : null}
