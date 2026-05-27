@@ -33,19 +33,28 @@ export default function GamesNearbyRail({
 }: Props) {
   const now = useNow();
 
-  const visible = useMemo(() => {
+  const { visible, onlyNextRun } = useMemo(() => {
     const live: UpcomingSession[] = [];
     const upcoming: UpcomingSession[] = [];
+    // Did we skip an active/upcoming game *because* it's the next-run card?
+    // If so and nothing else is left, the board isn't empty — it's just that
+    // your only game is already shown above.
+    let hadExcludedUpcoming = false;
     for (const entry of sessions) {
-      if (excludeSessionId && entry.session.id === excludeSessionId) continue;
       const status = getSessionStatus(entry.session, now);
+      if (status !== 'active' && status !== 'upcoming') continue;
+      if (excludeSessionId && entry.session.id === excludeSessionId) {
+        hadExcludedUpcoming = true;
+        continue;
+      }
       if (status === 'active') live.push(entry);
-      else if (status === 'upcoming') upcoming.push(entry);
+      else upcoming.push(entry);
     }
-    return [...live, ...upcoming].slice(0, MAX_CARDS).map((entry) => ({
+    const visible = [...live, ...upcoming].slice(0, MAX_CARDS).map((entry) => ({
       entry,
       live: getSessionStatus(entry.session, now) === 'active',
     }));
+    return { visible, onlyNextRun: hadExcludedUpcoming && visible.length === 0 };
   }, [sessions, now, excludeSessionId]);
 
   return (
@@ -71,7 +80,9 @@ export default function GamesNearbyRail({
       ) : visible.length === 0 ? (
         <div className="flex flex-col items-start gap-3 px-1 py-4">
           <p className="text-sm text-[var(--color-ink)]/65">
-            No games scheduled yet. Be the first to host one.
+            {onlyNextRun
+              ? "That's the only game on the board right now. Host another or check back as more get scheduled."
+              : 'No games scheduled yet. Be the first to host one.'}
           </p>
           <Link
             to="/map"
