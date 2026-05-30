@@ -69,7 +69,7 @@ function CourtMarkers({ filter, selectedCourtId, markerRefs }: CourtMarkersProps
       {error ? (
         <div
           role="alert"
-          className="pointer-events-auto absolute right-3 top-3 z-[400] max-w-xs rounded-md border border-red-300 bg-red-50 px-3 py-2 text-xs font-semibold text-red-800 shadow"
+          className="pointer-events-auto absolute right-3 top-3 z-[400] max-w-xs rounded-md border border-red-500/40 bg-[var(--color-night-2)] px-3 py-2 text-xs font-semibold text-red-300 shadow-lg"
         >
           Couldn't load courts: {error}
         </div>
@@ -92,17 +92,17 @@ function CourtMarkers({ filter, selectedCourtId, markerRefs }: CourtMarkersProps
         >
           <Popup>
             <div className="space-y-1">
-              <p className="font-semibold text-[var(--color-ink)]">
+              <p className="font-semibold text-[var(--color-bone)]">
                 {c.name ?? c.address ?? 'Basketball Court'}
               </p>
               {c.surface || c.hoops ? (
-                <p className="text-xs text-[var(--color-ink)]/70">
+                <p className="text-xs text-[var(--color-bone)]/70">
                   {[c.surface, c.hoops ? `${c.hoops} hoops` : null].filter(Boolean).join(' · ')}
                 </p>
               ) : null}
               <Link
                 to={`/courts/${c.id}`}
-                className="inline-block text-sm font-semibold text-[var(--color-court)] hover:underline"
+                className="inline-block text-sm font-semibold text-[var(--color-volt)] hover:underline"
               >
                 View details →
               </Link>
@@ -133,7 +133,7 @@ export default function MapPage() {
   const selectedCourtId = selectedEntry?.court?.id ?? null;
 
   return (
-    <div className="grid h-[calc(100vh-3.5rem)] grid-cols-1 grid-rows-[1fr_auto] md:grid-cols-[340px_1fr] md:grid-rows-1">
+    <div className="grid h-[calc(100vh-3.5rem)] grid-cols-1 grid-rows-[1fr_auto] bg-[var(--color-night)] md:grid-cols-[340px_1fr] md:grid-rows-1">
       <SessionPanel
         sessions={sessions}
         loading={loading}
@@ -151,8 +151,8 @@ export default function MapPage() {
           className="h-full w-full"
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           />
           <RecenterOnUser />
           <OverpassSync />
