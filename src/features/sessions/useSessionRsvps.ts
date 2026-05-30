@@ -97,7 +97,7 @@ export function useSessionRsvps(sessionId: string | null | undefined): Result {
           return {
             error: {
               code: 'SESSION_FULL',
-              message: 'Session is full — join the waitlist?',
+              message: 'Session is full. Join the waitlist?',
             },
           };
         }
