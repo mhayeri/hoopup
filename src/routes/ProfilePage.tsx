@@ -77,8 +77,8 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-full items-center justify-center px-6 py-16">
-        <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-hardwood)]">Loading…</p>
+      <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
+        <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-bone)]/55">Loading…</p>
       </main>
     );
   }
@@ -89,116 +89,120 @@ export default function ProfilePage() {
 
   if (error || !profile) {
     return (
-      <main className="mx-auto max-w-2xl px-6 py-16">
-        <p className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800">
-          {error ?? 'Profile not found.'}
-        </p>
+      <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
+        <div className="mx-auto max-w-2xl">
+          <p className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
+            {error ?? 'Profile not found.'}
+          </p>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10">
-      <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-        <aside className="lg:col-span-5">
-          <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
-            {isSelf && editing && updateProfile && ownHook.profile ? (
-              // Edit mode (self): the full avatar uploader on top, the form below.
-              <>
-                <AvatarUpload
-                  userId={profile.id}
-                  currentUrl={profile.avatar_url}
-                  onUploaded={async (url) => {
-                    await updateProfile({ avatar_url: url });
-                  }}
-                />
-                <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
-                  <ProfileEditForm
-                    profile={ownHook.profile}
-                    onSubmit={async (patch) => {
-                      const result = await updateProfile(patch);
-                      if (!result.error) {
-                        setEditing(false);
-                        void refresh();
-                      }
-                      return result;
+    <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+      <div className="mx-auto max-w-5xl px-6 py-10">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+          <aside className="lg:col-span-5">
+            <div className="rounded-3xl border border-white/10 bg-[var(--color-night-2)] p-8 shadow-sm">
+              {isSelf && editing && updateProfile && ownHook.profile ? (
+                // Edit mode (self): the full avatar uploader on top, the form below.
+                <>
+                  <AvatarUpload
+                    userId={profile.id}
+                    currentUrl={profile.avatar_url}
+                    onUploaded={async (url) => {
+                      await updateProfile({ avatar_url: url });
                     }}
-                    onCancel={() => setEditing(false)}
                   />
-                </div>
-              </>
-            ) : (
-              // Read mode (self or public): identity sits beside the avatar so the
-              // top of the card isn't blank; the action slot + stats follow below.
-              <>
-                <div className="flex items-start gap-4">
-                  <ReadOnlyAvatar url={profile.avatar_url} username={profile.username} />
-                  <div className="min-w-0 flex-1">
-                    <Identity
-                      profile={profile}
-                      email={isSelf ? (user?.email ?? null) : null}
-                      onEdit={isSelf ? () => setEditing(true) : null}
-                    />
-                  </div>
-                </div>
-
-                {isSelf && updateProfile ? (
-                  <div className="mt-6">
-                    <AvatarUpload
-                      userId={profile.id}
-                      currentUrl={profile.avatar_url}
-                      onUploaded={async (url) => {
-                        await updateProfile({ avatar_url: url });
+                  <div className="mt-6 border-t border-white/10 pt-6">
+                    <ProfileEditForm
+                      profile={ownHook.profile}
+                      onSubmit={async (patch) => {
+                        const result = await updateProfile(patch);
+                        if (!result.error) {
+                          setEditing(false);
+                          void refresh();
+                        }
+                        return result;
                       }}
-                      showAvatar={false}
+                      onCancel={() => setEditing(false)}
                     />
                   </div>
-                ) : showAddFriendButton ? (
-                  <div className="mt-6">
-                    <FriendActionButton
-                      otherUserId={profile.id}
-                      username={profile.username}
-                      variant="primary"
-                    />
+                </>
+              ) : (
+                // Read mode (self or public): identity sits beside the avatar so the
+                // top of the card isn't blank; the action slot + stats follow below.
+                <>
+                  <div className="flex items-start gap-4">
+                    <ReadOnlyAvatar url={profile.avatar_url} username={profile.username} />
+                    <div className="min-w-0 flex-1">
+                      <Identity
+                        profile={profile}
+                        email={isSelf ? (user?.email ?? null) : null}
+                        onEdit={isSelf ? () => setEditing(true) : null}
+                      />
+                    </div>
                   </div>
-                ) : null}
 
-                <div className="mt-6 border-t border-[var(--color-ink)]/10 pt-6">
-                  <ProfileStats profile={profile} />
-                </div>
-              </>
-            )}
-          </div>
-        </aside>
+                  {isSelf && updateProfile ? (
+                    <div className="mt-6">
+                      <AvatarUpload
+                        userId={profile.id}
+                        currentUrl={profile.avatar_url}
+                        onUploaded={async (url) => {
+                          await updateProfile({ avatar_url: url });
+                        }}
+                        showAvatar={false}
+                      />
+                    </div>
+                  ) : showAddFriendButton ? (
+                    <div className="mt-6">
+                      <FriendActionButton
+                        otherUserId={profile.id}
+                        username={profile.username}
+                        variant="primary"
+                      />
+                    </div>
+                  ) : null}
 
-        <section className="mt-6 space-y-6 lg:col-span-7 lg:mt-0">
-          <div className="rounded-3xl border border-[var(--color-ink)]/10 bg-white p-8 shadow-sm">
-            <Tabs
-              items={tabItems}
-              value={tab}
-              onChange={(id) => setTab(id as TabId)}
-              ariaLabel="Profile sections"
-            />
-            <div
-              role="tabpanel"
-              id={`tabpanel-${tab}`}
-              aria-labelledby={`tab-${tab}`}
-              className="mt-6"
-            >
-              {tab === 'sessions' ? <ActiveSessionsList userId={profile.id} /> : null}
-              {tab === 'friends' ? (
-                <FriendsTab userId={profile.id} viewerId={isSelf ? (user?.id ?? null) : null} />
-              ) : null}
-              {tab === 'favorites' && isSelf ? <FavoriteCourtsList userId={profile.id} /> : null}
-              {tab === 'settings' && isSelf ? (
-                <SettingsPanel
-                  onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
-                  onDeleteAccount={() => setDeleteOpen(true)}
-                />
-              ) : null}
+                  <div className="mt-6 border-t border-white/10 pt-6">
+                    <ProfileStats profile={profile} />
+                  </div>
+                </>
+              )}
             </div>
-          </div>
-        </section>
+          </aside>
+
+          <section className="mt-6 space-y-6 lg:col-span-7 lg:mt-0">
+            <div className="rounded-3xl border border-white/10 bg-[var(--color-night-2)] p-8 shadow-sm">
+              <Tabs
+                items={tabItems}
+                value={tab}
+                onChange={(id) => setTab(id as TabId)}
+                ariaLabel="Profile sections"
+              />
+              <div
+                role="tabpanel"
+                id={`tabpanel-${tab}`}
+                aria-labelledby={`tab-${tab}`}
+                className="mt-6"
+              >
+                {tab === 'sessions' ? <ActiveSessionsList userId={profile.id} /> : null}
+                {tab === 'friends' ? (
+                  <FriendsTab userId={profile.id} viewerId={isSelf ? (user?.id ?? null) : null} />
+                ) : null}
+                {tab === 'favorites' && isSelf ? <FavoriteCourtsList userId={profile.id} /> : null}
+                {tab === 'settings' && isSelf ? (
+                  <SettingsPanel
+                    onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
+                    onDeleteAccount={() => setDeleteOpen(true)}
+                  />
+                ) : null}
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
 
       {isSelf && hasEmailAuth ? (
@@ -217,11 +221,11 @@ export default function ProfilePage() {
 
 function ReadOnlyAvatar({ url, username }: { url: string | null; username: string }) {
   return (
-    <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-court)]/30 bg-[var(--color-net)]">
+    <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-blue)]/40 bg-[var(--color-night-3)]">
       {url ? (
         <img src={url} alt="" className="h-full w-full object-cover" />
       ) : (
-        <span className="text-sm font-bold uppercase text-[var(--color-hardwood)]/70">
+        <span className="text-sm font-bold uppercase text-[var(--color-blue)]">
           {username.charAt(0)}
         </span>
       )}
@@ -244,22 +248,22 @@ function Identity({
   return (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className="text-3xl font-black tracking-tight break-words text-[var(--color-court)]">
+        <h1 className="text-3xl font-black tracking-tight break-words text-[var(--color-volt)]">
           @{profile.username}
         </h1>
         {onEdit ? (
           <button
             type="button"
             onClick={onEdit}
-            className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+            className="rounded-full border border-[var(--color-blue)]/50 px-4 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10"
           >
             Edit
           </button>
         ) : null}
       </div>
-      {email ? <p className="mt-1 text-sm text-[var(--color-ink)]/60">{email}</p> : null}
+      {email ? <p className="mt-1 text-sm text-[var(--color-bone)]/55">{email}</p> : null}
       {profile.bio ? (
-        <p className="mt-2 whitespace-pre-wrap text-[var(--color-ink)]/80">{profile.bio}</p>
+        <p className="mt-2 whitespace-pre-wrap text-[var(--color-bone)]/80">{profile.bio}</p>
       ) : null}
     </>
   );
@@ -286,10 +290,10 @@ function ProfileStats({ profile }: { profile: PublicProfileRow }) {
 function Item({ label, value }: { label: string; value: string | null }) {
   return (
     <div>
-      <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
+      <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/55">
         {label}
       </dt>
-      <dd className="mt-0.5 text-[var(--color-ink)]">{value ?? '—'}</dd>
+      <dd className="mt-0.5 text-[var(--color-bone)]">{value ?? '-'}</dd>
     </div>
   );
 }
@@ -304,33 +308,33 @@ function SettingsPanel({
   return (
     <div className="space-y-6">
       {onChangePassword ? (
-        <div className="rounded-2xl border border-[var(--color-ink)]/10 p-5">
-          <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-hardwood)]">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+          <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
             Security
           </h3>
-          <p className="mt-2 text-sm text-[var(--color-ink)]/70">
+          <p className="mt-2 text-sm text-[var(--color-bone)]/70">
             Update the password you use to sign in.
           </p>
           <button
             type="button"
             onClick={onChangePassword}
-            className="mt-3 rounded-full border border-[var(--color-ink)]/20 px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+            className="mt-3 rounded-full border border-[var(--color-blue)]/50 px-4 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10"
           >
             Change password
           </button>
         </div>
       ) : null}
 
-      <div className="rounded-2xl border border-red-300 bg-red-50/40 p-5">
-        <h3 className="text-sm font-black uppercase tracking-widest text-red-800">Account</h3>
-        <p className="mt-2 text-sm text-red-900/80">
+      <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-5">
+        <h3 className="text-sm font-black uppercase tracking-widest text-red-300">Account</h3>
+        <p className="mt-2 text-sm text-red-300/80">
           Permanently delete your account and all of your sessions, RSVPs, and profile data. This
           cannot be undone.
         </p>
         <button
           type="button"
           onClick={onDeleteAccount}
-          className="mt-3 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700"
+          className="mt-3 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500"
         >
           Delete account
         </button>
