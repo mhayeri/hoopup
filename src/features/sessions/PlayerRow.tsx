@@ -18,12 +18,13 @@ const SKILL_LABEL: Record<SkillLevel, string> = {
   pro: 'Pro',
 };
 
-/** Skill-tier ramp driving the left accent rail + the Skill-column text. */
+/** Skill-tier ramp driving the left accent rail + the Skill-column text.
+ *  Shared with the friends/identity skill pill via the `--color-skill-*` tokens. */
 const SKILL_TIER_COLOR: Record<SkillLevel, string> = {
-  beginner: '#34d399',
-  intermediate: '#2b6fff',
-  advanced: '#a78bfa',
-  pro: '#fbbf24',
+  beginner: 'var(--color-skill-beginner)',
+  intermediate: 'var(--color-skill-intermediate)',
+  advanced: 'var(--color-skill-advanced)',
+  pro: 'var(--color-skill-pro)',
 };
 const TIER_NONE = 'rgba(255,255,255,0.3)';
 
