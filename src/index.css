@@ -45,3 +45,36 @@ body {
 .volt-glow {
   text-shadow: 0 0 32px rgba(200, 255, 45, 0.45);
 }
+
+/* Leaflet dark theming for the Volt map (overrides must beat leaflet.css). */
+.leaflet-container {
+  background: var(--color-night) !important;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--color-night-2) !important;
+  color: var(--color-bone);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+}
+.leaflet-popup-content-wrapper {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.leaflet-popup-close-button {
+  color: var(--color-bone) !important;
+}
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: var(--color-night-2);
+  color: var(--color-bone);
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+.leaflet-bar a:hover {
+  background: var(--color-night-3);
+}
+.leaflet-control-attribution {
+  background: rgba(11, 11, 15, 0.7) !important;
+  color: rgba(238, 240, 242, 0.6);
+}
+.leaflet-control-attribution a {
+  color: var(--color-blue);
+}
