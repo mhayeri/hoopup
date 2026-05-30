@@ -16,18 +16,18 @@ export default function NavBar() {
   }
 
   return (
-    <header className="sticky top-0 z-10 border-b border-[var(--color-ink)]/10 bg-[var(--color-chalk)]/80 backdrop-blur">
+    <header className="sticky top-0 z-10 border-b border-white/10 bg-[var(--color-night)]/85 backdrop-blur">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
         <Link
           to="/"
-          className="text-2xl font-black uppercase tracking-tight text-[var(--color-court)]"
+          className="text-2xl font-black uppercase tracking-tight text-[var(--color-bone)]"
         >
-          Hoop<span className="text-[var(--color-ink)]">Up</span>
+          Hoop<span className="text-[var(--color-volt)]">Up</span>
         </Link>
         <div className="hidden items-center gap-2 text-sm sm:flex">
           <Link
             to="/map"
-            className="rounded-full px-4 py-2 font-semibold text-[var(--color-ink)] hover:bg-[var(--color-ink)]/5"
+            className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
           >
             Map
           </Link>
@@ -38,7 +38,7 @@ export default function NavBar() {
                 onClick={() => setSearchOpen(true)}
                 aria-label="Find players"
                 title="Find players"
-                className="rounded-full p-2 text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+                className="rounded-full p-2 text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
               >
                 <svg
                   aria-hidden
@@ -56,14 +56,14 @@ export default function NavBar() {
               </button>
               <Link
                 to="/profile"
-                className="rounded-full px-4 py-2 font-semibold text-[var(--color-ink)] hover:bg-[var(--color-ink)]/5"
+                className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
               >
                 Profile
               </Link>
               <button
                 type="button"
                 onClick={onSignOut}
-                className="rounded-full border border-[var(--color-ink)]/20 px-4 py-2 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+                className="rounded-full border border-white/15 px-4 py-2 font-semibold text-[var(--color-bone)] transition hover:border-[var(--color-blue)]/60 hover:bg-[var(--color-blue)]/10"
               >
                 Sign out
               </button>
@@ -72,13 +72,13 @@ export default function NavBar() {
             <>
               <Link
                 to="/login"
-                className="rounded-full px-4 py-2 font-semibold text-[var(--color-ink)] hover:bg-[var(--color-ink)]/5"
+                className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
               >
                 Sign in
               </Link>
               <Link
                 to="/signup"
-                className="rounded-full bg-[var(--color-court)] px-4 py-2 font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90"
+                className="rounded-full bg-[var(--color-volt)] px-4 py-2 font-semibold text-[#0c1402] shadow-[0_0_20px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
               >
                 Sign up
               </Link>
@@ -91,7 +91,7 @@ export default function NavBar() {
           aria-label="Menu"
           aria-expanded={menuOpen}
           aria-controls="mobile-nav-menu"
-          className="rounded-full p-2 text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5 sm:hidden"
+          className="rounded-full p-2 text-[var(--color-bone)] transition hover:bg-white/8 sm:hidden"
         >
           {menuOpen ? (
             <svg

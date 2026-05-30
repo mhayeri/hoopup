@@ -6,7 +6,7 @@ const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const itemClass =
-  'w-full rounded-lg px-3 py-3 text-left text-base font-semibold text-[var(--color-ink)] hover:bg-[var(--color-ink)]/5';
+  'w-full rounded-lg px-3 py-3 text-left text-base font-semibold text-[var(--color-bone)] hover:bg-white/8';
 
 type Props = {
   open: boolean;
@@ -72,12 +72,12 @@ export default function MobileNavMenu({ open, onClose, authed, onSignOut, onOpen
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="pointer-events-auto absolute inset-x-0 bottom-0 top-14 w-full cursor-default bg-[var(--color-ink)]/30"
+        className="pointer-events-auto absolute inset-x-0 bottom-0 top-14 w-full cursor-default bg-black/50"
       />
       <div
         ref={panelRef}
         id="mobile-nav-menu"
-        className="pointer-events-auto absolute inset-x-0 top-14 border-b border-[var(--color-ink)]/10 bg-[var(--color-chalk)] shadow-lg"
+        className="pointer-events-auto absolute inset-x-0 top-14 border-b border-white/10 bg-[var(--color-night-2)] shadow-lg"
       >
         <nav className="mx-auto flex max-w-5xl flex-col gap-1 px-6 py-3">
           <Link to="/map" onClick={onClose} className={itemClass}>
@@ -104,7 +104,7 @@ export default function MobileNavMenu({ open, onClose, authed, onSignOut, onOpen
                   onClose();
                   onSignOut();
                 }}
-                className="mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 px-3 py-3 text-center text-base font-semibold text-[var(--color-ink)] hover:bg-[var(--color-ink)]/5"
+                className="mt-1 w-full rounded-lg border border-white/15 px-3 py-3 text-center text-base font-semibold text-[var(--color-bone)] hover:bg-white/8"
               >
                 Sign out
               </button>
@@ -117,7 +117,7 @@ export default function MobileNavMenu({ open, onClose, authed, onSignOut, onOpen
               <Link
                 to="/signup"
                 onClick={onClose}
-                className="mt-1 w-full rounded-lg bg-[var(--color-court)] px-3 py-3 text-center text-base font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90"
+                className="mt-1 w-full rounded-lg bg-[var(--color-volt)] px-3 py-3 text-center text-base font-semibold text-[#0c1402] shadow-[0_0_20px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
               >
                 Sign up
               </Link>
