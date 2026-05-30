@@ -19,6 +19,13 @@
   --color-bone: #eef0f2;
   --color-blue: #2b6fff;
   --color-volt: #c8ff2d;
+
+  /* Skill-tier ramp — shared by the roster (PlayerRow) and the friends/identity
+     skill pill so a player's skill reads the same color everywhere. */
+  --color-skill-beginner: #34d399;
+  --color-skill-intermediate: #5b8bff;
+  --color-skill-advanced: #a78bfa;
+  --color-skill-pro: #fbbf24;
 }
 
 html,
@@ -33,6 +40,16 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  /* The app is dark Volt — tell the browser so native controls (select option
+     popups, date/time pickers, scrollbars) render dark instead of OS-light. */
+  color-scheme: dark;
+}
+
+/* Belt-and-suspenders for the native <select> dropdown list (some engines
+   ignore color-scheme for option colors). */
+option {
+  background-color: var(--color-night-2);
+  color: var(--color-bone);
 }
 
 /* Volt theme helpers (used by the dark home + nav). */
