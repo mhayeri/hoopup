@@ -24,9 +24,9 @@ type Props = {
 /** Section divider label ("On the floor", "Bench") with a trailing rule. */
 function SubLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-6 mb-2.5 flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-[var(--color-hardwood)]">
+    <div className="mt-6 mb-2.5 flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-[var(--color-bone)]/55">
       <span>{children}</span>
-      <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
+      <span className="h-px flex-1 bg-white/10" />
     </div>
   );
 }
@@ -123,7 +123,7 @@ export default function RosterSection({
   // Box-score column header (rendered once, above the floor list).
   const columnHeader = (
     <div
-      className={`${ROW_GRID} rounded-lg bg-[var(--color-hardwood)] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white`}
+      className={`${ROW_GRID} rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-[var(--color-bone)]/60`}
     >
       <span className="text-center">#</span>
       <span aria-hidden />
@@ -137,18 +137,18 @@ export default function RosterSection({
   return (
     <section className="mt-12">
       <div className="flex items-center gap-3">
-        <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-ink)]">
+        <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-bone)]">
           Roster
         </h2>
-        <span className="rounded-full bg-[var(--color-court)]/10 px-3 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-court)]">
+        <span className="rounded-full bg-[var(--color-blue)]/15 px-3 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-blue)]">
           {goingCount} / {SESSION_CAP}
         </span>
       </div>
 
       {inProgress ? (
-        <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-emerald-700">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-          Hooping · {formatTimeUntilEnd(endsAt, now)} · RSVPs locked
+        <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-[var(--color-volt)] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[#0c1402]">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0c1402]" />
+          Hooping - {formatTimeUntilEnd(endsAt, now)} - RSVPs locked
         </p>
       ) : null}
 
@@ -158,7 +158,7 @@ export default function RosterSection({
           {!user ? (
             <Link
               to={`/login?from=/sessions/${sessionId}`}
-              className="rounded-full border border-[var(--color-ink)]/20 px-5 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+              className="rounded-full border border-[var(--color-blue)]/50 px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10"
             >
               Sign in to RSVP
             </Link>
@@ -168,18 +168,18 @@ export default function RosterSection({
                 type="button"
                 onClick={handleJoinWaitlist}
                 disabled={busy}
-                className="rounded-full border border-[var(--color-court)] px-5 py-2 text-sm font-semibold text-[var(--color-court)] transition hover:bg-[var(--color-court)]/10 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-[var(--color-blue)]/50 px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {busy ? 'Joining…' : 'Join waitlist'}
+                {busy ? 'Joining...' : 'Join waitlist'}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={handleRsvp}
                 disabled={busy}
-                className="rounded-full bg-[var(--color-court)] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {busy ? 'Joining…' : "I'm in"}
+                {busy ? 'Joining...' : "I'm in"}
               </button>
             )
           ) : myRsvp.status === 'going' ? (
@@ -187,22 +187,22 @@ export default function RosterSection({
               type="button"
               onClick={handleLeave}
               disabled={busy}
-              className="rounded-full border border-red-300 px-5 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-full border border-red-500/40 px-5 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {busy ? 'Leaving…' : 'Leave'}
+              {busy ? 'Leaving...' : 'Leave'}
             </button>
           ) : myRsvp.status === 'waitlist' ? (
             <div className="flex items-center gap-3">
-              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-amber-700">
+              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/80">
                 On waitlist
               </span>
               <button
                 type="button"
                 onClick={handleLeave}
                 disabled={busy}
-                className="rounded-full border border-red-300 px-5 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-red-500/40 px-5 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {busy ? 'Leaving…' : 'Leave'}
+                {busy ? 'Leaving...' : 'Leave'}
               </button>
             </div>
           ) : null}
@@ -211,15 +211,15 @@ export default function RosterSection({
 
       {/* SESSION_FULL prompt */}
       {showFullPrompt ? (
-        <div className="mt-3 flex items-center gap-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800">
-          <span>Session is full — join the waitlist?</span>
+        <div className="mt-3 flex items-center gap-3 rounded-md border border-white/15 bg-white/[0.04] px-3 py-2 text-sm text-[var(--color-bone)]/80">
+          <span>Session is full - join the waitlist?</span>
           <button
             type="button"
             onClick={handleJoinWaitlist}
             disabled={busy}
-            className="rounded-full border border-amber-600 px-3 py-1 text-xs font-semibold text-amber-700 transition hover:bg-amber-100 disabled:opacity-60"
+            className="rounded-full border border-[var(--color-blue)]/50 px-3 py-1 text-xs font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10 disabled:opacity-60"
           >
-            {busy ? 'Joining…' : 'Join waitlist'}
+            {busy ? 'Joining...' : 'Join waitlist'}
           </button>
         </div>
       ) : null}
@@ -228,7 +228,7 @@ export default function RosterSection({
       {actionError ? (
         <p
           role="alert"
-          className="mt-3 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+          className="mt-3 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
         >
           {actionError}
         </p>
@@ -238,20 +238,20 @@ export default function RosterSection({
       {error ? (
         <p
           role="alert"
-          className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+          className="mt-4 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
         >
           {error}
         </p>
       ) : loading ? (
-        <p className="mt-4 text-sm text-[var(--color-ink)]/60">Loading roster…</p>
+        <p className="mt-4 text-sm text-[var(--color-bone)]/60">Loading roster...</p>
       ) : goingSorted.length === 0 && waitlist.length === 0 ? (
-        <p className="mt-4 text-[var(--color-ink)]/70">No players yet. Be the first to join.</p>
+        <p className="mt-4 text-[var(--color-bone)]/70">No players yet. Be the first to join.</p>
       ) : (
         <>
           {/* On the floor (#1–FLOOR_SIZE) */}
           {floor.length > 0 ? (
             <>
-              <SubLabel>On the floor · {floor.length}</SubLabel>
+              <SubLabel>On the floor - {floor.length}</SubLabel>
               <ScrollX>
                 {columnHeader}
                 <ul className="mt-1.5 space-y-1.5">
@@ -269,10 +269,10 @@ export default function RosterSection({
             </>
           ) : null}
 
-          {/* Bench (#FLOOR_SIZE+1 … cap) */}
+          {/* Bench (#FLOOR_SIZE+1 ... cap) */}
           {bench.length > 0 ? (
             <>
-              <SubLabel>Bench · {bench.length}</SubLabel>
+              <SubLabel>Bench - {bench.length}</SubLabel>
               <ScrollX>
                 <ul className="space-y-1.5">
                   {bench.map((r, i) => (
@@ -295,7 +295,7 @@ export default function RosterSection({
               <button
                 type="button"
                 onClick={() => setWaitlistOpen((v) => !v)}
-                className="text-sm font-semibold text-[var(--color-hardwood)] hover:underline"
+                className="text-sm font-semibold text-[var(--color-bone)]/55 hover:text-[var(--color-bone)] hover:underline"
               >
                 Waitlist ({waitlistCount}) {waitlistOpen ? 'Hide' : 'Show'}
               </button>

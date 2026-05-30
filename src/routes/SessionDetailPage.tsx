@@ -28,61 +28,69 @@ export default function SessionDetailPage() {
 
   if (id && !validId) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16">
-        <p
-          role="alert"
-          className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
-        >
-          Invalid session id
-        </p>
-        <Link
-          to="/map"
-          className="mt-4 inline-block text-sm font-semibold text-[var(--color-court)] hover:underline"
-        >
-          ← Back to map
-        </Link>
+      <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+        <div className="mx-auto max-w-3xl px-6 py-16">
+          <p
+            role="alert"
+            className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
+          >
+            Invalid session id
+          </p>
+          <Link
+            to="/map"
+            className="mt-4 inline-block text-sm font-semibold text-[var(--color-blue)] hover:underline"
+          >
+            &larr; Back to map
+          </Link>
+        </div>
       </main>
     );
   }
 
   if (loading) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16">
-        <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-hardwood)]">
-          Loading session…
-        </p>
+      <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+        <div className="mx-auto max-w-3xl px-6 py-16">
+          <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-bone)]/60">
+            Loading session...
+          </p>
+        </div>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16">
-        <p
-          role="alert"
-          className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
-        >
-          {error}
-        </p>
+      <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+        <div className="mx-auto max-w-3xl px-6 py-16">
+          <p
+            role="alert"
+            className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
+          >
+            {error}
+          </p>
+        </div>
       </main>
     );
   }
 
   if (!session) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16 text-center">
-        <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-court)]">
-          Session not found
-        </h1>
-        <p className="mt-3 text-[var(--color-ink)]/70">
-          This session may have been removed or never existed.
-        </p>
-        <Link
-          to="/map"
-          className="mt-6 inline-block text-sm font-semibold text-[var(--color-court)] hover:underline"
-        >
-          ← Back to map
-        </Link>
+      <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+        <div className="mx-auto max-w-3xl px-6 py-16 text-center">
+          <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-volt)]">
+            Session not found
+          </h1>
+          <p className="mt-3 text-[var(--color-bone)]/70">
+            This session may have been removed or never existed.
+          </p>
+          <Link
+            to="/map"
+            className="mt-6 inline-block text-sm font-semibold text-[var(--color-blue)] hover:underline"
+          >
+            &larr; Back to map
+          </Link>
+        </div>
       </main>
     );
   }
@@ -105,119 +113,121 @@ export default function SessionDetailPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12">
-      <Link
-        to={session.court ? `/courts/${session.court.id}` : '/map'}
-        className="text-sm font-semibold text-[var(--color-court)] hover:underline"
-      >
-        ← Back to {session.court ? courtName : 'map'}
-      </Link>
-
-      <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
-        <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-court)]">
-          {courtName}
-        </h1>
-        {cancelled ? (
-          <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-red-700">
-            Cancelled
-          </span>
-        ) : active ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-emerald-700">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-            Hooping · {formatTimeUntilEnd(session.ends_at, now)}
-          </span>
-        ) : (
-          <span className="rounded-full bg-[var(--color-court)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-court)]">
-            {relativeTime(session.starts_at, now)}
-          </span>
-        )}
-      </div>
-
-      <p className="mt-2 text-lg text-[var(--color-ink)]">
-        {formatSessionRange(session.starts_at, session.ends_at)}
-      </p>
-      <p className="mt-1 text-sm text-[var(--color-ink)]/70">
-        Hosted by{' '}
-        {session.host?.username ? (
-          <Link
-            to={`/u/${session.host.username}`}
-            className="font-semibold text-[var(--color-ink)] hover:text-[var(--color-court)]"
-          >
-            @{hostName}
-          </Link>
-        ) : (
-          <span className="font-semibold text-[var(--color-ink)]">@{hostName}</span>
-        )}
-      </p>
-
-      {session.notes ? (
-        <section className="mt-8 rounded-lg border border-[var(--color-ink)]/10 bg-white px-4 py-3">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
-            Notes
-          </p>
-          <p className="mt-1 whitespace-pre-wrap text-[var(--color-ink)]">{session.notes}</p>
-        </section>
-      ) : null}
-
-      {isHost && !cancelled && !startsInPast ? (
-        <div className="mt-8 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => setEditOpen(true)}
-            className="rounded-full border border-[var(--color-ink)]/20 px-5 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-          >
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={cancelling}
-            className="rounded-full border border-red-300 px-5 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {cancelling ? 'Cancelling…' : 'Cancel session'}
-          </button>
-        </div>
-      ) : null}
-
-      {cancelError ? (
-        <p
-          role="alert"
-          className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+    <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+      <div className="mx-auto max-w-3xl px-6 py-12">
+        <Link
+          to={session.court ? `/courts/${session.court.id}` : '/map'}
+          className="text-sm font-semibold text-[var(--color-blue)] hover:underline"
         >
-          {cancelError}
+          &larr; Back to {session.court ? courtName : 'map'}
+        </Link>
+
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+          <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-volt)]">
+            {courtName}
+          </h1>
+          {cancelled ? (
+            <span className="rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-red-300">
+              Cancelled
+            </span>
+          ) : active ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-volt)] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[#0c1402]">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0c1402]" />
+              Hooping - {formatTimeUntilEnd(session.ends_at, now)}
+            </span>
+          ) : (
+            <span className="rounded-full bg-[var(--color-blue)]/15 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-blue)]">
+              {relativeTime(session.starts_at, now)}
+            </span>
+          )}
+        </div>
+
+        <p className="mt-2 text-lg text-[var(--color-bone)]">
+          {formatSessionRange(session.starts_at, session.ends_at)}
         </p>
-      ) : null}
+        <p className="mt-1 text-sm text-[var(--color-bone)]/70">
+          Hosted by{' '}
+          {session.host?.username ? (
+            <Link
+              to={`/u/${session.host.username}`}
+              className="font-semibold text-[var(--color-bone)] hover:text-[var(--color-volt)]"
+            >
+              @{hostName}
+            </Link>
+          ) : (
+            <span className="font-semibold text-[var(--color-bone)]">@{hostName}</span>
+          )}
+        </p>
 
-      <RosterSection
-        sessionId={session.id}
-        hostId={session.host_id}
-        cancelled={cancelled}
-        startsAt={session.starts_at}
-        endsAt={session.ends_at}
-        onAfterLeave={refresh}
-      />
+        {session.notes ? (
+          <section className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
+              Notes
+            </p>
+            <p className="mt-1 whitespace-pre-wrap text-[var(--color-bone)]">{session.notes}</p>
+          </section>
+        ) : null}
 
-      {isHost ? (
-        <SessionModal
-          open={editOpen}
-          title="Edit session"
-          submitLabel="Save changes"
-          initial={{
-            startsAt: session.starts_at,
-            endsAt: session.ends_at,
-            notes: session.notes,
-          }}
-          onClose={() => setEditOpen(false)}
-          onSubmit={async ({ startsAt, endsAt, notes }) => {
-            const { error: updateErr } = await update({
-              starts_at: startsAt,
-              ends_at: endsAt,
-              notes,
-            });
-            return { error: updateErr };
-          }}
+        {isHost && !cancelled && !startsInPast ? (
+          <div className="mt-8 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              className="rounded-full border border-[var(--color-blue)]/50 px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              disabled={cancelling}
+              className="rounded-full border border-red-500/40 px-5 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {cancelling ? 'Cancelling...' : 'Cancel session'}
+            </button>
+          </div>
+        ) : null}
+
+        {cancelError ? (
+          <p
+            role="alert"
+            className="mt-4 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
+          >
+            {cancelError}
+          </p>
+        ) : null}
+
+        <RosterSection
+          sessionId={session.id}
+          hostId={session.host_id}
+          cancelled={cancelled}
+          startsAt={session.starts_at}
+          endsAt={session.ends_at}
+          onAfterLeave={refresh}
         />
-      ) : null}
+
+        {isHost ? (
+          <SessionModal
+            open={editOpen}
+            title="Edit session"
+            submitLabel="Save changes"
+            initial={{
+              startsAt: session.starts_at,
+              endsAt: session.ends_at,
+              notes: session.notes,
+            }}
+            onClose={() => setEditOpen(false)}
+            onSubmit={async ({ startsAt, endsAt, notes }) => {
+              const { error: updateErr } = await update({
+                starts_at: startsAt,
+                ends_at: endsAt,
+                notes,
+              });
+              return { error: updateErr };
+            }}
+          />
+        ) : null}
+      </div>
     </main>
   );
 }
