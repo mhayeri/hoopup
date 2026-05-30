@@ -73,48 +73,54 @@ export default function CourtDetailPage() {
 
   if (loading) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16">
-        <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-hardwood)]">
-          Loading court…
-        </p>
+      <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+        <div className="mx-auto max-w-3xl px-6 py-16">
+          <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-bone)]/60">
+            Loading court…
+          </p>
+        </div>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16">
-        <p
-          role="alert"
-          className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
-        >
-          {error}
-        </p>
-        <Link
-          to="/map"
-          className="mt-4 inline-block text-sm font-semibold text-[var(--color-court)] hover:underline"
-        >
-          ← Back to map
-        </Link>
+      <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+        <div className="mx-auto max-w-3xl px-6 py-16">
+          <p
+            role="alert"
+            className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
+          >
+            {error}
+          </p>
+          <Link
+            to="/map"
+            className="mt-4 inline-block text-sm font-semibold text-[var(--color-blue)] hover:underline"
+          >
+            Back to map
+          </Link>
+        </div>
       </main>
     );
   }
 
   if (!court) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16 text-center">
-        <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-court)]">
-          Court not found
-        </h1>
-        <p className="mt-3 text-[var(--color-ink)]/70">
-          We couldn't find a court with that id. It may have been removed.
-        </p>
-        <Link
-          to="/map"
-          className="mt-6 inline-block text-sm font-semibold text-[var(--color-court)] hover:underline"
-        >
-          ← Back to map
-        </Link>
+      <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+        <div className="mx-auto max-w-3xl px-6 py-16 text-center">
+          <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-bone)]">
+            Court not found
+          </h1>
+          <p className="mt-3 text-[var(--color-bone)]/70">
+            We couldn't find a court with that id. It may have been removed.
+          </p>
+          <Link
+            to="/map"
+            className="mt-6 inline-block text-sm font-semibold text-[var(--color-blue)] hover:underline"
+          >
+            Back to map
+          </Link>
+        </div>
       </main>
     );
   }
@@ -130,100 +136,102 @@ export default function CourtDetailPage() {
   ].filter((f): f is { label: string; value: string } => f !== null);
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12">
-      <Link to="/map" className="text-sm font-semibold text-[var(--color-court)] hover:underline">
-        ← Back to map
-      </Link>
-      <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
-        <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-court)]">
-          {courtDisplayName}
-        </h1>
-        <FavoriteCourtButton courtId={court.id} />
-      </div>
-
-      <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {facts.map((f) => (
-          <div
-            key={f.label}
-            className="rounded-lg border border-[var(--color-ink)]/10 bg-white px-4 py-3"
-          >
-            <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
-              {f.label}
-            </dt>
-            <dd className="mt-1 text-[var(--color-ink)]">{f.value}</dd>
-          </div>
-        ))}
-      </dl>
-
-      {liveSessions.length > 0 ? (
-        <section className="mt-12">
-          <div className="flex items-center gap-3">
-            <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-emerald-700">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-              Hooping
-            </h2>
-            <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-emerald-700">
-              {liveSessions.length}
-            </span>
-          </div>
-          <ul className="mt-4 space-y-3">
-            {liveSessions.map((s) => (
-              <li key={s.id}>
-                <SessionListItem session={s} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      <section className="mt-12">
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-ink)]">
-            Upcoming sessions
-          </h2>
-          {user ? (
-            <button
-              type="button"
-              onClick={() => setHostModalOpen(true)}
-              className="rounded-full bg-[var(--color-court)] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90"
-            >
-              Host a session
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              className="rounded-full border border-[var(--color-ink)]/20 px-5 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
-            >
-              Sign in to host
-            </Link>
-          )}
+    <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
+      <div className="mx-auto max-w-3xl px-6 py-12">
+        <Link to="/map" className="text-sm font-semibold text-[var(--color-blue)] hover:underline">
+          Back to map
+        </Link>
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+          <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-bone)]">
+            {courtDisplayName}
+          </h1>
+          <FavoriteCourtButton courtId={court.id} />
         </div>
 
-        {sessionsError ? (
-          <p
-            role="alert"
-            className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
-          >
-            {sessionsError}
-          </p>
-        ) : sessionsLoading ? (
-          <p className="mt-4 text-sm text-[var(--color-ink)]/60">Loading sessions…</p>
-        ) : upcomingSessions.length === 0 ? (
-          <p className="mt-4 text-[var(--color-ink)]/70">
-            {liveSessions.length > 0
-              ? 'No future sessions scheduled yet.'
-              : 'No upcoming sessions. Be the first to host one.'}
-          </p>
-        ) : (
-          <ul className="mt-4 space-y-3">
-            {upcomingSessions.map((s) => (
-              <li key={s.id}>
-                <SessionListItem session={s} />
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+        <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {facts.map((f) => (
+            <div
+              key={f.label}
+              className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3"
+            >
+              <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
+                {f.label}
+              </dt>
+              <dd className="mt-1 text-[var(--color-bone)]">{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        {liveSessions.length > 0 ? (
+          <section className="mt-12">
+            <div className="flex items-center gap-3">
+              <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-[var(--color-volt)]">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--color-volt)]" />
+                Hooping
+              </h2>
+              <span className="rounded-full bg-[var(--color-volt)]/15 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-volt)]">
+                {liveSessions.length}
+              </span>
+            </div>
+            <ul className="mt-4 space-y-3">
+              {liveSessions.map((s) => (
+                <li key={s.id}>
+                  <SessionListItem session={s} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        <section className="mt-12">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-bone)]">
+              Upcoming sessions
+            </h2>
+            {user ? (
+              <button
+                type="button"
+                onClick={() => setHostModalOpen(true)}
+                className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
+              >
+                Host a session
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-white/8"
+              >
+                Sign in to host
+              </Link>
+            )}
+          </div>
+
+          {sessionsError ? (
+            <p
+              role="alert"
+              className="mt-4 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
+            >
+              {sessionsError}
+            </p>
+          ) : sessionsLoading ? (
+            <p className="mt-4 text-sm text-[var(--color-bone)]/55">Loading sessions…</p>
+          ) : upcomingSessions.length === 0 ? (
+            <p className="mt-4 text-[var(--color-bone)]/70">
+              {liveSessions.length > 0
+                ? 'No future sessions scheduled yet.'
+                : 'No upcoming sessions. Be the first to host one.'}
+            </p>
+          ) : (
+            <ul className="mt-4 space-y-3">
+              {upcomingSessions.map((s) => (
+                <li key={s.id}>
+                  <SessionListItem session={s} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
 
       {user ? (
         <SessionModal
