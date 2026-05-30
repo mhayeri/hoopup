@@ -9,7 +9,7 @@ function markerSvg(fill: string): string {
 
 export const defaultCourtIcon = new L.DivIcon({
   className: '',
-  html: markerSvg('#2A81CB'),
+  html: markerSvg('#64748b'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -17,7 +17,7 @@ export const defaultCourtIcon = new L.DivIcon({
 
 export const activeCourtIcon = new L.DivIcon({
   className: '',
-  html: markerSvg('#C5622A'),
+  html: markerSvg('#2b6fff'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -28,7 +28,7 @@ export const activeCourtIcon = new L.DivIcon({
 // courts with any not-yet-ended session (live or upcoming).
 export const liveCourtIcon = new L.DivIcon({
   className: '',
-  html: markerSvg('#10B981'),
+  html: markerSvg('#c8ff2d'),
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],

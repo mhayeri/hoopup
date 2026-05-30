@@ -15,7 +15,7 @@ export default function FavoriteCourtButton({ courtId }: { courtId: number }) {
     return (
       <Link
         to="/login"
-        className="text-sm font-semibold text-[var(--color-ink)]/55 underline underline-offset-4 transition hover:text-[var(--color-ink)]"
+        className="text-sm font-semibold text-[var(--color-bone)]/45 underline underline-offset-4 transition hover:text-[var(--color-bone)]"
       >
         Sign in to save
       </Link>
@@ -28,11 +28,11 @@ export default function FavoriteCourtButton({ courtId }: { courtId: number }) {
       onClick={() => void toggle()}
       disabled={loading || pending}
       aria-pressed={isFavorite}
-      title={isFavorite ? 'Saved — tap to remove' : 'Save this court'}
+      title={isFavorite ? 'Saved - tap to remove' : 'Save this court'}
       className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition disabled:opacity-60 ${
         isFavorite
-          ? 'border border-[var(--color-court)]/35 bg-[var(--color-court)]/10 text-[var(--color-court)] hover:bg-[var(--color-court)]/15'
-          : 'border border-[var(--color-ink)]/20 bg-white text-[var(--color-ink)] hover:bg-[var(--color-ink)]/5'
+          ? 'bg-[var(--color-volt)] text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] hover:bg-[var(--color-volt)]/90'
+          : 'border border-white/15 text-[var(--color-bone)] hover:bg-white/8'
       }`}
     >
       <span aria-hidden className="text-base leading-none">

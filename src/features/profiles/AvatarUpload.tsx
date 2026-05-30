@@ -58,7 +58,7 @@ export default function AvatarUpload({ userId, currentUrl, onUploaded, showAvata
 
   const control = (
     <div>
-      <label className="inline-block cursor-pointer rounded-full border border-[var(--color-ink)]/20 bg-white px-4 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5">
+      <label className="inline-block cursor-pointer rounded-full border border-[var(--color-blue)]/50 px-4 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10">
         {uploading ? 'Uploading…' : currentUrl ? 'Replace photo' : 'Upload photo'}
         <input
           ref={fileInputRef}
@@ -69,9 +69,9 @@ export default function AvatarUpload({ userId, currentUrl, onUploaded, showAvata
           className="hidden"
         />
       </label>
-      <p className="mt-1 text-xs text-[var(--color-ink)]/60">PNG, JPG, WEBP, or GIF. ≤ 5 MB.</p>
+      <p className="mt-1 text-xs text-[var(--color-bone)]/55">PNG, JPG, WEBP, or GIF. 5 MB max.</p>
       {error ? (
-        <p role="alert" className="mt-2 text-sm text-red-700">
+        <p role="alert" className="mt-2 text-sm text-red-300">
           {error}
         </p>
       ) : null}
@@ -82,11 +82,11 @@ export default function AvatarUpload({ userId, currentUrl, onUploaded, showAvata
 
   return (
     <div className="flex items-center gap-4">
-      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-court)]/30 bg-[var(--color-net)]">
+      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-blue)]/40 bg-[var(--color-night-3)]">
         {currentUrl ? (
           <img src={currentUrl} alt="" className="h-full w-full object-cover" />
         ) : (
-          <span className="text-xs uppercase tracking-widest text-[var(--color-hardwood)]/70">
+          <span className="text-xs uppercase tracking-widest text-[var(--color-bone)]/60">
             no pic
           </span>
         )}

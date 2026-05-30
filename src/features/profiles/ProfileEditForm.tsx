@@ -90,7 +90,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
           required
           className={inputClass}
         />
-        <Hint>3–20 characters, lowercase. Must be unique.</Hint>
+        <Hint>3-20 characters, lowercase. Must be unique.</Hint>
       </Field>
 
       <Field label="Bio">
@@ -111,7 +111,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
             onChange={(e) => setSkillLevel(e.target.value)}
             className={inputClass}
           >
-            <option value="">—</option>
+            <option value="">-</option>
             {SKILL_LEVELS.map((s) => (
               <option key={s} value={s}>
                 {s}
@@ -125,7 +125,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
             onChange={(e) => setPosition(e.target.value)}
             className={inputClass}
           >
-            <option value="">—</option>
+            <option value="">-</option>
             {POSITIONS.map((p) => (
               <option key={p} value={p}>
                 {p}
@@ -152,7 +152,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
           onChange={(e) => setHomeCourtId(e.target.value)}
           className={inputClass}
         >
-          <option value="">— pick one —</option>
+          <option value="">- pick one -</option>
           {courts.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name ?? `Court #${c.id}`}
@@ -164,7 +164,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
       {error ? (
         <p
           role="alert"
-          className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+          className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
         >
           {error}
         </p>
@@ -174,14 +174,14 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-full bg-[var(--color-court)] px-6 py-2 font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-full bg-[var(--color-volt)] px-6 py-2 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {submitting ? 'Saving…' : 'Save'}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-full border border-[var(--color-ink)]/20 px-6 py-2 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+          className="rounded-full border border-[var(--color-blue)]/50 px-6 py-2 font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10"
         >
           Cancel
         </button>
@@ -191,19 +191,17 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
 }
 
 const inputClass =
-  'mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20';
+  'mt-1 w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-[var(--color-bone)] placeholder:text-[var(--color-bone)]/40 outline-none focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
-        {label}
-      </span>
+      <span className="text-sm font-medium text-[var(--color-bone)]/80">{label}</span>
       {children}
     </label>
   );
 }
 
 function Hint({ children }: { children: React.ReactNode }) {
-  return <span className="mt-1 block text-xs text-[var(--color-ink)]/60">{children}</span>;
+  return <span className="mt-1 block text-xs text-[var(--color-bone)]/55">{children}</span>;
 }

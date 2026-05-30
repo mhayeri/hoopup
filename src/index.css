@@ -9,6 +9,23 @@
   --color-chalk: oklch(0.97 0.01 90);
   --color-net: oklch(0.85 0.02 90);
   --color-ink: oklch(0.18 0.02 60);
+
+  /* Volt night-neon theme — floodlit dark base, electric blue for structure,
+     volt green for energy/live. Added incrementally (home + nav first); the
+     legacy light tokens above stay until the rest of the app is migrated. */
+  --color-night: #0b0b0f;
+  --color-night-2: #131319;
+  --color-night-3: #1b1b23;
+  --color-bone: #eef0f2;
+  --color-blue: #2b6fff;
+  --color-volt: #c8ff2d;
+
+  /* Skill-tier ramp — shared by the roster (PlayerRow) and the friends/identity
+     skill pill so a player's skill reads the same color everywhere. */
+  --color-skill-beginner: #34d399;
+  --color-skill-intermediate: #5b8bff;
+  --color-skill-advanced: #a78bfa;
+  --color-skill-pro: #fbbf24;
 }
 
 html,
@@ -23,4 +40,58 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  /* The app is dark Volt — tell the browser so native controls (select option
+     popups, date/time pickers, scrollbars) render dark instead of OS-light. */
+  color-scheme: dark;
+}
+
+/* Belt-and-suspenders for the native <select> dropdown list (some engines
+   ignore color-scheme for option colors). */
+option {
+  background-color: var(--color-night-2);
+  color: var(--color-bone);
+}
+
+/* Volt theme helpers (used by the dark home + nav). */
+.volt-floods {
+  background:
+    radial-gradient(42% 52% at 20% 6%, rgba(43, 111, 255, 0.22), transparent 60%),
+    radial-gradient(40% 50% at 84% 0%, rgba(200, 255, 45, 0.13), transparent 60%),
+    radial-gradient(60% 60% at 50% 118%, rgba(43, 111, 255, 0.08), transparent 60%);
+}
+.volt-glow {
+  text-shadow: 0 0 32px rgba(200, 255, 45, 0.45);
+}
+
+/* Leaflet dark theming for the Volt map (overrides must beat leaflet.css). */
+.leaflet-container {
+  background: var(--color-night) !important;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--color-night-2) !important;
+  color: var(--color-bone);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+}
+.leaflet-popup-content-wrapper {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.leaflet-popup-close-button {
+  color: var(--color-bone) !important;
+}
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: var(--color-night-2);
+  color: var(--color-bone);
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+.leaflet-bar a:hover {
+  background: var(--color-night-3);
+}
+.leaflet-control-attribution {
+  background: rgba(11, 11, 15, 0.7) !important;
+  color: rgba(238, 240, 242, 0.6);
+}
+.leaflet-control-attribution a {
+  color: var(--color-blue);
 }

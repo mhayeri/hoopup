@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { RsvpWithProfile } from '../../lib/database.types';
-
-type SkillLevel = NonNullable<NonNullable<RsvpWithProfile['profile']>['skill_level']>;
+import { SKILL_LABEL, SKILL_TIER_COLOR, SKILL_TIER_NONE } from '../../lib/skill';
 
 /**
  * Shared box-score grid — jersey · avatar · player · pos · skill · yrs.
@@ -10,22 +9,6 @@ type SkillLevel = NonNullable<NonNullable<RsvpWithProfile['profile']>['skill_lev
  */
 export const ROW_GRID =
   'grid grid-cols-[34px_36px_minmax(0,1fr)_50px_112px_44px] items-center gap-x-2.5';
-
-const SKILL_LABEL: Record<SkillLevel, string> = {
-  beginner: 'Beginner',
-  intermediate: 'Intermediate',
-  advanced: 'Advanced',
-  pro: 'Pro',
-};
-
-/** Skill-tier ramp driving the left accent rail + the Skill-column text. */
-const SKILL_TIER_COLOR: Record<SkillLevel, string> = {
-  beginner: '#15803d',
-  intermediate: 'var(--color-court)',
-  advanced: 'var(--color-hardwood)',
-  pro: '#b45309',
-};
-const TIER_NONE = 'oklch(0.18 0.02 60 / 0.25)';
 
 type Props = {
   rsvp: RsvpWithProfile;
@@ -38,12 +21,12 @@ type Props = {
 export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey = null }: Props) {
   if (!rsvp.profile) return null;
   const { profile } = rsvp;
-  const tier = profile.skill_level ? SKILL_TIER_COLOR[profile.skill_level] : TIER_NONE;
-  const rowTint = isHost ? 'bg-amber-50' : isYou ? 'bg-[var(--color-court)]/5' : 'bg-white';
+  const tier = profile.skill_level ? SKILL_TIER_COLOR[profile.skill_level] : SKILL_TIER_NONE;
+  const rowTint = isYou ? 'bg-[var(--color-blue)]/10' : 'bg-white/[0.03]';
 
   return (
     <li
-      className={`${ROW_GRID} relative overflow-hidden rounded-xl border border-[var(--color-ink)]/10 px-4 py-2.5 transition hover:-translate-y-px hover:border-[var(--color-court)]/45 hover:shadow-sm ${rowTint}`}
+      className={`${ROW_GRID} relative overflow-hidden rounded-xl border border-white/10 px-4 py-2.5 transition hover:-translate-y-px hover:border-white/20 hover:shadow-sm ${rowTint}`}
     >
       {/* skill-tier rail — absolute so it never shifts the column grid */}
       <span
@@ -56,17 +39,17 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
       <span
         className={`text-center font-display leading-none tabular-nums ${
           jersey == null ? 'text-lg' : 'text-2xl'
-        } ${isHost ? 'text-[var(--color-court)]' : 'text-[var(--color-ink)]/35'}`}
+        } ${isHost ? 'text-[var(--color-volt)]' : 'text-white/35'}`}
       >
-        {jersey ?? '—'}
+        {jersey ?? '-'}
       </span>
 
       {/* avatar */}
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-court)]/20 bg-[var(--color-net)]">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-blue)]/30 bg-[var(--color-night-3)]">
         {profile.avatar_url ? (
           <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
         ) : (
-          <span className="text-xs font-bold uppercase text-[var(--color-hardwood)]/60">
+          <span className="text-xs font-bold uppercase text-[var(--color-bone)]/60">
             {profile.username.charAt(0)}
           </span>
         )}
@@ -76,28 +59,28 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
       <div className="flex min-w-0 items-center gap-2">
         <Link
           to={`/u/${profile.username}`}
-          className="truncate rounded text-sm font-semibold text-[var(--color-ink)] outline-none hover:text-[var(--color-court)] hover:underline focus-visible:ring-2 focus-visible:ring-[var(--color-court)]/40"
+          className="truncate rounded text-sm font-semibold text-[var(--color-bone)] outline-none hover:text-[var(--color-volt)] hover:underline focus-visible:ring-2 focus-visible:ring-[var(--color-volt)]/40"
         >
           @{profile.username}
         </Link>
         {isHost ? (
           <span
-            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider text-amber-700"
+            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[var(--color-volt)]/40 bg-[var(--color-volt)]/10 px-2 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider text-[var(--color-volt)]"
             aria-label="Host"
           >
-            <span aria-hidden>👑</span> Host
+            <span aria-hidden>&#x1F451;</span> Host
           </span>
         ) : null}
         {isYou ? (
-          <span className="inline-flex shrink-0 items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider text-emerald-700">
+          <span className="inline-flex shrink-0 items-center rounded-full bg-[var(--color-blue)]/20 px-2 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider text-[var(--color-blue)]">
             You
           </span>
         ) : null}
       </div>
 
       {/* Pos */}
-      <span className="text-center text-[13px] font-semibold tabular-nums text-[var(--color-hardwood)]">
-        {profile.preferred_position ?? <span className="text-[var(--color-ink)]/30">—</span>}
+      <span className="text-center text-[13px] font-semibold tabular-nums text-[var(--color-bone)]/60">
+        {profile.preferred_position ?? <span className="text-white/30">-</span>}
       </span>
 
       {/* Skill */}
@@ -109,12 +92,12 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
           {SKILL_LABEL[profile.skill_level]}
         </span>
       ) : (
-        <span className="text-xs text-[var(--color-ink)]/30">—</span>
+        <span className="text-xs text-white/30">-</span>
       )}
 
       {/* Yrs */}
-      <span className="text-center text-[13px] font-semibold tabular-nums text-[var(--color-ink)]/65">
-        {profile.years_playing ?? <span className="text-[var(--color-ink)]/30">—</span>}
+      <span className="text-center text-[13px] font-semibold tabular-nums text-[var(--color-bone)]/65">
+        {profile.years_playing ?? <span className="text-white/30">-</span>}
       </span>
     </li>
   );

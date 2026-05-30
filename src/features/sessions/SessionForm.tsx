@@ -95,7 +95,7 @@ export default function SessionForm({ initial, submitLabel, onSubmit, onCancel }
           onChange={(e) => setNotes(e.target.value)}
           maxLength={500}
           rows={3}
-          placeholder="Skill level, who's bringing the ball, anything else…"
+          placeholder="Skill level, who's bringing the ball, anything else..."
           className={inputClass}
         />
         <Hint>{notes.length}/500</Hint>
@@ -104,7 +104,7 @@ export default function SessionForm({ initial, submitLabel, onSubmit, onCancel }
       {error ? (
         <p
           role="alert"
-          className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+          className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
         >
           {error}
         </p>
@@ -114,14 +114,14 @@ export default function SessionForm({ initial, submitLabel, onSubmit, onCancel }
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-full bg-[var(--color-court)] px-6 py-2 font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-full bg-[var(--color-volt)] px-6 py-2 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? 'Saving…' : submitLabel}
+          {submitting ? 'Saving...' : submitLabel}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-full border border-[var(--color-ink)]/20 px-6 py-2 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+          className="rounded-full border border-[var(--color-blue)]/50 px-6 py-2 font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10"
         >
           Cancel
         </button>
@@ -131,12 +131,12 @@ export default function SessionForm({ initial, submitLabel, onSubmit, onCancel }
 }
 
 const inputClass =
-  'mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20';
+  'mt-1 w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-[var(--color-bone)] placeholder:text-[var(--color-bone)]/40 outline-none focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
+      <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/80">
         {label}
       </span>
       {children}
@@ -145,5 +145,5 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function Hint({ children }: { children: React.ReactNode }) {
-  return <span className="mt-1 block text-xs text-[var(--color-ink)]/60">{children}</span>;
+  return <span className="mt-1 block text-xs text-[var(--color-bone)]/55">{children}</span>;
 }

@@ -48,7 +48,7 @@ export function friendlyMessage(
     return 'Could not generate a username. Please try again.';
   if (code === PG_ERROR_CODES.FRIENDSHIP_SELF) return 'You cannot add yourself as a friend.';
   if (code === PG_ERROR_CODES.FRIENDSHIP_DUPLICATE)
-    return 'They already sent you a friend request — check your incoming requests.';
+    return 'They already sent you a friend request. Check your incoming requests.';
   if (code === PG_ERROR_CODES.FRIENDSHIP_IMMUTABLE)
     return 'This friend request can no longer be changed.';
 

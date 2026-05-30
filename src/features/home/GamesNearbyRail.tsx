@@ -58,9 +58,9 @@ export default function GamesNearbyRail({
   }, [sessions, now, excludeSessionId]);
 
   return (
-    <div className="rounded-2xl border border-[var(--color-ink)]/10 bg-white p-4 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.25)]">
-      <p className="mb-3 flex items-center gap-2 px-1 text-xs font-bold tracking-[0.08em] text-emerald-700 uppercase">
-        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+    <div className="rounded-2xl border border-white/12 bg-[var(--color-night-2)]/60 p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)] ring-1 ring-[var(--color-blue)]/15 backdrop-blur">
+      <p className="mb-3 flex items-center gap-2 px-1 text-xs font-bold tracking-[0.08em] text-[var(--color-volt)] uppercase">
+        <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-volt)] shadow-[0_0_8px_var(--color-volt)]" />
         {heading}
       </p>
 
@@ -73,20 +73,20 @@ export default function GamesNearbyRail({
       ) : error ? (
         <p
           role="alert"
-          className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+          className="rounded-xl border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
         >
           {error}
         </p>
       ) : visible.length === 0 ? (
         <div className="flex flex-col items-start gap-3 px-1 py-4">
-          <p className="text-sm text-[var(--color-ink)]/65">
+          <p className="text-sm text-[var(--color-bone)]/65">
             {onlyNextRun
               ? "That's the only game on the board right now. Host another or check back as more get scheduled."
               : 'No games scheduled yet. Be the first to host one.'}
           </p>
           <Link
             to="/map"
-            className="rounded-full border border-[var(--color-court)]/40 bg-[var(--color-court)]/8 px-4 py-1.5 text-xs font-bold text-[var(--color-court)] transition hover:bg-[var(--color-court)]/12"
+            className="rounded-full border border-[var(--color-blue)]/45 bg-[var(--color-blue)]/10 px-4 py-1.5 text-xs font-bold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/18"
           >
             Browse the map →
           </Link>
@@ -100,7 +100,7 @@ export default function GamesNearbyRail({
           </div>
           <Link
             to="/map"
-            className="mt-2.5 block rounded-full bg-[var(--color-ink)]/4 px-4 py-2 text-center text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/8"
+            className="mt-2.5 block rounded-full bg-[var(--color-blue)]/12 px-4 py-2 text-center text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/20"
           >
             See all on the map →
           </Link>
@@ -112,6 +112,6 @@ export default function GamesNearbyRail({
 
 function SkeletonCard() {
   return (
-    <div className="h-[88px] animate-pulse rounded-xl border border-[var(--color-ink)]/8 bg-[var(--color-ink)]/3" />
+    <div className="h-[88px] animate-pulse rounded-xl border border-white/8 bg-white/[0.04]" />
   );
 }
