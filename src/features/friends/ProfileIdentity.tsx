@@ -9,6 +9,14 @@ const SKILL_LABEL: Record<SkillLevel, string> = {
   pro: 'Pro',
 };
 
+/** Per-tier pill colors, shared with the roster via the `--color-skill-*` tokens. */
+const SKILL_PILL: Record<SkillLevel, string> = {
+  beginner: 'bg-[var(--color-skill-beginner)]/15 text-[var(--color-skill-beginner)]',
+  intermediate: 'bg-[var(--color-skill-intermediate)]/15 text-[var(--color-skill-intermediate)]',
+  advanced: 'bg-[var(--color-skill-advanced)]/15 text-[var(--color-skill-advanced)]',
+  pro: 'bg-[var(--color-skill-pro)]/15 text-[var(--color-skill-pro)]',
+};
+
 /** Just the fields the identity block renders — satisfied by both
  *  `PublicProfile` (friendship embeds) and `PublicProfileRow` (search). */
 type IdentityProfile = {
@@ -40,13 +48,15 @@ export default function ProfileIdentity({ profile, onUsernameClick, footer }: Pr
         <Link
           to={`/u/${profile.username}`}
           onClick={onUsernameClick}
-          className="block truncate text-sm font-semibold text-[var(--color-blue)] hover:underline"
+          className="block truncate text-sm font-semibold text-[var(--color-bone)] hover:text-[var(--color-volt)] hover:underline"
         >
           @{profile.username}
         </Link>
         <div className="mt-1 flex flex-wrap gap-1">
           {profile.skill_level ? (
-            <span className="rounded-full bg-[var(--color-blue)]/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-blue)]">
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${SKILL_PILL[profile.skill_level]}`}
+            >
               {SKILL_LABEL[profile.skill_level]}
             </span>
           ) : null}
@@ -69,11 +79,11 @@ export default function ProfileIdentity({ profile, onUsernameClick, footer }: Pr
 
 function ProfileAvatar({ avatarUrl, username }: { avatarUrl: string | null; username: string }) {
   return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-blue)]/40 bg-[var(--color-night-3)]">
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-volt)]/40 bg-[var(--color-night-3)]">
       {avatarUrl ? (
         <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
       ) : (
-        <span className="text-xs font-bold uppercase text-[var(--color-blue)]">
+        <span className="text-xs font-bold uppercase text-[var(--color-volt)]">
           {username.charAt(0)}
         </span>
       )}

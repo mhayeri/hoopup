@@ -72,7 +72,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
     return (
       <Link
         to="/login"
-        className="inline-flex w-full items-center justify-center rounded-full bg-[var(--color-blue)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--color-blue)]/90"
+        className="inline-flex w-full items-center justify-center rounded-full bg-[var(--color-volt)] px-5 py-2.5 text-sm font-semibold text-[#0c1402] transition hover:bg-[var(--color-volt)]/90"
       >
         Sign in to add friend
       </Link>
@@ -107,7 +107,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
           stop(e);
           void run(send);
         }}
-        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-blue)]/30 bg-[var(--color-night-3)] text-[var(--color-blue)] transition hover:bg-[var(--color-blue)]/15 disabled:opacity-50"
+        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-volt)]/30 bg-[var(--color-night-3)] text-[var(--color-volt)] transition hover:bg-[var(--color-volt)]/15 disabled:opacity-50"
       >
         <span aria-hidden>+</span>
       </button>
@@ -129,7 +129,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
             stop(e);
             void run(send);
           }}
-          className={`${primaryShell} rounded-full bg-[var(--color-blue)] font-semibold text-white transition hover:bg-[var(--color-blue)]/90 disabled:opacity-60`}
+          className={`${primaryShell} rounded-full bg-[var(--color-volt)] font-semibold text-[#0c1402] transition hover:bg-[var(--color-volt)]/90 disabled:opacity-60`}
         >
           + Add friend
         </button>
@@ -168,7 +168,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
               stop(e);
               void run(accept);
             }}
-            className={`${primaryShell} flex-1 rounded-full bg-[var(--color-blue)] font-semibold text-white transition hover:bg-[var(--color-blue)]/90 disabled:opacity-60`}
+            className={`${primaryShell} flex-1 rounded-full bg-[var(--color-volt)] font-semibold text-[#0c1402] transition hover:bg-[var(--color-volt)]/90 disabled:opacity-60`}
           >
             Accept
           </button>
@@ -201,7 +201,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
         }}
         aria-haspopup="menu"
         aria-expanded={removeMenuOpen}
-        className={`${primaryShell} rounded-full border border-[var(--color-blue)]/45 bg-[var(--color-blue)]/12 font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/20 disabled:opacity-60`}
+        className={`${primaryShell} rounded-full border border-[var(--color-volt)]/45 bg-[var(--color-volt)]/12 font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-volt)]/20 disabled:opacity-60`}
       >
         Friends
         <span className="ml-1" aria-hidden>

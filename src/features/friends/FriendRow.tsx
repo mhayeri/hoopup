@@ -72,7 +72,7 @@ export default function FriendRow({
               type="button"
               disabled={busy}
               onClick={() => void run(onAccept)}
-              className="flex-1 sm:flex-none rounded-full bg-[var(--color-blue)] px-3 py-2 sm:py-1.5 text-xs font-semibold text-white transition hover:bg-[var(--color-blue)]/90 disabled:opacity-60"
+              className="flex-1 sm:flex-none rounded-full bg-[var(--color-volt)] px-3 py-2 sm:py-1.5 text-xs font-semibold text-[#0c1402] transition hover:bg-[var(--color-volt)]/90 disabled:opacity-60"
             >
               Accept
             </button>
