@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import type { UpcomingSession } from '../map/useUpcomingSessions';
 import { formatPanelTime, formatTimeUntilEnd } from '../sessions/formatTime';
 import { SESSION_CAP } from '../sessions/useSessionRsvps';
+import { SKILL_PILL } from '../../lib/skill';
 
 type Props = {
   entry: UpcomingSession;
@@ -56,7 +57,9 @@ export default function HomeSessionCard({ entry, now, live = false }: Props) {
           {host ? `@${host.username}` : 'Unknown host'}
         </span>
         {host?.skill_level ? (
-          <span className="rounded-full bg-[var(--color-blue)]/15 px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-[var(--color-blue)] uppercase">
+          <span
+            className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold tracking-wide uppercase ${SKILL_PILL[host.skill_level]}`}
+          >
             {host.skill_level}
           </span>
         ) : null}
