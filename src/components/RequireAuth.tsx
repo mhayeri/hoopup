@@ -8,8 +8,8 @@ export default function RequireAuth({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <main className="flex min-h-full items-center justify-center px-6 py-16">
-        <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-hardwood)]">Loading…</p>
+      <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16">
+        <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-bone)]/60">Loading...</p>
       </main>
     );
   }

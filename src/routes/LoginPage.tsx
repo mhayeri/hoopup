@@ -19,7 +19,7 @@ function safeReturnPath(raw: string | null): string {
 
 // The `login` edge function returns its (already user-friendly) message in the
 // JSON body on a non-2xx response. Pull it out so the user sees "Too many
-// attempts…" / "Invalid email/username or password." rather than a generic
+// attempts..." / "Invalid email/username or password." rather than a generic
 // FunctionsHttpError.
 async function loginErrorMessage(error: unknown): Promise<string> {
   if (error instanceof FunctionsHttpError) {
@@ -27,7 +27,7 @@ async function loginErrorMessage(error: unknown): Promise<string> {
       const body = await error.context.json();
       if (body && typeof body.error === 'string') return body.error;
     } catch {
-      // body wasn't JSON — fall through to the default.
+      // body wasn't JSON - fall through to the default.
     }
   }
   return 'Sign in failed. Please try again.';
@@ -86,16 +86,16 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-full items-center justify-center px-6 py-16">
+    <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
       <div className="w-full max-w-sm">
-        <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-court)]">
+        <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-volt)]">
           Sign in
         </h1>
-        <p className="mt-2 text-sm text-[var(--color-ink)]/70">Welcome back. Hit the floor.</p>
+        <p className="mt-2 text-sm text-[var(--color-bone)]/70">Welcome back. Hit the floor.</p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
+            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
               Email or username
             </span>
             <input
@@ -104,11 +104,11 @@ export default function LoginPage() {
               autoComplete="username email"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20"
+              className="mt-1 w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-[var(--color-bone)] placeholder:text-[var(--color-bone)]/40 outline-none focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30"
             />
           </label>
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
+            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
               Password
             </span>
             <input
@@ -117,14 +117,14 @@ export default function LoginPage() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-[var(--color-ink)]/20 bg-white px-3 py-2 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20"
+              className="mt-1 w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-[var(--color-bone)] placeholder:text-[var(--color-bone)]/40 outline-none focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30"
             />
           </label>
 
           <div className="text-right">
             <Link
               to="/reset-password"
-              className="text-xs font-semibold text-[var(--color-court)] hover:underline"
+              className="text-xs font-semibold text-[var(--color-blue)] hover:underline"
             >
               Forgot password?
             </Link>
@@ -133,7 +133,7 @@ export default function LoginPage() {
           {error ? (
             <p
               role="alert"
-              className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+              className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
             >
               {error}
             </p>
@@ -142,23 +142,23 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-full bg-[var(--color-court)] px-6 py-3 font-semibold text-white shadow-lg shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {submitting ? 'Signing in…' : 'Sign in'}
+            {submitting ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-[var(--color-ink)]/40">
-          <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
+        <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-[var(--color-bone)]/45">
+          <span className="h-px flex-1 bg-white/10" />
           or
-          <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
+          <span className="h-px flex-1 bg-white/10" />
         </div>
 
         <OAuthButtons />
 
-        <p className="mt-6 text-sm text-[var(--color-ink)]/70">
+        <p className="mt-6 text-sm text-[var(--color-bone)]/70">
           New here?{' '}
-          <Link to="/signup" className="font-semibold text-[var(--color-court)] hover:underline">
+          <Link to="/signup" className="font-semibold text-[var(--color-blue)] hover:underline">
             Create an account
           </Link>
           .

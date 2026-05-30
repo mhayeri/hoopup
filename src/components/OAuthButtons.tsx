@@ -37,15 +37,15 @@ export default function OAuthButtons() {
           type="button"
           onClick={() => start(p)}
           disabled={pending !== null}
-          className="flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-ink)]/20 bg-white px-6 py-3 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 font-semibold text-[var(--color-bone)] transition hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {pending === p ? 'Redirecting…' : labels[p]}
+          {pending === p ? 'Redirecting...' : labels[p]}
         </button>
       ))}
       {error ? (
         <p
           role="alert"
-          className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+          className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
         >
           {error}
         </p>

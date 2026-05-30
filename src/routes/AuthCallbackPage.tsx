@@ -24,7 +24,7 @@ const OTP_TYPES: ReadonlySet<EmailOtpType> = new Set([
  *   - Legacy: #access_token=...&refresh_token=... (auto-handled by
  *             detectSessionInUrl before this component renders)
  *
- * The hash placement is what makes this fiddly — window.location.search is
+ * The hash placement is what makes this fiddly - window.location.search is
  * empty, so we parse the query suffix from window.location.hash ourselves.
  */
 function readAuthParams(): URLSearchParams {
@@ -130,7 +130,7 @@ export default function AuthCallbackPage() {
     return () => window.clearTimeout(timeoutId);
   }, [loading, session, navigate]);
 
-  // Once a session is established, clean the URL and head on — to
+  // Once a session is established, clean the URL and head on - to
   // /update-password for a recovery flow, otherwise home.
   useEffect(() => {
     if (!loading && session) {
@@ -141,27 +141,27 @@ export default function AuthCallbackPage() {
 
   if (error) {
     return (
-      <main className="flex min-h-full items-center justify-center px-6 py-16">
+      <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
         <div className="max-w-md text-center">
-          <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-court)]">
+          <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-volt)]">
             Couldn't sign you in
           </h1>
           <p
             role="alert"
-            className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+            className="mt-4 rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
           >
             {error}
           </p>
           <div className="mt-6 flex items-center justify-center gap-3">
             <Link
               to="/login"
-              className="rounded-full bg-[var(--color-court)] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:bg-[var(--color-court)]/90"
+              className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
             >
               Sign in
             </Link>
             <Link
               to="/"
-              className="rounded-full border border-[var(--color-ink)]/20 px-5 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5"
+              className="rounded-full border border-[var(--color-blue)]/50 px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10"
             >
               Go home
             </Link>
@@ -172,12 +172,12 @@ export default function AuthCallbackPage() {
   }
 
   return (
-    <main className="flex min-h-full items-center justify-center px-6 py-16">
+    <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
       <div className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-hardwood)]">
-          Lacing up…
+        <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-bone)]/60">
+          Lacing up...
         </p>
-        <p className="mt-4 text-[var(--color-ink)]/70">Finishing sign-in.</p>
+        <p className="mt-4 text-[var(--color-bone)]/70">Finishing sign-in.</p>
       </div>
     </main>
   );
