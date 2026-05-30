@@ -8,7 +8,7 @@ const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const searchInputClass =
-  'w-full rounded-lg border border-[var(--color-ink)]/20 bg-white py-2 pl-9 pr-3 outline-none focus:border-[var(--color-court)] focus:ring-2 focus:ring-[var(--color-court)]/20';
+  'w-full rounded-lg border border-white/15 bg-white/[0.04] py-2 pl-9 pr-3 text-[var(--color-bone)] outline-none placeholder:text-[var(--color-bone)]/40 focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30';
 
 type Props = {
   open: boolean;
@@ -91,21 +91,21 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
       role="dialog"
       aria-modal="true"
       aria-label="Find players"
-      className="fixed inset-0 z-[2000] flex flex-col bg-[var(--color-chalk)] sm:bg-[var(--color-ink)]/40 sm:p-4 sm:pt-16"
+      className="fixed inset-0 z-[2000] flex flex-col bg-[var(--color-night-2)] sm:bg-black/60 sm:p-4 sm:pt-16"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
         ref={panelRef}
-        className="flex h-full w-full flex-col overflow-hidden bg-[var(--color-chalk)] sm:mx-auto sm:h-auto sm:max-h-[80vh] sm:max-w-lg sm:rounded-2xl sm:border sm:border-[var(--color-ink)]/10 sm:shadow-2xl"
+        className="flex h-full w-full flex-col overflow-hidden bg-[var(--color-night-2)] sm:mx-auto sm:h-auto sm:max-h-[80vh] sm:max-w-lg sm:rounded-2xl sm:border sm:border-white/10 sm:shadow-2xl"
       >
-        <div className="flex items-center gap-2 border-b border-[var(--color-ink)]/10 px-4 py-3">
+        <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
           <div className="relative flex-1">
             <svg
               aria-hidden
               viewBox="0 0 24 24"
-              className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-ink)]/40"
+              className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-bone)]/40"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -133,7 +133,7 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded-full p-2 text-[var(--color-ink)]/60 hover:bg-[var(--color-ink)]/5 hover:text-[var(--color-ink)]"
+            className="rounded-full p-2 text-[var(--color-bone)]/60 hover:bg-white/8 hover:text-[var(--color-bone)]"
           >
             ✕
           </button>
@@ -141,16 +141,18 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
 
         <div className="flex-1 overflow-y-auto p-4">
           {tooShort ? (
-            <p className="px-1 py-6 text-center text-sm text-[var(--color-ink)]/50">
+            <p className="px-1 py-6 text-center text-sm text-[var(--color-bone)]/55">
               Search players by username to add them as friends.
             </p>
           ) : loading ? (
-            <p className="px-1 py-6 text-center text-sm text-[var(--color-ink)]/50">Searching…</p>
+            <p className="px-1 py-6 text-center text-sm text-[var(--color-bone)]/55">
+              Searching...
+            </p>
           ) : error ? (
-            <p className="px-1 py-6 text-center text-sm text-red-700">{error}</p>
+            <p className="px-1 py-6 text-center text-sm text-red-300">{error}</p>
           ) : results.length === 0 ? (
-            <p className="px-1 py-6 text-center text-sm text-[var(--color-ink)]/50">
-              No players found for “{trimmed}”.
+            <p className="px-1 py-6 text-center text-sm text-[var(--color-bone)]/55">
+              No players found for &quot;{trimmed}&quot;.
             </p>
           ) : (
             <ul className="space-y-2">

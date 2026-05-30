@@ -72,7 +72,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
     return (
       <Link
         to="/login"
-        className="inline-flex w-full items-center justify-center rounded-full bg-[var(--color-court)] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:brightness-95"
+        className="inline-flex w-full items-center justify-center rounded-full bg-[var(--color-blue)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--color-blue)]/90"
       >
         Sign in to add friend
       </Link>
@@ -107,7 +107,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
           stop(e);
           void run(send);
         }}
-        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-court)]/30 bg-white text-[var(--color-court)] transition hover:bg-[var(--color-court)]/10 disabled:opacity-50"
+        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-blue)]/30 bg-[var(--color-night-3)] text-[var(--color-blue)] transition hover:bg-[var(--color-blue)]/15 disabled:opacity-50"
       >
         <span aria-hidden>+</span>
       </button>
@@ -129,11 +129,11 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
             stop(e);
             void run(send);
           }}
-          className={`${primaryShell} rounded-full bg-[var(--color-court)] font-semibold text-white shadow-md shadow-[var(--color-court)]/30 transition hover:brightness-95 disabled:opacity-60`}
+          className={`${primaryShell} rounded-full bg-[var(--color-blue)] font-semibold text-white transition hover:bg-[var(--color-blue)]/90 disabled:opacity-60`}
         >
           + Add friend
         </button>
-        {error ? <p className="mt-2 text-xs text-red-700">{error}</p> : null}
+        {error ? <p className="mt-2 text-xs text-red-300">{error}</p> : null}
       </div>
     );
   }
@@ -148,11 +148,11 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
             stop(e);
             void run(cancel);
           }}
-          className={`${primaryShell} rounded-full border border-[var(--color-ink)]/20 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5 disabled:opacity-60`}
+          className={`${primaryShell} rounded-full border border-white/12 bg-white/8 font-semibold text-[var(--color-bone)]/70 transition hover:bg-white/12 disabled:opacity-60`}
         >
-          Request sent · Cancel
+          Request sent - Cancel
         </button>
-        {error ? <p className="mt-2 text-xs text-red-700">{error}</p> : null}
+        {error ? <p className="mt-2 text-xs text-red-300">{error}</p> : null}
       </div>
     );
   }
@@ -168,7 +168,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
               stop(e);
               void run(accept);
             }}
-            className={`${primaryShell} flex-1 rounded-full bg-emerald-600 font-semibold text-white shadow-md shadow-emerald-600/30 transition hover:bg-emerald-700 disabled:opacity-60`}
+            className={`${primaryShell} flex-1 rounded-full bg-[var(--color-blue)] font-semibold text-white transition hover:bg-[var(--color-blue)]/90 disabled:opacity-60`}
           >
             Accept
           </button>
@@ -179,12 +179,12 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
               stop(e);
               void run(decline);
             }}
-            className={`${primaryShell} flex-1 rounded-full border border-[var(--color-ink)]/20 font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5 disabled:opacity-60`}
+            className={`${primaryShell} flex-1 rounded-full border border-white/15 font-semibold text-[var(--color-bone)]/70 transition hover:bg-white/8 disabled:opacity-60`}
           >
             Decline
           </button>
         </div>
-        {error ? <p className="mt-2 text-xs text-red-700">{error}</p> : null}
+        {error ? <p className="mt-2 text-xs text-red-300">{error}</p> : null}
       </div>
     );
   }
@@ -201,7 +201,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
         }}
         aria-haspopup="menu"
         aria-expanded={removeMenuOpen}
-        className={`${primaryShell} rounded-full border border-emerald-600/40 bg-emerald-50 font-semibold text-emerald-800 transition hover:bg-emerald-100 disabled:opacity-60`}
+        className={`${primaryShell} rounded-full border border-[var(--color-blue)]/45 bg-[var(--color-blue)]/12 font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/20 disabled:opacity-60`}
       >
         Friends
         <span className="ml-1" aria-hidden>
@@ -211,7 +211,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
       {removeMenuOpen ? (
         <div
           role="menu"
-          className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-xl border border-[var(--color-ink)]/10 bg-white shadow-lg"
+          className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-xl border border-white/10 bg-[var(--color-night-2)] shadow-lg"
         >
           <button
             type="button"
@@ -222,13 +222,13 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
               setRemoveMenuOpen(false);
               setRemoveOpen(true);
             }}
-            className="block w-full px-4 py-2 text-left text-sm font-semibold text-red-700 transition hover:bg-red-50"
+            className="block w-full px-4 py-2 text-left text-sm font-semibold text-red-300 transition hover:bg-red-500/10"
           >
             Remove friend
           </button>
         </div>
       ) : null}
-      {error ? <p className="mt-2 text-xs text-red-700">{error}</p> : null}
+      {error ? <p className="mt-2 text-xs text-red-300">{error}</p> : null}
       <RemoveFriendModal
         open={removeOpen}
         onClose={() => setRemoveOpen(false)}

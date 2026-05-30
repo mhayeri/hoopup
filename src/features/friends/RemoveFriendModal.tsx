@@ -38,18 +38,18 @@ export default function RemoveFriendModal({ open, onClose, username, onConfirm }
   return (
     <Modal title="Remove friend?" open={open} onClose={handleClose}>
       <div className="space-y-4">
-        <p className="text-sm text-[var(--color-ink)]">
+        <p className="text-sm text-[var(--color-bone)]">
           Are you sure you want to remove <span className="font-semibold">@{username}</span> from
           your friends?
         </p>
-        <p className="text-xs text-[var(--color-ink)]/70">
+        <p className="text-xs text-[var(--color-bone)]/55">
           You'll need to re-add them to become friends again.
         </p>
 
         {error ? (
           <p
             role="alert"
-            className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800"
+            className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
           >
             {error}
           </p>
@@ -60,7 +60,7 @@ export default function RemoveFriendModal({ open, onClose, username, onConfirm }
             type="button"
             onClick={handleClose}
             disabled={busy}
-            className="rounded-full border border-[var(--color-ink)]/20 px-5 py-2 text-sm font-semibold text-[var(--color-ink)] transition hover:bg-[var(--color-ink)]/5 disabled:opacity-60"
+            className="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-[var(--color-bone)]/70 transition hover:bg-white/8 disabled:opacity-60"
           >
             Cancel
           </button>
@@ -68,7 +68,7 @@ export default function RemoveFriendModal({ open, onClose, username, onConfirm }
             type="button"
             onClick={() => void handleConfirm()}
             disabled={busy}
-            className="rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white shadow-md shadow-red-600/30 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy ? 'Removing…' : 'Remove'}
           </button>

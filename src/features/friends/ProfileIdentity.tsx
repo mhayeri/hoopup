@@ -40,23 +40,23 @@ export default function ProfileIdentity({ profile, onUsernameClick, footer }: Pr
         <Link
           to={`/u/${profile.username}`}
           onClick={onUsernameClick}
-          className="block truncate text-sm font-semibold text-[var(--color-ink)] hover:text-[var(--color-court)]"
+          className="block truncate text-sm font-semibold text-[var(--color-blue)] hover:underline"
         >
           @{profile.username}
         </Link>
         <div className="mt-1 flex flex-wrap gap-1">
           {profile.skill_level ? (
-            <span className="rounded-full bg-[var(--color-court)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-court)]">
+            <span className="rounded-full bg-[var(--color-blue)]/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-blue)]">
               {SKILL_LABEL[profile.skill_level]}
             </span>
           ) : null}
           {profile.preferred_position ? (
-            <span className="rounded-full bg-[var(--color-hardwood)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-hardwood)]">
+            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-bone)]">
               {profile.preferred_position}
             </span>
           ) : null}
           {profile.years_playing != null ? (
-            <span className="rounded-full bg-[var(--color-ink)]/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-ink)]/70">
+            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-bone)]/70">
               {profile.years_playing} {profile.years_playing === 1 ? 'yr' : 'yrs'}
             </span>
           ) : null}
@@ -69,11 +69,11 @@ export default function ProfileIdentity({ profile, onUsernameClick, footer }: Pr
 
 function ProfileAvatar({ avatarUrl, username }: { avatarUrl: string | null; username: string }) {
   return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-court)]/20 bg-[var(--color-net)]">
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-blue)]/40 bg-[var(--color-night-3)]">
       {avatarUrl ? (
         <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
       ) : (
-        <span className="text-xs font-bold uppercase text-[var(--color-hardwood)]/60">
+        <span className="text-xs font-bold uppercase text-[var(--color-blue)]">
           {username.charAt(0)}
         </span>
       )}
