@@ -37,6 +37,8 @@ test-results/
 
 # Claude / agent helpers (local-only)
 .claude/
+.agents/
+skills-lock.json
 
 # Design mockups — local-only decision-making artifacts, not shipped
 design-mockups/
