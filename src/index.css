@@ -9,6 +9,16 @@
   --color-chalk: oklch(0.97 0.01 90);
   --color-net: oklch(0.85 0.02 90);
   --color-ink: oklch(0.18 0.02 60);
+
+  /* Volt night-neon theme — floodlit dark base, electric blue for structure,
+     volt green for energy/live. Added incrementally (home + nav first); the
+     legacy light tokens above stay until the rest of the app is migrated. */
+  --color-night: #0b0b0f;
+  --color-night-2: #131319;
+  --color-night-3: #1b1b23;
+  --color-bone: #eef0f2;
+  --color-blue: #2b6fff;
+  --color-volt: #c8ff2d;
 }
 
 html,
@@ -23,4 +33,15 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Volt theme helpers (used by the dark home + nav). */
+.volt-floods {
+  background:
+    radial-gradient(42% 52% at 20% 6%, rgba(43, 111, 255, 0.22), transparent 60%),
+    radial-gradient(40% 50% at 84% 0%, rgba(200, 255, 45, 0.13), transparent 60%),
+    radial-gradient(60% 60% at 50% 118%, rgba(43, 111, 255, 0.08), transparent 60%);
+}
+.volt-glow {
+  text-shadow: 0 0 32px rgba(200, 255, 45, 0.45);
 }
