@@ -248,7 +248,7 @@ function Identity({
   return (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className="text-3xl font-black tracking-tight break-words text-[var(--color-volt)]">
+        <h1 className="text-2xl font-black tracking-tight break-words text-[var(--color-volt)]">
           @{profile.username}
         </h1>
         {onEdit ? (
