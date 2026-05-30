@@ -1,21 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { Position, SkillLevel } from '../../lib/database.types';
-
-const SKILL_LABEL: Record<SkillLevel, string> = {
-  beginner: 'Beginner',
-  intermediate: 'Intermediate',
-  advanced: 'Advanced',
-  pro: 'Pro',
-};
-
-/** Per-tier pill colors, shared with the roster via the `--color-skill-*` tokens. */
-const SKILL_PILL: Record<SkillLevel, string> = {
-  beginner: 'bg-[var(--color-skill-beginner)]/15 text-[var(--color-skill-beginner)]',
-  intermediate: 'bg-[var(--color-skill-intermediate)]/15 text-[var(--color-skill-intermediate)]',
-  advanced: 'bg-[var(--color-skill-advanced)]/15 text-[var(--color-skill-advanced)]',
-  pro: 'bg-[var(--color-skill-pro)]/15 text-[var(--color-skill-pro)]',
-};
+import { SKILL_LABEL, SKILL_PILL } from '../../lib/skill';
 
 /** Just the fields the identity block renders — satisfied by both
  *  `PublicProfile` (friendship embeds) and `PublicProfileRow` (search). */

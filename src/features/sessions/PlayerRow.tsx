@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { RsvpWithProfile } from '../../lib/database.types';
-
-type SkillLevel = NonNullable<NonNullable<RsvpWithProfile['profile']>['skill_level']>;
+import { SKILL_LABEL, SKILL_TIER_COLOR, SKILL_TIER_NONE } from '../../lib/skill';
 
 /**
  * Shared box-score grid — jersey · avatar · player · pos · skill · yrs.
@@ -10,23 +9,6 @@ type SkillLevel = NonNullable<NonNullable<RsvpWithProfile['profile']>['skill_lev
  */
 export const ROW_GRID =
   'grid grid-cols-[34px_36px_minmax(0,1fr)_50px_112px_44px] items-center gap-x-2.5';
-
-const SKILL_LABEL: Record<SkillLevel, string> = {
-  beginner: 'Beginner',
-  intermediate: 'Intermediate',
-  advanced: 'Advanced',
-  pro: 'Pro',
-};
-
-/** Skill-tier ramp driving the left accent rail + the Skill-column text.
- *  Shared with the friends/identity skill pill via the `--color-skill-*` tokens. */
-const SKILL_TIER_COLOR: Record<SkillLevel, string> = {
-  beginner: 'var(--color-skill-beginner)',
-  intermediate: 'var(--color-skill-intermediate)',
-  advanced: 'var(--color-skill-advanced)',
-  pro: 'var(--color-skill-pro)',
-};
-const TIER_NONE = 'rgba(255,255,255,0.3)';
 
 type Props = {
   rsvp: RsvpWithProfile;
@@ -39,7 +21,7 @@ type Props = {
 export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey = null }: Props) {
   if (!rsvp.profile) return null;
   const { profile } = rsvp;
-  const tier = profile.skill_level ? SKILL_TIER_COLOR[profile.skill_level] : TIER_NONE;
+  const tier = profile.skill_level ? SKILL_TIER_COLOR[profile.skill_level] : SKILL_TIER_NONE;
   const rowTint = isYou ? 'bg-[var(--color-blue)]/10' : 'bg-white/[0.03]';
 
   return (
