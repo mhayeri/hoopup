@@ -79,11 +79,62 @@ export function formatSessionRange(startsAt: string, endsAt: string): string {
 /**
  * Converts a Date to the `YYYY-MM-DDTHH:mm` format that `<input
  * type="datetime-local">` expects. Built-in toISOString returns UTC which
- * shifts the displayed time; this preserves the user's local clock.
+ * shifts the displayed time; this preserves the user's local clock. Splitting
+ * the result on `'T'` also yields the `<input type="date">` value and the
+ * `HH:mm` key used by the time-slot `<select>` (see `TIME_SLOTS`).
  */
 export function toDatetimeLocalValue(d: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+/** A 15-minute time-of-day option: `value` is the `HH:mm` key, `label` the
+ * locale-formatted display (e.g. "1:00 PM"). */
+export type TimeSlot = { value: string; label: string };
+
+/** Step (minutes) between selectable session times — pickup games start on the
+ * quarter-hour, never at 9:19. Used by `TIME_SLOTS` and the rounding helper. */
+export const SLOT_MINUTES = 15;
+
+/**
+ * Every 15-minute slot in a day (`00:00` → `23:45`, 96 entries) for the host
+ * form's time dropdown. `value` is the zero-padded `HH:mm` so it lines up with
+ * `toDatetimeLocalValue`'s time component; `label` is locale-aware via Intl.
+ */
+export const TIME_SLOTS: TimeSlot[] = buildTimeSlots();
+
+function buildTimeSlots(): TimeSlot[] {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const fmt = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit' });
+  const slots: TimeSlot[] = [];
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += SLOT_MINUTES) {
+      slots.push({ value: `${pad(h)}:${pad(m)}`, label: fmt.format(new Date(2000, 0, 1, h, m)) });
+    }
+  }
+  return slots;
+}
+
+/**
+ * Snaps a Date to the nearest 15-minute mark (seconds/ms dropped). Lets Date's
+ * own normalization carry an overflow past `:45` into the next hour/day so the
+ * paired date + time stay consistent. Used to keep the host form's start/end on
+ * the same grid as `TIME_SLOTS`, including when editing an older off-grid session.
+ */
+export function roundToNearestQuarterHour(d: Date): Date {
+  const r = new Date(d);
+  r.setSeconds(0, 0);
+  r.setMinutes(Math.round(r.getMinutes() / SLOT_MINUTES) * SLOT_MINUTES);
+  return r;
+}
+
+/**
+ * Combines a `YYYY-MM-DD` date and an `HH:mm` time into a Date in the user's
+ * local timezone — a date-time string with no offset parses as local, matching
+ * `toDatetimeLocalValue`'s semantics. Inverse of splitting that value on `'T'`.
+ */
+export function combineDateTime(date: string, time: string): Date {
+  return new Date(`${date}T${time}`);
 }
 
 /**
