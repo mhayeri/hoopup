@@ -4,15 +4,13 @@
   --font-display: 'Bebas Neue', 'Oswald', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
 
-  --color-court: oklch(0.62 0.18 45);
-  --color-hardwood: oklch(0.45 0.07 60);
+  /* Legacy light tokens — only chalk/ink remain, used solely as the `body`
+     base color; every full-page route paints its own dark Volt wrapper. */
   --color-chalk: oklch(0.97 0.01 90);
-  --color-net: oklch(0.85 0.02 90);
   --color-ink: oklch(0.18 0.02 60);
 
   /* Volt night-neon theme — floodlit dark base, electric blue for structure,
-     volt green for energy/live. Added incrementally (home + nav first); the
-     legacy light tokens above stay until the rest of the app is migrated. */
+     volt green for energy/live. */
   --color-night: #0b0b0f;
   --color-night-2: #131319;
   --color-night-3: #1b1b23;
