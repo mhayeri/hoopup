@@ -4,6 +4,19 @@
 
 HoopUp is a basketball pickup-game coordinator. Pull up the map, see nearby courts, RSVP to a session, and show up knowing exactly who's running with you. Each session caps at 15 — first come, first hooped.
 
+## Features
+
+- **Live court map** — nearby basketball courts pulled from OpenStreetMap via the Overpass API, cached server-side.
+- **Host & RSVP** — spin up a pickup game on any court; the 15-player cap (plus waitlist) is enforced atomically in Postgres, so there's no "16th player slipped through" race.
+- **Live "Hooping" status** — sessions flip to a live indicator across the map, panels, and rosters once they tip off.
+- **Player profiles** — skill level, preferred position, years playing, home court, bio, and avatar.
+- **Friends** — request / accept / decline a friendship graph with public `/u/:username` profiles.
+- **Court favorites** — save any court with a ★ and browse your saved courts from your profile.
+- **Map session filters** — narrow the "Find a game" list by time window, open spots, and host skill.
+- **Auth-aware home** — a personalized launchpad (your next game + quick actions) when signed in; a marketing landing with a live games rail when signed out.
+- **Hardened auth** — rate-limited username login, password reset, and secure account deletion.
+- **Dark "Volt" theme** — a floodlit night-neon look with a responsive mobile navbar.
+
 ## Stack
 
 - **Frontend**: React 19 + Vite + TypeScript + Tailwind CSS
@@ -60,9 +73,12 @@ Once a provider is enabled in the dashboard, the corresponding button on the sig
 
 ## How it works
 
-- **Map view** geolocates you and renders nearby basketball courts pulled from OpenStreetMap. Courts are cached server-side to avoid hammering Overpass.
-- **Sessions** are time-windowed pickup games attached to a court. Anyone can host one; anyone can RSVP. The 15-player cap is enforced atomically by a Postgres trigger — there's no "16th player slipped through" race condition.
-- **Profiles** show your bio, skill level, preferred position, years playing, home court, and avatar.
+- **Map view** geolocates you and renders nearby basketball courts pulled from OpenStreetMap. Courts are cached server-side to avoid hammering Overpass. Filter the "Find a game" panel by time window, open spots, and host skill.
+- **Sessions** are time-windowed pickup games attached to a court. Anyone can host one; anyone can RSVP. The 15-player cap is enforced atomically by a Postgres trigger — there's no "16th player slipped through" race condition. Once a game tips off it shows a live "Hooping" status everywhere it appears.
+- **Profiles** show your bio, skill level, preferred position, years playing, home court, and avatar. The signed-in home page becomes a personalized launchpad with your next game and quick actions.
+- **Friends** let you send, accept, and decline requests, and view anyone's public profile at `/u/:username`.
+- **Favorites** save any court with a ★ toggle for quick access from your profile.
+- **Account & security** cover rate-limited username login, a password-reset flow, and self-service account deletion.
 
 ## Project layout
 
