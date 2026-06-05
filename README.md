@@ -88,6 +88,7 @@ src/
   lib/             # supabase client, env, database types
   providers/       # AuthProvider + useAuth hook
   routes/          # page-level components (one per route)
+  features/        # feature modules (map, sessions, profiles, friends, courts, home)
 supabase/
   config.toml      # CLI-readable project link + auth redirect allowlist
   migrations/      # SQL schema, RLS, triggers, seed
