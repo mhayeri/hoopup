@@ -7,6 +7,7 @@ export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'pro';
 export type Position = 'PG' | 'SG' | 'SF' | 'PF' | 'C';
 export type RsvpStatus = 'going' | 'waitlist' | 'cancelled';
 export type FriendshipStatus = 'pending' | 'accepted';
+export type NotificationType = 'friend_session' | 'friend_request';
 
 export type Database = {
   public: {
@@ -21,6 +22,7 @@ export type Database = {
           years_playing: number | null;
           home_court_id: number | null;
           avatar_url: string | null;
+          notifications_enabled: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -33,6 +35,8 @@ export type Database = {
           years_playing?: number | null;
           home_court_id?: number | null;
           avatar_url?: string | null;
+          // notifications_enabled is omitted — it defaults true and the insert
+          // path is the autocreate-on-signup trigger, not the client.
         };
         Update: {
           username?: string;
@@ -42,6 +46,7 @@ export type Database = {
           years_playing?: number | null;
           home_court_id?: number | null;
           avatar_url?: string | null;
+          notifications_enabled?: boolean;
         };
         Relationships: [];
       };
@@ -147,6 +152,26 @@ export type Database = {
         Update: Record<string, never>;
         Relationships: [];
       };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          actor_id: string;
+          type: NotificationType;
+          session_id: string | null;
+          read_at: string | null;
+          created_at: string;
+        };
+        // Rows are created only by SECURITY DEFINER fan-out triggers, never by
+        // the client (no INSERT RLS policy) — same convention as `courts`.
+        Insert: Record<string, never>;
+        // Only read_at is mutable (mark-as-read); the owner-only UPDATE policy
+        // keeps user_id pinned.
+        Update: {
+          read_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -214,6 +239,29 @@ export type FavoriteCourtRow = {
   court_id: number;
   created_at: string;
   court: Database['public']['Tables']['courts']['Row'] | null;
+};
+
+/**
+ * Notification row joined with the actor's public profile and (for
+ * 'friend_session') the hosted session + its court (PostgREST embed).
+ * `session` is null for 'friend_request' rows. Powers the navbar dropdown.
+ */
+export type NotificationWithActor = {
+  id: string;
+  user_id: string;
+  actor_id: string;
+  type: NotificationType;
+  session_id: string | null;
+  read_at: string | null;
+  created_at: string;
+  actor: Pick<PublicProfile, 'id' | 'username' | 'avatar_url'> | null;
+  session: {
+    id: string;
+    starts_at: string;
+    ends_at: string;
+    cancelled_at: string | null;
+    court: Pick<Database['public']['Tables']['courts']['Row'], 'id' | 'name'> | null;
+  } | null;
 };
 
 // Postgres error codes we throw from triggers
