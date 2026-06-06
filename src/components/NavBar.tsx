@@ -2,13 +2,20 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
 import PlayerSearchOverlay from '../features/friends/PlayerSearchOverlay';
+import NotificationBell from '../features/notifications/NotificationBell';
+import NotificationsPanel from '../features/notifications/NotificationsPanel';
+import { useNotifications } from '../features/notifications/useNotifications';
 import MobileNavMenu from './MobileNavMenu';
 
 export default function NavBar() {
-  const { session, signOut } = useAuth();
+  const { session, user, signOut } = useAuth();
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Mounted once here so the poll interval and unread count are app-wide
+  // singletons; the bell and the dropdown both read from this instance.
+  const notifs = useNotifications(user?.id);
 
   async function onSignOut() {
     await signOut();
@@ -54,6 +61,10 @@ export default function NavBar() {
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
               </button>
+              <NotificationBell
+                unreadCount={notifs.unreadCount}
+                onOpen={() => setNotifOpen(true)}
+              />
               <Link
                 to="/profile"
                 className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
@@ -131,9 +142,22 @@ export default function NavBar() {
         authed={!!session}
         onSignOut={onSignOut}
         onOpenSearch={() => setSearchOpen(true)}
+        onOpenNotifications={() => setNotifOpen(true)}
+        unreadCount={notifs.unreadCount}
       />
       {session ? (
-        <PlayerSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+        <>
+          <PlayerSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+          <NotificationsPanel
+            open={notifOpen}
+            onClose={() => setNotifOpen(false)}
+            notifications={notifs.notifications}
+            loading={notifs.loading}
+            error={notifs.error}
+            markAllRead={notifs.markAllRead}
+            remove={notifs.remove}
+          />
+        </>
       ) : null}
     </header>
   );

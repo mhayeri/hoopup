@@ -14,6 +14,8 @@ type Props = {
   authed: boolean;
   onSignOut: () => void;
   onOpenSearch: () => void;
+  onOpenNotifications: () => void;
+  unreadCount: number;
 };
 
 /**
@@ -30,7 +32,15 @@ type Props = {
  * the top strip over the real header stays click-through and the header's
  * hamburger (which toggles to ✕ at z-10) remains tappable to close.
  */
-export default function MobileNavMenu({ open, onClose, authed, onSignOut, onOpenSearch }: Props) {
+export default function MobileNavMenu({
+  open,
+  onClose,
+  authed,
+  onSignOut,
+  onOpenSearch,
+  onOpenNotifications,
+  unreadCount,
+}: Props) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -94,6 +104,21 @@ export default function MobileNavMenu({ open, onClose, authed, onSignOut, onOpen
                 className={itemClass}
               >
                 Find players
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenNotifications();
+                }}
+                className={`${itemClass} flex items-center justify-between`}
+              >
+                <span>Notifications</span>
+                {unreadCount > 0 ? (
+                  <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--color-volt)] px-1 text-[10px] font-extrabold leading-none text-[#0c1402]">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                ) : null}
               </button>
               <Link to="/profile" onClick={onClose} className={itemClass}>
                 Profile

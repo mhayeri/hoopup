@@ -195,6 +195,10 @@ export default function ProfilePage() {
                 {tab === 'favorites' && isSelf ? <FavoriteCourtsList userId={profile.id} /> : null}
                 {tab === 'settings' && isSelf ? (
                   <SettingsPanel
+                    notificationsEnabled={ownHook.profile?.notifications_enabled ?? true}
+                    onToggleNotifications={(value) => {
+                      void ownHook.updateProfile({ notifications_enabled: value });
+                    }}
                     onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
                     onDeleteAccount={() => setDeleteOpen(true)}
                   />
@@ -299,14 +303,46 @@ function Item({ label, value }: { label: string; value: string | null }) {
 }
 
 function SettingsPanel({
+  notificationsEnabled,
+  onToggleNotifications,
   onChangePassword,
   onDeleteAccount,
 }: {
+  notificationsEnabled: boolean;
+  onToggleNotifications: (value: boolean) => void;
   onChangePassword: (() => void) | null;
   onDeleteAccount: () => void;
 }) {
   return (
     <div className="space-y-6">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+        <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
+          Notifications
+        </h3>
+        <p className="mt-2 text-sm text-[var(--color-bone)]/70">
+          Get notified when a friend hosts a game or sends you a friend request.
+        </p>
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <span className="text-sm font-semibold text-[var(--color-bone)]">Friend activity</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={notificationsEnabled}
+            aria-label="Toggle friend-activity notifications"
+            onClick={() => onToggleNotifications(!notificationsEnabled)}
+            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
+              notificationsEnabled ? 'bg-[var(--color-volt)]' : 'bg-white/15'
+            }`}
+          >
+            <span
+              className={`absolute top-1 left-1 h-5 w-5 rounded-full transition-transform ${
+                notificationsEnabled ? 'translate-x-5 bg-[#0c1402]' : 'translate-x-0 bg-white'
+              }`}
+            />
+          </button>
+        </div>
+      </div>
+
       {onChangePassword ? (
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
           <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
