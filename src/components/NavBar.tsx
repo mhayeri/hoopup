@@ -6,6 +6,7 @@ import NotificationBell from '../features/notifications/NotificationBell';
 import NotificationsPanel from '../features/notifications/NotificationsPanel';
 import { useNotifications } from '../features/notifications/useNotifications';
 import MobileNavMenu from './MobileNavMenu';
+import PlayerIcon from './PlayerIcon';
 
 export default function NavBar() {
   const { session, user, signOut } = useAuth();
@@ -44,22 +45,10 @@ export default function NavBar() {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Find players"
-                title="Find players"
-                className="rounded-full p-2 text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
+                className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-[var(--color-bone)]/40 transition hover:border-[var(--color-blue)]/50 hover:text-[var(--color-bone)]/70"
               >
-                <svg
-                  aria-hidden
-                  viewBox="0 0 24 24"
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="11" cy="11" r="7" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
+                <PlayerIcon className="h-4 w-4" />
+                <span>Find players</span>
               </button>
               <NotificationBell
                 unreadCount={notifs.unreadCount}
