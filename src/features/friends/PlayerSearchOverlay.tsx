@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useDebouncedValue } from '../../lib/useDebouncedValue';
 import { MIN_QUERY_LENGTH, useProfileSearch } from './useProfileSearch';
 import PlayerSearchResult from './PlayerSearchResult';
+import PlayerIcon from '../../components/PlayerIcon';
 
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -102,19 +103,7 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
       >
         <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
           <div className="relative flex-1">
-            <svg
-              aria-hidden
-              viewBox="0 0 24 24"
-              className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-bone)]/40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            <PlayerIcon className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-bone)]/40" />
             <input
               ref={inputRef}
               type="text"
