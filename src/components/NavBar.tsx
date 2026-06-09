@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
+import PlayerSearchBar from '../features/friends/PlayerSearchBar';
 import PlayerSearchOverlay from '../features/friends/PlayerSearchOverlay';
 import NotificationBell from '../features/notifications/NotificationBell';
 import NotificationsPanel from '../features/notifications/NotificationsPanel';
 import { useNotifications } from '../features/notifications/useNotifications';
 import MobileNavMenu from './MobileNavMenu';
-import PlayerIcon from './PlayerIcon';
 
 export default function NavBar() {
   const { session, user, signOut } = useAuth();
@@ -33,6 +33,7 @@ export default function NavBar() {
           Hoop<span className="text-[var(--color-volt)]">Up</span>
         </Link>
         <div className="hidden items-center gap-2 text-sm sm:flex">
+          {session ? <PlayerSearchBar /> : null}
           <Link
             to="/map"
             className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
@@ -41,15 +42,6 @@ export default function NavBar() {
           </Link>
           {session ? (
             <>
-              <button
-                type="button"
-                onClick={() => setSearchOpen(true)}
-                aria-label="Find players"
-                className="flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-[var(--color-bone)]/40 transition hover:border-[var(--color-blue)]/50 hover:text-[var(--color-bone)]/70"
-              >
-                <PlayerIcon className="h-4 w-4" />
-                <span>Find players</span>
-              </button>
               <NotificationBell
                 unreadCount={notifs.unreadCount}
                 onOpen={() => setNotifOpen(true)}
