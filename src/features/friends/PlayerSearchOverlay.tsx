@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDebouncedValue } from '../../lib/useDebouncedValue';
-import { MIN_QUERY_LENGTH, useProfileSearch } from './useProfileSearch';
-import PlayerSearchResult from './PlayerSearchResult';
+import { useProfileSearch } from './useProfileSearch';
+import PlayerSearchResults from './PlayerSearchResults';
 import PlayerIcon from '../../components/PlayerIcon';
 
 const FOCUSABLE_SELECTOR =
@@ -76,9 +76,6 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
 
   if (!open) return null;
 
-  const trimmed = query.trim();
-  const tooShort = trimmed.length < MIN_QUERY_LENGTH;
-
   // Portal to <body>: the NavBar's <header> uses backdrop-blur, and a
   // backdrop-filter makes that element the containing block for `position:
   // fixed` descendants — which would clamp this overlay to the navbar's box
@@ -129,27 +126,13 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
-          {tooShort ? (
-            <p className="px-1 py-6 text-center text-sm text-[var(--color-bone)]/55">
-              Search players by username to add them as friends.
-            </p>
-          ) : loading ? (
-            <p className="px-1 py-6 text-center text-sm text-[var(--color-bone)]/55">
-              Searching...
-            </p>
-          ) : error ? (
-            <p className="px-1 py-6 text-center text-sm text-red-300">{error}</p>
-          ) : results.length === 0 ? (
-            <p className="px-1 py-6 text-center text-sm text-[var(--color-bone)]/55">
-              No players found for &quot;{trimmed}&quot;.
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {results.map((profile) => (
-                <PlayerSearchResult key={profile.id} profile={profile} onNavigate={onClose} />
-              ))}
-            </ul>
-          )}
+          <PlayerSearchResults
+            query={query}
+            results={results}
+            loading={loading}
+            error={error}
+            onNavigate={onClose}
+          />
         </div>
       </div>
     </div>,
