@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
+import PlayerSearchBar from '../features/friends/PlayerSearchBar';
 import PlayerSearchOverlay from '../features/friends/PlayerSearchOverlay';
 import NotificationBell from '../features/notifications/NotificationBell';
 import NotificationsPanel from '../features/notifications/NotificationsPanel';
@@ -32,6 +33,7 @@ export default function NavBar() {
           Hoop<span className="text-[var(--color-volt)]">Up</span>
         </Link>
         <div className="hidden items-center gap-2 text-sm sm:flex">
+          {session ? <PlayerSearchBar /> : null}
           <Link
             to="/map"
             className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
@@ -40,27 +42,6 @@ export default function NavBar() {
           </Link>
           {session ? (
             <>
-              <button
-                type="button"
-                onClick={() => setSearchOpen(true)}
-                aria-label="Find players"
-                title="Find players"
-                className="rounded-full p-2 text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
-              >
-                <svg
-                  aria-hidden
-                  viewBox="0 0 24 24"
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="11" cy="11" r="7" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </button>
               <NotificationBell
                 unreadCount={notifs.unreadCount}
                 onOpen={() => setNotifOpen(true)}
