@@ -10,7 +10,8 @@
   --color-ink: oklch(0.18 0.02 60);
 
   /* Volt night-neon theme — floodlit dark base, electric blue for structure,
-     volt green for energy/live. */
+     volt green for energy/live. These are the DARK defaults; the light "Solar
+     Court" theme redefines them under :root[data-theme='light'] below. */
   --color-night: #0b0b0f;
   --color-night-2: #131319;
   --color-night-3: #1b1b23;
@@ -18,12 +19,52 @@
   --color-blue: #2b6fff;
   --color-volt: #c8ff2d;
 
+  /* Live / "Hooping" energy. In dark it's the same volt green; the light theme
+     splits it to crimson so live reads apart from the amber primary CTA. */
+  --color-live: #c8ff2d;
+
+  /* Semantic surface tokens — the recurring translucent card/border/hover
+     patterns, hoisted out of hardcoded `white/[0.0x]` utilities so they can
+     invert for light. Components reference these via `bg-[var(--surface)]`,
+     `border-[var(--border)]`, etc. */
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --hover: rgba(255, 255, 255, 0.08);
+
   /* Skill-tier ramp — shared by the roster (PlayerRow) and the friends/identity
      skill pill so a player's skill reads the same color everywhere. */
   --color-skill-beginner: #34d399;
   --color-skill-intermediate: #5b8bff;
   --color-skill-advanced: #a78bfa;
   --color-skill-pro: #fbbf24;
+}
+
+/* The app defaults to the dark Volt theme. The no-flash bootstrap script in
+   index.html sets <html data-theme="light|dark"> before first paint; this
+   block is the "Solar Court" light palette (sunlit white, paper cards, black
+   text + structure, amber energy, crimson live). Only tokens change here —
+   component markup is untouched. */
+:root {
+  color-scheme: dark;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --color-night: #ffffff;
+  --color-night-2: #fbfbf9;
+  --color-night-3: #f1efe9;
+  --color-bone: #0a0a0a;
+  --color-blue: #111111;
+  --color-volt: #ffce00;
+  --color-live: #ff3b30;
+
+  --surface: rgba(10, 10, 10, 0.025);
+  --surface-2: rgba(10, 10, 10, 0.05);
+  --border: rgba(10, 10, 10, 0.12);
+  --border-strong: rgba(10, 10, 10, 0.18);
+  --hover: rgba(10, 10, 10, 0.06);
 }
 
 html,
@@ -38,9 +79,8 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  /* The app is dark Volt — tell the browser so native controls (select option
-     popups, date/time pickers, scrollbars) render dark instead of OS-light. */
-  color-scheme: dark;
+  /* color-scheme lives on :root so native controls (select option popups,
+     date/time pickers, scrollbars) follow the active theme. */
 }
 
 /* Belt-and-suspenders for the native <select> dropdown list (some engines
