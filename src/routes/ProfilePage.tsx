@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
+import { useTheme } from '../providers/useTheme';
 import { useProfile } from '../features/profiles/useProfile';
 import { useProfileByUsername } from '../features/profiles/useProfileByUsername';
 import ProfileEditForm from '../features/profiles/ProfileEditForm';
@@ -313,8 +314,46 @@ function SettingsPanel({
   onChangePassword: (() => void) | null;
   onDeleteAccount: () => void;
 }) {
+  const { theme, toggle } = useTheme();
+  const isLight = theme === 'light';
+
   return (
     <div className="space-y-6">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+        <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
+          Appearance
+        </h3>
+        <p className="mt-2 text-sm text-[var(--color-bone)]/70">
+          Choose how HoopUp looks. Your choice is saved on this device.
+        </p>
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <span className="flex items-center gap-2.5 text-sm font-semibold text-[var(--color-bone)]">
+            Theme
+            <span className="rounded-full bg-[var(--color-volt)]/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-[var(--color-bone)]/80">
+              {isLight ? 'Light' : 'Dark'}
+            </span>
+          </span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={isLight}
+            aria-label="Switch between light and dark theme"
+            onClick={toggle}
+            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
+              isLight ? 'bg-[var(--color-volt)]' : 'bg-white/15'
+            }`}
+          >
+            <span
+              className={`absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] leading-none transition-transform ${
+                isLight ? 'translate-x-5 bg-[#0c1402]' : 'translate-x-0 bg-white'
+              }`}
+            >
+              {isLight ? '☀️' : '🌙'}
+            </span>
+          </button>
+        </div>
+      </div>
+
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
         <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
           Notifications
