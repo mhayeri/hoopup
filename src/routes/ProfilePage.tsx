@@ -105,7 +105,7 @@ export default function ProfilePage() {
       <div className="mx-auto max-w-5xl px-6 py-10">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           <aside className="lg:col-span-5">
-            <div className="rounded-3xl border border-white/10 bg-[var(--color-night-2)] p-8 shadow-sm">
+            <div className="rounded-3xl border border-[var(--border)] bg-[var(--color-night-2)] p-8 shadow-sm">
               {isSelf && editing && updateProfile && ownHook.profile ? (
                 // Edit mode (self): the full avatar uploader on top, the form below.
                 <>
@@ -116,7 +116,7 @@ export default function ProfilePage() {
                       await updateProfile({ avatar_url: url });
                     }}
                   />
-                  <div className="mt-6 border-t border-white/10 pt-6">
+                  <div className="mt-6 border-t border-[var(--border)] pt-6">
                     <ProfileEditForm
                       profile={ownHook.profile}
                       onSubmit={async (patch) => {
@@ -167,7 +167,7 @@ export default function ProfilePage() {
                     </div>
                   ) : null}
 
-                  <div className="mt-6 border-t border-white/10 pt-6">
+                  <div className="mt-6 border-t border-[var(--border)] pt-6">
                     <ProfileStats profile={profile} />
                   </div>
                 </>
@@ -176,7 +176,7 @@ export default function ProfilePage() {
           </aside>
 
           <section className="mt-6 space-y-6 lg:col-span-7 lg:mt-0">
-            <div className="rounded-3xl border border-white/10 bg-[var(--color-night-2)] p-8 shadow-sm">
+            <div className="rounded-3xl border border-[var(--border)] bg-[var(--color-night-2)] p-8 shadow-sm">
               <Tabs
                 items={tabItems}
                 value={tab}
@@ -319,7 +319,7 @@ function SettingsPanel({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
         <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
           Appearance
         </h3>
@@ -340,7 +340,7 @@ function SettingsPanel({
             aria-label="Switch between light and dark theme"
             onClick={toggle}
             className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
-              isLight ? 'bg-[var(--color-volt)]' : 'bg-white/15'
+              isLight ? 'bg-[var(--color-volt)]' : 'bg-[var(--border-strong)]'
             }`}
           >
             <span
@@ -354,7 +354,7 @@ function SettingsPanel({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
         <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
           Notifications
         </h3>
@@ -370,7 +370,7 @@ function SettingsPanel({
             aria-label="Toggle friend-activity notifications"
             onClick={() => onToggleNotifications(!notificationsEnabled)}
             className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
-              notificationsEnabled ? 'bg-[var(--color-volt)]' : 'bg-white/15'
+              notificationsEnabled ? 'bg-[var(--color-volt)]' : 'bg-[var(--border-strong)]'
             }`}
           >
             <span
@@ -383,7 +383,7 @@ function SettingsPanel({
       </div>
 
       {onChangePassword ? (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
           <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
             Security
           </h3>

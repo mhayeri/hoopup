@@ -191,7 +191,7 @@ export default function ProfileEditForm({ profile, onSubmit, onCancel }: Props) 
 }
 
 const inputClass =
-  'mt-1 w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-[var(--color-bone)] placeholder:text-[var(--color-bone)]/40 outline-none focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30';
+  'mt-1 w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-3 py-2 text-[var(--color-bone)] placeholder:text-[var(--color-bone)]/40 outline-none focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
