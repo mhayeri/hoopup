@@ -6,7 +6,7 @@ const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const itemClass =
-  'w-full rounded-lg px-3 py-3 text-left text-base font-semibold text-[var(--color-bone)] hover:bg-white/8';
+  'w-full rounded-lg px-3 py-3 text-left text-base font-semibold text-[var(--color-bone)] hover:bg-[var(--hover)]';
 
 type Props = {
   open: boolean;
@@ -87,7 +87,7 @@ export default function MobileNavMenu({
       <div
         ref={panelRef}
         id="mobile-nav-menu"
-        className="pointer-events-auto absolute inset-x-0 top-14 border-b border-white/10 bg-[var(--color-night-2)] shadow-lg"
+        className="pointer-events-auto absolute inset-x-0 top-14 border-b border-[var(--border)] bg-[var(--color-night-2)] shadow-lg"
       >
         <nav className="mx-auto flex max-w-5xl flex-col gap-1 px-6 py-3">
           <Link to="/map" onClick={onClose} className={itemClass}>
@@ -129,7 +129,7 @@ export default function MobileNavMenu({
                   onClose();
                   onSignOut();
                 }}
-                className="mt-1 w-full rounded-lg border border-white/15 px-3 py-3 text-center text-base font-semibold text-[var(--color-bone)] hover:bg-white/8"
+                className="mt-1 w-full rounded-lg border border-[var(--border-strong)] px-3 py-3 text-center text-base font-semibold text-[var(--color-bone)] hover:bg-[var(--hover)]"
               >
                 Sign out
               </button>

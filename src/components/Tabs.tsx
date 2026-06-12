@@ -29,7 +29,7 @@ export default function Tabs({ items, value, onChange, ariaLabel }: Props) {
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className="flex flex-wrap gap-1 border-b border-white/10 pb-2"
+      className="flex flex-wrap gap-1 border-b border-[var(--border)] pb-2"
     >
       {items.map((item, i) => {
         const selected = item.id === value;
