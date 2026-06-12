@@ -22,11 +22,11 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
   if (!rsvp.profile) return null;
   const { profile } = rsvp;
   const tier = profile.skill_level ? SKILL_TIER_COLOR[profile.skill_level] : SKILL_TIER_NONE;
-  const rowTint = isYou ? 'bg-[var(--color-blue)]/10' : 'bg-white/[0.03]';
+  const rowTint = isYou ? 'bg-[var(--color-blue)]/10' : 'bg-[var(--surface)]';
 
   return (
     <li
-      className={`${ROW_GRID} relative overflow-hidden rounded-xl border border-white/10 px-4 py-2.5 transition hover:-translate-y-px hover:border-white/20 hover:shadow-sm ${rowTint}`}
+      className={`${ROW_GRID} relative overflow-hidden rounded-xl border border-[var(--border)] px-4 py-2.5 transition hover:-translate-y-px hover:border-[var(--border-strong)] hover:shadow-sm ${rowTint}`}
     >
       {/* skill-tier rail — absolute so it never shifts the column grid */}
       <span
@@ -39,7 +39,7 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
       <span
         className={`text-center font-display leading-none tabular-nums ${
           jersey == null ? 'text-lg' : 'text-2xl'
-        } ${isHost ? 'text-[var(--color-volt)]' : 'text-white/35'}`}
+        } ${isHost ? 'text-[var(--color-volt)]' : 'text-[var(--color-bone)]/35'}`}
       >
         {jersey ?? '-'}
       </span>
@@ -80,7 +80,7 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
 
       {/* Pos */}
       <span className="text-center text-[13px] font-semibold tabular-nums text-[var(--color-bone)]/60">
-        {profile.preferred_position ?? <span className="text-white/30">-</span>}
+        {profile.preferred_position ?? <span className="text-[var(--color-bone)]/30">-</span>}
       </span>
 
       {/* Skill */}
@@ -92,12 +92,12 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
           {SKILL_LABEL[profile.skill_level]}
         </span>
       ) : (
-        <span className="text-xs text-white/30">-</span>
+        <span className="text-xs text-[var(--color-bone)]/30">-</span>
       )}
 
       {/* Yrs */}
       <span className="text-center text-[13px] font-semibold tabular-nums text-[var(--color-bone)]/65">
-        {profile.years_playing ?? <span className="text-white/30">-</span>}
+        {profile.years_playing ?? <span className="text-[var(--color-bone)]/30">-</span>}
       </span>
     </li>
   );

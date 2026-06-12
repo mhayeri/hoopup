@@ -18,7 +18,7 @@ type Props = {
 
 const ROLE_PILL_CLASS: Record<Role, string> = {
   going: 'bg-[var(--color-volt)] text-[#0c1402]',
-  waitlist: 'bg-white/10 text-[var(--color-bone)]/80',
+  waitlist: 'bg-[var(--color-bone)]/10 text-[var(--color-bone)]/80',
 };
 
 const ROLE_LABEL: Record<Role, string> = {
@@ -34,10 +34,10 @@ export default function SessionListItem({ session, courtName, role }: Props) {
   return (
     <Link
       to={`/sessions/${session.id}`}
-      className={`block rounded-lg border bg-white/[0.03] px-4 py-3 transition hover:shadow-sm ${
+      className={`block rounded-lg border bg-[var(--surface)] px-4 py-3 transition hover:shadow-sm ${
         active
           ? 'border-[var(--color-volt)]/45 hover:border-[var(--color-volt)]'
-          : 'border-white/10 hover:border-[var(--color-blue)]/50'
+          : 'border-[var(--border)] hover:border-[var(--color-blue)]/50'
       }`}
     >
       <div className="flex items-start justify-between gap-3">

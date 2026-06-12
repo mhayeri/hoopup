@@ -93,7 +93,7 @@ export default function SessionPanel({
 
   return (
     <aside
-      className={`relative flex w-full flex-col overflow-hidden bg-[var(--color-night-2)] text-[var(--color-bone)] shadow-[0_-10px_24px_-12px_rgba(0,0,0,0.45)] md:h-full md:w-[340px] md:border-r md:border-white/10 md:shadow-none`}
+      className={`relative flex w-full flex-col overflow-hidden bg-[var(--color-night-2)] text-[var(--color-bone)] shadow-[0_-10px_24px_-12px_rgba(0,0,0,0.45)] md:h-full md:w-[340px] md:border-r md:border-[var(--border)] md:shadow-none`}
     >
       <button
         type="button"
@@ -102,10 +102,10 @@ export default function SessionPanel({
         aria-label={mobileExpanded ? 'Collapse session list' : 'Expand session list'}
         className="block md:hidden"
       >
-        <span className="mx-auto mt-2 mb-1 block h-1 w-9 rounded-full bg-white/20" />
+        <span className="mx-auto mt-2 mb-1 block h-1 w-9 rounded-full bg-[var(--color-bone)]/20" />
       </button>
 
-      <div className="border-b border-white/8 px-5 pt-3 pb-3 md:pt-4">
+      <div className="border-b border-[var(--border)] px-5 pt-3 pb-3 md:pt-4">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-display text-2xl leading-none tracking-wide text-[var(--color-bone)]">
             Find a game
@@ -122,7 +122,7 @@ export default function SessionPanel({
         <div
           role="tablist"
           aria-label="Map filter"
-          className="inline-flex gap-1 rounded-full bg-white/8 p-1"
+          className="inline-flex gap-1 rounded-full bg-[var(--color-bone)]/8 p-1"
         >
           <FilterTab active={filter === 'all'} onClick={() => onFilterChange('all')}>
             All courts
@@ -144,12 +144,12 @@ export default function SessionPanel({
         </div>
 
         {filter === 'sessions' ? (
-          <div className="mt-3 border-t border-dashed border-white/12 pt-3">
+          <div className="mt-3 border-t border-dashed border-[var(--border)] pt-3">
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <div
                 role="group"
                 aria-label="Time window"
-                className="inline-flex flex-wrap gap-1 rounded-2xl bg-white/8 p-1"
+                className="inline-flex flex-wrap gap-1 rounded-2xl bg-[var(--color-bone)]/8 p-1"
               >
                 {TIME_WINDOWS.map(([value, label]) => (
                   <FilterChip
@@ -179,14 +179,14 @@ export default function SessionPanel({
                 className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                   openOnly
                     ? 'border-[var(--color-blue)]/50 bg-[var(--color-blue)]/15 text-[var(--color-bone)]'
-                    : 'border-white/15 text-[var(--color-bone)]/75 hover:bg-white/8'
+                    : 'border-[var(--border-strong)] text-[var(--color-bone)]/75 hover:bg-[var(--hover)]'
                 }`}
               >
                 <span
                   className={`inline-flex h-3.5 w-3.5 items-center justify-center rounded-full border text-[9px] leading-none text-white ${
                     openOnly
                       ? 'border-[var(--color-blue)] bg-[var(--color-blue)]'
-                      : 'border-white/30'
+                      : 'border-[var(--color-bone)]/30'
                   }`}
                 >
                   {openOnly ? '✓' : ''}
@@ -196,7 +196,7 @@ export default function SessionPanel({
               <div
                 role="group"
                 aria-label="Host skill"
-                className="inline-flex flex-wrap gap-1 rounded-2xl bg-white/8 p-1"
+                className="inline-flex flex-wrap gap-1 rounded-2xl bg-[var(--color-bone)]/8 p-1"
               >
                 {SKILL_OPTIONS.map(([value, label]) => (
                   <FilterChip key={value} active={skill === value} onClick={() => setSkill(value)}>
@@ -250,7 +250,7 @@ export default function SessionPanel({
                 </p>
                 <Link
                   to="/profile"
-                  className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-[var(--color-bone)] transition hover:bg-white/8"
+                  className="rounded-full border border-[var(--border-strong)] px-3 py-1.5 text-xs font-semibold text-[var(--color-bone)] transition hover:bg-[var(--hover)]"
                 >
                   View your sessions
                 </Link>
@@ -320,7 +320,7 @@ function FilterTab({
       onClick={onClick}
       className={`inline-flex items-center rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
         active
-          ? 'bg-white/12 text-[var(--color-bone)] shadow-sm'
+          ? 'bg-[var(--color-bone)]/12 text-[var(--color-bone)] shadow-sm'
           : 'text-[var(--color-bone)]/65 hover:text-[var(--color-bone)]'
       }`}
     >
@@ -345,7 +345,7 @@ function FilterChip({
       onClick={onClick}
       className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold transition ${
         active
-          ? 'bg-white/12 text-[var(--color-volt)] shadow-sm'
+          ? 'bg-[var(--color-bone)]/12 text-[var(--color-volt)] shadow-sm'
           : 'text-[var(--color-bone)]/65 hover:text-[var(--color-bone)]'
       }`}
     >
@@ -356,6 +356,6 @@ function FilterChip({
 
 function SkeletonCard() {
   return (
-    <div className="h-[92px] animate-pulse rounded-xl border border-white/8 bg-white/[0.04]" />
+    <div className="h-[92px] animate-pulse rounded-xl border border-[var(--border)] bg-[var(--surface)]" />
   );
 }

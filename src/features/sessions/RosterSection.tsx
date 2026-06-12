@@ -26,7 +26,7 @@ function SubLabel({ children }: { children: ReactNode }) {
   return (
     <div className="mt-6 mb-2.5 flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-[var(--color-bone)]/55">
       <span>{children}</span>
-      <span className="h-px flex-1 bg-white/10" />
+      <span className="h-px flex-1 bg-[var(--border)]" />
     </div>
   );
 }
@@ -123,7 +123,7 @@ export default function RosterSection({
   // Box-score column header (rendered once, above the floor list).
   const columnHeader = (
     <div
-      className={`${ROW_GRID} rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-[var(--color-bone)]/60`}
+      className={`${ROW_GRID} rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-[var(--color-bone)]/60`}
     >
       <span className="text-center">#</span>
       <span aria-hidden />
@@ -193,7 +193,7 @@ export default function RosterSection({
             </button>
           ) : myRsvp.status === 'waitlist' ? (
             <div className="flex items-center gap-3">
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/80">
+              <span className="rounded-full bg-[var(--color-bone)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/80">
                 On waitlist
               </span>
               <button
@@ -211,7 +211,7 @@ export default function RosterSection({
 
       {/* SESSION_FULL prompt */}
       {showFullPrompt ? (
-        <div className="mt-3 flex items-center gap-3 rounded-md border border-white/15 bg-white/[0.04] px-3 py-2 text-sm text-[var(--color-bone)]/80">
+        <div className="mt-3 flex items-center gap-3 rounded-md border border-[var(--border-strong)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--color-bone)]/80">
           <span>Session is full - join the waitlist?</span>
           <button
             type="button"

@@ -160,7 +160,7 @@ export default function SessionDetailPage() {
         </p>
 
         {session.notes ? (
-          <section className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3">
+          <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
               Notes
             </p>
