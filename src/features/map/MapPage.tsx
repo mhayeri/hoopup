@@ -6,7 +6,8 @@ import { useOverpassSync } from './useOverpassSync';
 import { useCourtsInView } from './useCourtsInView';
 import { useActiveCourts } from './useActiveCourts';
 import { useUpcomingSessions, type UpcomingSession } from './useUpcomingSessions';
-import { defaultCourtIcon, activeCourtIcon, liveCourtIcon } from './courtMarkerIcons';
+import { getCourtIcons } from './courtMarkerIcons';
+import { useTheme } from '../../providers/useTheme';
 import SessionPanel, { type MapFilter } from './SessionPanel';
 
 const DEFAULT_CENTER: [number, number] = [32.7849, -117.1611];
@@ -48,6 +49,8 @@ type CourtMarkersProps = {
 function CourtMarkers({ filter, selectedCourtId, markerRefs }: CourtMarkersProps) {
   const { courts, error } = useCourtsInView();
   const { liveCourtIds, upcomingCourtIds } = useActiveCourts();
+  const { theme } = useTheme();
+  const icons = getCourtIcons(theme);
 
   // When a session card is clicked, the parent updates selectedCourtId and the
   // map flies to it. Once the new courts load into view, this effect opens the
@@ -80,10 +83,10 @@ function CourtMarkers({ filter, selectedCourtId, markerRefs }: CourtMarkersProps
           position={[c.lat, c.lng]}
           icon={
             liveCourtIds.has(c.id)
-              ? liveCourtIcon
+              ? icons.live
               : upcomingCourtIds.has(c.id)
-                ? activeCourtIcon
-                : defaultCourtIcon
+                ? icons.active
+                : icons.default
           }
           ref={(instance) => {
             if (instance) markerRefs.current.set(c.id, instance);
@@ -128,6 +131,13 @@ export default function MapPage() {
   const [selectedEntry, setSelectedEntry] = useState<UpcomingSession | null>(null);
   const markerRefs = useRef<Map<number, LeafletMarker>>(new Map());
   const { sessions, loading, error } = useUpcomingSessions();
+  const { theme } = useTheme();
+  // CartoDB basemap matched to the active theme; key the TileLayer on it so the
+  // tiles swap cleanly when the user toggles light/dark.
+  const basemapUrl =
+    theme === 'light'
+      ? 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
   const selectedSessionId = selectedEntry?.session.id ?? null;
   const selectedCourtId = selectedEntry?.court?.id ?? null;
@@ -151,8 +161,9 @@ export default function MapPage() {
           className="h-full w-full"
         >
           <TileLayer
+            key={theme}
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            url={basemapUrl}
           />
           <RecenterOnUser />
           <OverpassSync />

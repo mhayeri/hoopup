@@ -112,7 +112,7 @@ option {
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
 }
 .leaflet-popup-content-wrapper {
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border);
 }
 .leaflet-popup-close-button {
   color: var(--color-bone) !important;
@@ -121,14 +121,14 @@ option {
 .leaflet-bar a:hover {
   background: var(--color-night-2);
   color: var(--color-bone);
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: var(--border);
 }
 .leaflet-bar a:hover {
   background: var(--color-night-3);
 }
 .leaflet-control-attribution {
-  background: rgba(11, 11, 15, 0.7) !important;
-  color: rgba(238, 240, 242, 0.6);
+  background: color-mix(in srgb, var(--color-night) 80%, transparent) !important;
+  color: var(--color-bone);
 }
 .leaflet-control-attribution a {
   color: var(--color-blue);
