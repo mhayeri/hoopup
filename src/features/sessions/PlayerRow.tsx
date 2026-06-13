@@ -59,7 +59,7 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
       <div className="flex min-w-0 items-center gap-2">
         <Link
           to={`/u/${profile.username}`}
-          className="truncate rounded text-sm font-semibold text-[var(--color-bone)] outline-none hover:text-[var(--color-volt)] hover:underline focus-visible:ring-2 focus-visible:ring-[var(--color-volt)]/40"
+          className="truncate rounded text-sm font-semibold text-[var(--color-bone)] outline-none hover:text-[var(--color-volt)] hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ring-focus)]/40"
         >
           @{profile.username}
         </Link>

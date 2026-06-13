@@ -26,7 +26,7 @@ export default function HomeSessionCard({ entry, now, live = false }: Props) {
   return (
     <Link
       to={`/sessions/${session.id}`}
-      className={`flex w-full flex-col gap-2 rounded-xl border bg-[var(--surface)] px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-volt)]/40 ${
+      className={`flex w-full flex-col gap-2 rounded-xl border bg-[var(--surface)] px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring-focus)]/40 ${
         live
           ? 'glow-live border-[var(--color-live)]/45 hover:border-[var(--color-live)]'
           : 'border-[var(--border)] hover:border-[var(--color-blue)]/50'

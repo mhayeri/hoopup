@@ -93,7 +93,7 @@ export default function SessionPanel({
 
   return (
     <aside
-      className={`relative flex w-full flex-col overflow-hidden bg-[var(--color-night-2)] text-[var(--color-bone)] shadow-[0_-10px_24px_-12px_rgba(0,0,0,0.45)] md:h-full md:w-[340px] md:border-r md:border-[var(--border)] md:shadow-none`}
+      className={`relative flex w-full flex-col overflow-hidden bg-[var(--color-night-2)] text-[var(--color-bone)] shadow-[0_-10px_24px_-12px_var(--drawer-shadow)] md:h-full md:w-[340px] md:border-r md:border-[var(--border)] md:shadow-none`}
     >
       <button
         type="button"
