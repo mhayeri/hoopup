@@ -24,10 +24,10 @@ export default function NotificationItem({ notification, now, onNavigate, onRemo
 
   return (
     <div
-      className={`group relative flex items-start gap-3 border-b border-white/5 px-4 py-3 transition last:border-b-0 ${
+      className={`group relative flex items-start gap-3 border-b border-[var(--border)] px-4 py-3 transition last:border-b-0 ${
         unread
           ? 'bg-[var(--color-blue)]/[0.06] hover:bg-[var(--color-blue)]/10'
-          : 'hover:bg-white/[0.03]'
+          : 'hover:bg-[var(--hover)]'
       }`}
     >
       <Link
@@ -69,7 +69,7 @@ export default function NotificationItem({ notification, now, onNavigate, onRemo
         type="button"
         onClick={() => onRemove(notification.id)}
         aria-label="Dismiss notification"
-        className="shrink-0 rounded-full p-1 text-[var(--color-bone)]/40 opacity-0 transition hover:bg-white/8 hover:text-[var(--color-bone)] focus:opacity-100 group-hover:opacity-100"
+        className="shrink-0 rounded-full p-1 text-[var(--color-bone)]/40 opacity-0 transition hover:bg-[var(--hover)] hover:text-[var(--color-bone)] focus:opacity-100 group-hover:opacity-100"
       >
         <svg
           aria-hidden

@@ -80,10 +80,10 @@ export default function FriendsTab({ userId, viewerId }: Props) {
 
       {isSelf && outgoing.length > 0 ? (
         <section>
-          <details className="rounded-2xl border border-white/10 p-3">
+          <details className="rounded-2xl border border-[var(--border)] p-3">
             <summary className="flex cursor-pointer items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-bone)]/60">
               <span>Sent requests</span>
-              <span className="rounded-full bg-white/8 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--color-bone)]/70">
+              <span className="rounded-full bg-[var(--color-bone)]/8 px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-[var(--color-bone)]/70">
                 {outgoing.length} outgoing
               </span>
             </summary>
@@ -121,7 +121,7 @@ function SectionHead({ label, count, suffix }: { label: string; count: number; s
 
 function EmptyState({ isSelf }: { isSelf: boolean }) {
   return (
-    <div className="mt-3 rounded-2xl border border-dashed border-white/15 p-8 text-center">
+    <div className="mt-3 rounded-2xl border border-dashed border-[var(--border-strong)] p-8 text-center">
       <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
         {isSelf ? 'No friends yet' : 'No friends to show'}
       </p>

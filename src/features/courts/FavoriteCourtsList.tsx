@@ -44,7 +44,7 @@ export default function FavoriteCourtsList({ userId }: Props) {
         </p>
         <Link
           to="/map"
-          className="rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-[var(--color-blue)] transition hover:bg-white/8"
+          className="rounded-full border border-[var(--border-strong)] px-4 py-2 text-sm font-semibold text-[var(--color-blue)] transition hover:bg-[var(--hover)]"
         >
           Open map
         </Link>

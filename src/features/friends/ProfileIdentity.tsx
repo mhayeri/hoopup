@@ -47,12 +47,12 @@ export default function ProfileIdentity({ profile, onUsernameClick, footer }: Pr
             </span>
           ) : null}
           {profile.preferred_position ? (
-            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-bone)]">
+            <span className="rounded-full bg-[var(--color-bone)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-bone)]">
               {profile.preferred_position}
             </span>
           ) : null}
           {profile.years_playing != null ? (
-            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-bone)]/70">
+            <span className="rounded-full bg-[var(--color-bone)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--color-bone)]/70">
               {profile.years_playing} {profile.years_playing === 1 ? 'yr' : 'yrs'}
             </span>
           ) : null}

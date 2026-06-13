@@ -17,7 +17,7 @@ type Props = {
  */
 export default function PlayerSearchResult({ profile, onNavigate }: Props) {
   return (
-    <li className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+    <li className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
       <ProfileIdentity profile={profile} onUsernameClick={onNavigate} />
       <div className="shrink-0">
         <FriendActionButton

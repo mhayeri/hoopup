@@ -35,7 +35,7 @@ export default function QuickActions() {
             className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold transition ${
               tile.primary
                 ? 'border-[var(--color-volt)]/45 bg-[var(--color-volt)]/10 text-[var(--color-volt)] hover:bg-[var(--color-volt)]/15'
-                : 'border-white/12 bg-white/[0.04] text-[var(--color-bone)] hover:border-white/25 hover:bg-white/[0.07]'
+                : 'border-[var(--border)] bg-[var(--surface)] text-[var(--color-bone)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]'
             }`}
           >
             <span className="text-base leading-none" aria-hidden>

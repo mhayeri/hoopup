@@ -103,7 +103,7 @@ function StatsStrip({ sessions }: { sessions: UpcomingSession[] }) {
   ];
 
   return (
-    <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-dashed border-white/12 pt-6">
+    <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-dashed border-[var(--border)] pt-6">
       {items.map(([n, label]) => (
         <div key={label}>
           <div className="volt-glow font-display text-4xl leading-none text-[var(--color-volt)]">
@@ -178,7 +178,7 @@ function SignedInHome({ userId }: { userId: string }) {
 
 function EmptyNextRun() {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-center">
+    <div className="rounded-2xl border border-dashed border-[var(--border-strong)] bg-[var(--surface)] p-6 text-center">
       <p className="text-2xl" aria-hidden>
         🏀
       </p>
@@ -203,8 +203,8 @@ function HomeLoading() {
   return (
     <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)]">
       <div className="mx-auto grid max-w-5xl gap-10 px-6 py-16 md:grid-cols-[1.1fr_0.9fr]">
-        <div className="h-72 animate-pulse rounded-2xl bg-white/[0.05]" />
-        <div className="h-72 animate-pulse rounded-2xl bg-white/[0.05]" />
+        <div className="h-72 animate-pulse rounded-2xl bg-[var(--surface-2)]" />
+        <div className="h-72 animate-pulse rounded-2xl bg-[var(--surface-2)]" />
       </div>
     </main>
   );

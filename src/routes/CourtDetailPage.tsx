@@ -152,7 +152,7 @@ export default function CourtDetailPage() {
           {facts.map((f) => (
             <div
               key={f.label}
-              className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3"
+              className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3"
             >
               <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
                 {f.label}
@@ -199,7 +199,7 @@ export default function CourtDetailPage() {
             ) : (
               <Link
                 to="/login"
-                className="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-white/8"
+                className="rounded-full border border-[var(--border-strong)] px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--hover)]"
               >
                 Sign in to host
               </Link>

@@ -104,7 +104,7 @@ export default function PlayerSearchBar() {
         autoCorrect="off"
         autoCapitalize="none"
         spellCheck={false}
-        className="w-60 rounded-lg border border-white/15 bg-white/[0.04] py-2 pl-9 pr-3 text-sm text-[var(--color-bone)] outline-none placeholder:text-[var(--color-bone)]/40 focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30"
+        className="w-60 rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] py-2 pl-9 pr-3 text-sm text-[var(--color-bone)] outline-none placeholder:text-[var(--color-bone)]/40 focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30"
       />
 
       {open && coords
@@ -114,7 +114,7 @@ export default function PlayerSearchBar() {
               ref={dropdownRef}
               role="listbox"
               style={{ top: coords.top, left: coords.left, width: DROPDOWN_WIDTH }}
-              className="fixed z-[2000] max-h-[70vh] overflow-y-auto rounded-2xl border border-white/10 bg-[var(--color-night-2)] p-2 shadow-2xl"
+              className="fixed z-[2000] max-h-[70vh] overflow-y-auto rounded-2xl border border-[var(--border)] bg-[var(--color-night-2)] p-2 shadow-2xl"
             >
               <PlayerSearchResults
                 query={query}
