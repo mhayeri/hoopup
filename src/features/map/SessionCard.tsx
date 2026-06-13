@@ -48,8 +48,8 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
         <p className="text-sm font-bold text-[var(--color-bone)]">{courtLabel}</p>
       </div>
       {live ? (
-        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--color-volt)] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[#0c1402]">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0c1402]" />
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--color-live)] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[var(--on-live)]">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--on-live)]" />
           Hooping · {formatTimeUntilEnd(session.ends_at, now)}
         </span>
       ) : (

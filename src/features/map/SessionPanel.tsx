@@ -260,8 +260,8 @@ export default function SessionPanel({
             <>
               {liveSessions.length > 0 ? (
                 <section>
-                  <p className="flex items-center gap-1.5 px-5 pt-4 pb-2 text-[11px] font-bold tracking-[0.12em] text-[var(--color-volt)] uppercase">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-volt)]" />
+                  <p className="flex items-center gap-1.5 px-5 pt-4 pb-2 text-[11px] font-bold tracking-[0.12em] text-[var(--color-live)] uppercase">
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-live)]" />
                     Hooping · {liveSessions.length}
                   </p>
                   <div className="flex flex-col gap-2 px-4">

@@ -33,9 +33,13 @@ export default function NextGameCard({ entry }: { entry: ActiveSessionEntry }) {
           : 'border-[var(--color-blue)]/35 from-[var(--color-blue)]/14 to-transparent'
       }`}
     >
-      <p className="flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-[var(--color-volt)] uppercase">
+      <p
+        className={`flex items-center gap-2 text-xs font-bold tracking-[0.12em] uppercase ${
+          live ? 'text-[var(--color-live)]' : 'text-[var(--color-volt)]'
+        }`}
+      >
         {live ? (
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-volt)]" />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-live)]" />
         ) : null}
         {label}
       </p>

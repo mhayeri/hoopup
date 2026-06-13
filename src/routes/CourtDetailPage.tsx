@@ -165,11 +165,11 @@ export default function CourtDetailPage() {
         {liveSessions.length > 0 ? (
           <section className="mt-12">
             <div className="flex items-center gap-3">
-              <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-[var(--color-volt)]">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--color-volt)]" />
+              <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-[var(--color-live)]">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--color-live)]" />
                 Hooping
               </h2>
-              <span className="rounded-full bg-[var(--color-volt)]/15 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-volt)]">
+              <span className="rounded-full bg-[var(--color-live)]/15 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-live)]">
                 {liveSessions.length}
               </span>
             </div>

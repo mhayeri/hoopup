@@ -20,8 +20,10 @@
   --color-volt: #c8ff2d;
 
   /* Live / "Hooping" energy. In dark it's the same volt green; the light theme
-     splits it to crimson so live reads apart from the amber primary CTA. */
+     splits it to crimson so live reads apart from the amber primary CTA.
+     --on-live is the text/glyph color that sits on a --color-live fill. */
   --color-live: #c8ff2d;
+  --on-live: #0c1402;
 
   /* Semantic surface tokens — the recurring translucent card/border/hover
      patterns, hoisted out of hardcoded `white/[0.0x]` utilities so they can
@@ -59,6 +61,7 @@
   --color-blue: #111111;
   --color-volt: #ffce00;
   --color-live: #ff3b30;
+  --on-live: #ffffff;
 
   --surface: rgba(10, 10, 10, 0.025);
   --surface-2: rgba(10, 10, 10, 0.05);
@@ -99,6 +102,18 @@ option {
 }
 .volt-glow {
   text-shadow: 0 0 32px rgba(200, 255, 45, 0.45);
+}
+
+/* In the light Solar Court theme the floodlit glows read as muddy smears on
+   white, so soften them: drop the neon text-glow and swap the radial floods for
+   a faint grey + amber sunlight wash. */
+:root[data-theme='light'] .volt-glow {
+  text-shadow: none;
+}
+:root[data-theme='light'] .volt-floods {
+  background:
+    radial-gradient(42% 52% at 20% 6%, rgba(17, 17, 17, 0.04), transparent 60%),
+    radial-gradient(40% 50% at 84% 0%, rgba(255, 206, 0, 0.12), transparent 60%);
 }
 
 /* Leaflet dark theming for the Volt map (overrides must beat leaflet.css). */
