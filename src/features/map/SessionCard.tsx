@@ -36,24 +36,24 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
       onClick={onSelect}
       onKeyDown={handleKey}
       aria-current={selected ? 'true' : undefined}
-      className={`flex w-full cursor-pointer flex-col gap-2 rounded-xl border bg-white/[0.03] px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-volt)]/40 ${
+      className={`flex w-full cursor-pointer flex-col gap-2 rounded-xl border bg-[var(--surface)] px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-volt)]/40 ${
         selected
           ? 'border-[var(--color-blue)] bg-[var(--color-blue)]/10 shadow-[0_0_0_1px_var(--color-blue)]'
           : live
-            ? 'border-[var(--color-volt)]/45 shadow-[0_0_24px_-6px_rgba(200,255,45,0.4)] hover:border-[var(--color-volt)]'
-            : 'border-white/10 hover:border-[var(--color-blue)]/50'
+            ? 'glow-live border-[var(--color-live)]/45 hover:border-[var(--color-live)]'
+            : 'border-[var(--border)] hover:border-[var(--color-blue)]/50'
       }`}
     >
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-bold text-[var(--color-bone)]">{courtLabel}</p>
       </div>
       {live ? (
-        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--color-volt)] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[#0c1402]">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0c1402]" />
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--color-live)] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[var(--on-live)]">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--on-live)]" />
           Hooping · {formatTimeUntilEnd(session.ends_at, now)}
         </span>
       ) : (
-        <span className="inline-flex w-fit items-center rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-bold text-[var(--color-bone)]">
+        <span className="inline-flex w-fit items-center rounded-full bg-[var(--color-bone)]/10 px-2 py-0.5 text-[11px] font-bold text-[var(--color-bone)]">
           {formatPanelTime(session.starts_at)}
         </span>
       )}

@@ -28,5 +28,6 @@ export const SKILL_TIER_COLOR: Record<SkillLevel, string> = {
   pro: 'var(--color-skill-pro)',
 };
 
-/** Rail/text color for a player with no skill level set. */
-export const SKILL_TIER_NONE = 'rgba(255,255,255,0.3)';
+/** Rail/text color for a player with no skill level set. Theme-aware so the
+ * roster rail stays visible in light mode (token defined in `index.css`). */
+export const SKILL_TIER_NONE = 'var(--color-skill-none)';

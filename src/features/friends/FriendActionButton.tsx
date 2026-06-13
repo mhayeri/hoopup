@@ -148,7 +148,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
             stop(e);
             void run(cancel);
           }}
-          className={`${primaryShell} rounded-full border border-white/12 bg-white/8 font-semibold text-[var(--color-bone)]/70 transition hover:bg-white/12 disabled:opacity-60`}
+          className={`${primaryShell} rounded-full border border-[var(--border)] bg-[var(--color-bone)]/8 font-semibold text-[var(--color-bone)]/70 transition hover:bg-[var(--color-bone)]/12 disabled:opacity-60`}
         >
           Request sent - Cancel
         </button>
@@ -179,7 +179,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
               stop(e);
               void run(decline);
             }}
-            className={`${primaryShell} flex-1 rounded-full border border-white/15 font-semibold text-[var(--color-bone)]/70 transition hover:bg-white/8 disabled:opacity-60`}
+            className={`${primaryShell} flex-1 rounded-full border border-[var(--border-strong)] font-semibold text-[var(--color-bone)]/70 transition hover:bg-[var(--hover)] disabled:opacity-60`}
           >
             Decline
           </button>
@@ -211,7 +211,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
       {removeMenuOpen ? (
         <div
           role="menu"
-          className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-xl border border-white/10 bg-[var(--color-night-2)] shadow-lg"
+          className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--color-night-2)] shadow-lg"
         >
           <button
             type="button"

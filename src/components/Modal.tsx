@@ -65,7 +65,7 @@ export default function Modal({ title, open, onClose, children }: Props) {
     >
       <div
         ref={panelRef}
-        className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--color-night-2)] p-6 shadow-2xl"
+        className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--color-night-2)] p-6 shadow-2xl"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-bone)]">
@@ -75,7 +75,7 @@ export default function Modal({ title, open, onClose, children }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded-full p-2 text-[var(--color-bone)]/70 hover:bg-white/8 hover:text-[var(--color-bone)]"
+            className="rounded-full p-2 text-[var(--color-bone)]/70 hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
           >
             ✕
           </button>

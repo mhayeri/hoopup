@@ -1,4 +1,5 @@
 import L from 'leaflet';
+import type { Theme } from '../../providers/theme-context';
 
 function markerSvg(fill: string): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41">
@@ -7,29 +8,33 @@ function markerSvg(fill: string): string {
   </svg>`;
 }
 
-export const defaultCourtIcon = new L.DivIcon({
-  className: '',
-  html: markerSvg('#64748b'),
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
+function makeIcon(fill: string): L.DivIcon {
+  return new L.DivIcon({
+    className: '',
+    html: markerSvg(fill),
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+}
 
-export const activeCourtIcon = new L.DivIcon({
-  className: '',
-  html: markerSvg('#2b6fff'),
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
+export type CourtIconSet = {
+  /** Court with no upcoming/live session. */
+  default: L.DivIcon;
+  /** Court with a not-yet-ended (live or upcoming) session. */
+  active: L.DivIcon;
+  /** Court with a session currently in-progress. */
+  live: L.DivIcon;
+};
 
-// Used for courts with a session that's currently in-progress (now between
-// starts_at and ends_at). Distinct from `activeCourtIcon`, which marks
-// courts with any not-yet-ended session (live or upcoming).
-export const liveCourtIcon = new L.DivIcon({
-  className: '',
-  html: markerSvg('#c8ff2d'),
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
+// Recolored per theme so markers stay legible on each basemap. Dark uses the
+// Volt palette (blue structure / volt live); light uses Solar Court (black
+// structure / crimson live, matching --color-live). Slate default works on both.
+const ICON_SETS: Record<Theme, CourtIconSet> = {
+  dark: { default: makeIcon('#64748b'), active: makeIcon('#2b6fff'), live: makeIcon('#c8ff2d') },
+  light: { default: makeIcon('#64748b'), active: makeIcon('#111111'), live: makeIcon('#ff3b30') },
+};
+
+export function getCourtIcons(theme: Theme): CourtIconSet {
+  return ICON_SETS[theme] ?? ICON_SETS.dark;
+}

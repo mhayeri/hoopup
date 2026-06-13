@@ -9,7 +9,7 @@ const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const searchInputClass =
-  'w-full rounded-lg border border-white/15 bg-white/[0.04] py-2 pl-9 pr-3 text-[var(--color-bone)] outline-none placeholder:text-[var(--color-bone)]/40 focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30';
+  'w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] py-2 pl-9 pr-3 text-[var(--color-bone)] outline-none placeholder:text-[var(--color-bone)]/40 focus:border-[var(--color-blue)] focus:ring-2 focus:ring-[var(--color-blue)]/30';
 
 type Props = {
   open: boolean;
@@ -96,9 +96,9 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
     >
       <div
         ref={panelRef}
-        className="flex h-full w-full flex-col overflow-hidden bg-[var(--color-night-2)] sm:mx-auto sm:h-auto sm:max-h-[80vh] sm:max-w-lg sm:rounded-2xl sm:border sm:border-white/10 sm:shadow-2xl"
+        className="flex h-full w-full flex-col overflow-hidden bg-[var(--color-night-2)] sm:mx-auto sm:h-auto sm:max-h-[80vh] sm:max-w-lg sm:rounded-2xl sm:border sm:border-[var(--border)] sm:shadow-2xl"
       >
-        <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
+        <div className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-3">
           <div className="relative flex-1">
             <PlayerIcon className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-bone)]/40" />
             <input
@@ -119,7 +119,7 @@ export default function PlayerSearchOverlay({ open, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded-full p-2 text-[var(--color-bone)]/60 hover:bg-white/8 hover:text-[var(--color-bone)]"
+            className="rounded-full p-2 text-[var(--color-bone)]/60 hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
           >
             ✕
           </button>

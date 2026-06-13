@@ -8,7 +8,26 @@
       name="description"
       content="HoopUp — find a basketball court, RSVP to a pickup game, get on the floor."
     />
-    <meta name="theme-color" content="#0c0a09" />
+    <meta name="theme-color" content="#0b0b0f" />
+    <!-- Resolve + apply the theme before first paint so light-mode users never
+         see a flash of dark: localStorage -> system preference -> dark. The
+         ThemeProvider reads this attribute back to stay in sync. -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('hoopup.theme');
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: light)').matches
+                ? 'light'
+                : 'dark';
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
     <!-- Display (Bebas Neue) + body (Inter) fonts declared in index.css's @theme.
          Without these they fall back to system-ui everywhere. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

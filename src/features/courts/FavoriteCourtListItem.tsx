@@ -21,14 +21,14 @@ export default function FavoriteCourtListItem({ favorite, onRequestRemove }: Pro
     .join(' · ');
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5">
+    <div className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5">
       <Link
         to={`/courts/${favorite.court_id}`}
         className="flex min-w-0 flex-1 items-center gap-3 transition hover:opacity-80"
       >
         <span
           aria-hidden
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[var(--color-night-3)] text-lg"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--color-night-3)] text-lg"
         >
           🏀
         </span>

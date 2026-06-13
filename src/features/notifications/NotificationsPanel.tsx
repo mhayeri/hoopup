@@ -96,9 +96,9 @@ export default function NotificationsPanel({
     >
       <div
         ref={panelRef}
-        className="flex h-full w-full flex-col overflow-hidden bg-[var(--color-night-2)] sm:absolute sm:right-4 sm:top-16 sm:h-auto sm:max-h-[70vh] sm:w-96 sm:rounded-2xl sm:border sm:border-white/10 sm:shadow-2xl"
+        className="flex h-full w-full flex-col overflow-hidden bg-[var(--color-night-2)] sm:absolute sm:right-4 sm:top-16 sm:h-auto sm:max-h-[70vh] sm:w-96 sm:rounded-2xl sm:border sm:border-[var(--border)] sm:shadow-2xl"
       >
-        <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+        <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-3">
           <h2 className="text-lg font-black uppercase tracking-tight text-[var(--color-bone)]">
             Notifications
           </h2>
@@ -106,7 +106,7 @@ export default function NotificationsPanel({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded-full p-2 text-[var(--color-bone)]/60 hover:bg-white/8 hover:text-[var(--color-bone)]"
+            className="rounded-full p-2 text-[var(--color-bone)]/60 hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
           >
             ✕
           </button>

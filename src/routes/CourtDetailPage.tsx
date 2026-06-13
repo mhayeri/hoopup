@@ -152,7 +152,7 @@ export default function CourtDetailPage() {
           {facts.map((f) => (
             <div
               key={f.label}
-              className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3"
+              className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3"
             >
               <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
                 {f.label}
@@ -165,11 +165,11 @@ export default function CourtDetailPage() {
         {liveSessions.length > 0 ? (
           <section className="mt-12">
             <div className="flex items-center gap-3">
-              <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-[var(--color-volt)]">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--color-volt)]" />
+              <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-[var(--color-live)]">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--color-live)]" />
                 Hooping
               </h2>
-              <span className="rounded-full bg-[var(--color-volt)]/15 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-volt)]">
+              <span className="rounded-full bg-[var(--color-live)]/15 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-live)]">
                 {liveSessions.length}
               </span>
             </div>
@@ -199,7 +199,7 @@ export default function CourtDetailPage() {
             ) : (
               <Link
                 to="/login"
-                className="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-white/8"
+                className="rounded-full border border-[var(--border-strong)] px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--hover)]"
               >
                 Sign in to host
               </Link>

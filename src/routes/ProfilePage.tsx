@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
+import { useTheme } from '../providers/useTheme';
 import { useProfile } from '../features/profiles/useProfile';
 import { useProfileByUsername } from '../features/profiles/useProfileByUsername';
 import ProfileEditForm from '../features/profiles/ProfileEditForm';
@@ -104,7 +105,7 @@ export default function ProfilePage() {
       <div className="mx-auto max-w-5xl px-6 py-10">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           <aside className="lg:col-span-5">
-            <div className="rounded-3xl border border-white/10 bg-[var(--color-night-2)] p-8 shadow-sm">
+            <div className="rounded-3xl border border-[var(--border)] bg-[var(--color-night-2)] p-8 shadow-sm">
               {isSelf && editing && updateProfile && ownHook.profile ? (
                 // Edit mode (self): the full avatar uploader on top, the form below.
                 <>
@@ -115,7 +116,7 @@ export default function ProfilePage() {
                       await updateProfile({ avatar_url: url });
                     }}
                   />
-                  <div className="mt-6 border-t border-white/10 pt-6">
+                  <div className="mt-6 border-t border-[var(--border)] pt-6">
                     <ProfileEditForm
                       profile={ownHook.profile}
                       onSubmit={async (patch) => {
@@ -166,7 +167,7 @@ export default function ProfilePage() {
                     </div>
                   ) : null}
 
-                  <div className="mt-6 border-t border-white/10 pt-6">
+                  <div className="mt-6 border-t border-[var(--border)] pt-6">
                     <ProfileStats profile={profile} />
                   </div>
                 </>
@@ -175,7 +176,7 @@ export default function ProfilePage() {
           </aside>
 
           <section className="mt-6 space-y-6 lg:col-span-7 lg:mt-0">
-            <div className="rounded-3xl border border-white/10 bg-[var(--color-night-2)] p-8 shadow-sm">
+            <div className="rounded-3xl border border-[var(--border)] bg-[var(--color-night-2)] p-8 shadow-sm">
               <Tabs
                 items={tabItems}
                 value={tab}
@@ -249,10 +250,17 @@ function Identity({
   email: string | null;
   onEdit: (() => void) | null;
 }) {
+  // Volt green reads as an accent on the dark surface, but that amber is
+  // low-contrast for a large heading on white, so the name goes ink in light.
+  const { theme } = useTheme();
   return (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className="text-2xl font-black tracking-tight break-words text-[var(--color-volt)]">
+        <h1
+          className={`text-2xl font-black tracking-tight break-words ${
+            theme === 'light' ? 'text-[var(--color-bone)]' : 'text-[var(--color-volt)]'
+          }`}
+        >
           @{profile.username}
         </h1>
         {onEdit ? (
@@ -313,9 +321,47 @@ function SettingsPanel({
   onChangePassword: (() => void) | null;
   onDeleteAccount: () => void;
 }) {
+  const { theme, toggle } = useTheme();
+  const isLight = theme === 'light';
+
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+        <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
+          Appearance
+        </h3>
+        <p className="mt-2 text-sm text-[var(--color-bone)]/70">
+          Choose how HoopUp looks. Your choice is saved on this device.
+        </p>
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <span className="flex items-center gap-2.5 text-sm font-semibold text-[var(--color-bone)]">
+            Theme
+            <span className="rounded-full bg-[var(--color-volt)]/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-[var(--color-bone)]/80">
+              {isLight ? 'Light' : 'Dark'}
+            </span>
+          </span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={isLight}
+            aria-label="Switch between light and dark theme"
+            onClick={toggle}
+            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
+              isLight ? 'bg-[var(--color-volt)]' : 'bg-[var(--border-strong)]'
+            }`}
+          >
+            <span
+              className={`absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] leading-none transition-transform ${
+                isLight ? 'translate-x-5 bg-[#0c1402]' : 'translate-x-0 bg-white'
+              }`}
+            >
+              {isLight ? '☀️' : '🌙'}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
         <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
           Notifications
         </h3>
@@ -331,7 +377,7 @@ function SettingsPanel({
             aria-label="Toggle friend-activity notifications"
             onClick={() => onToggleNotifications(!notificationsEnabled)}
             className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${
-              notificationsEnabled ? 'bg-[var(--color-volt)]' : 'bg-white/15'
+              notificationsEnabled ? 'bg-[var(--color-volt)]' : 'bg-[var(--border-strong)]'
             }`}
           >
             <span
@@ -344,7 +390,7 @@ function SettingsPanel({
       </div>
 
       {onChangePassword ? (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
           <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
             Security
           </h3>

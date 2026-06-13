@@ -10,7 +10,8 @@
   --color-ink: oklch(0.18 0.02 60);
 
   /* Volt night-neon theme — floodlit dark base, electric blue for structure,
-     volt green for energy/live. */
+     volt green for energy/live. These are the DARK defaults; the light "Solar
+     Court" theme redefines them under :root[data-theme='light'] below. */
   --color-night: #0b0b0f;
   --color-night-2: #131319;
   --color-night-3: #1b1b23;
@@ -18,12 +19,76 @@
   --color-blue: #2b6fff;
   --color-volt: #c8ff2d;
 
+  /* Live / "Hooping" energy. In dark it's the same volt green; the light theme
+     splits it to crimson so live reads apart from the amber primary CTA.
+     --on-live is the text/glyph color that sits on a --color-live fill. */
+  --color-live: #c8ff2d;
+  --on-live: #0c1402;
+
+  /* Semantic surface tokens — the recurring translucent card/border/hover
+     patterns, hoisted out of hardcoded `white/[0.0x]` utilities so they can
+     invert for light. Components reference these via `bg-[var(--surface)]`,
+     `border-[var(--border)]`, etc. */
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --hover: rgba(255, 255, 255, 0.08);
+
   /* Skill-tier ramp — shared by the roster (PlayerRow) and the friends/identity
      skill pill so a player's skill reads the same color everywhere. */
   --color-skill-beginner: #34d399;
   --color-skill-intermediate: #5b8bff;
   --color-skill-advanced: #a78bfa;
   --color-skill-pro: #fbbf24;
+  /* Rail/text tint for a player with no skill set. White-on-dark by default;
+     inverts to black-on-light so the roster rail stays visible (see skill.ts). */
+  --color-skill-none: rgba(255, 255, 255, 0.3);
+}
+
+/* The app defaults to the dark Volt theme. The no-flash bootstrap script in
+   index.html sets <html data-theme="light|dark"> before first paint; this
+   block is the "Solar Court" light palette (sunlit white, paper cards, black
+   text + structure, amber energy, crimson live). Only tokens change here —
+   component markup is untouched. */
+:root {
+  color-scheme: dark;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --color-night: #ffffff;
+  --color-night-2: #fbfbf9;
+  --color-night-3: #f1efe9;
+  --color-bone: #0a0a0a;
+  --color-blue: #111111;
+  --color-volt: #ffce00;
+  --color-live: #ff3b30;
+  --on-live: #ffffff;
+
+  --surface: rgba(10, 10, 10, 0.025);
+  --surface-2: rgba(10, 10, 10, 0.05);
+  --border: rgba(10, 10, 10, 0.12);
+  --border-strong: rgba(10, 10, 10, 0.18);
+  --hover: rgba(10, 10, 10, 0.06);
+
+  --color-skill-none: rgba(10, 10, 10, 0.25);
+}
+
+/* Live-card glow. Volt green in dark, crimson in light (matching --color-live);
+   kept as a class so the rgba alpha survives the theme swap, which a Tailwind
+   arbitrary shadow-[var(...)] can't express. */
+.glow-live {
+  box-shadow: 0 0 24px -6px rgba(200, 255, 45, 0.4);
+}
+.glow-live-strong {
+  box-shadow: 0 0 30px -8px rgba(200, 255, 45, 0.45);
+}
+:root[data-theme='light'] .glow-live {
+  box-shadow: 0 0 24px -6px rgba(255, 59, 48, 0.4);
+}
+:root[data-theme='light'] .glow-live-strong {
+  box-shadow: 0 0 30px -8px rgba(255, 59, 48, 0.45);
 }
 
 html,
@@ -38,9 +103,8 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  /* The app is dark Volt — tell the browser so native controls (select option
-     popups, date/time pickers, scrollbars) render dark instead of OS-light. */
-  color-scheme: dark;
+  /* color-scheme lives on :root so native controls (select option popups,
+     date/time pickers, scrollbars) follow the active theme. */
 }
 
 /* Belt-and-suspenders for the native <select> dropdown list (some engines
@@ -61,6 +125,18 @@ option {
   text-shadow: 0 0 32px rgba(200, 255, 45, 0.45);
 }
 
+/* In the light Solar Court theme the floodlit glows read as muddy smears on
+   white, so soften them: drop the neon text-glow and swap the radial floods for
+   a faint grey + amber sunlight wash. */
+:root[data-theme='light'] .volt-glow {
+  text-shadow: none;
+}
+:root[data-theme='light'] .volt-floods {
+  background:
+    radial-gradient(42% 52% at 20% 6%, rgba(17, 17, 17, 0.04), transparent 60%),
+    radial-gradient(40% 50% at 84% 0%, rgba(255, 206, 0, 0.12), transparent 60%);
+}
+
 /* Leaflet dark theming for the Volt map (overrides must beat leaflet.css). */
 .leaflet-container {
   background: var(--color-night) !important;
@@ -72,7 +148,7 @@ option {
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
 }
 .leaflet-popup-content-wrapper {
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border);
 }
 .leaflet-popup-close-button {
   color: var(--color-bone) !important;
@@ -81,14 +157,14 @@ option {
 .leaflet-bar a:hover {
   background: var(--color-night-2);
   color: var(--color-bone);
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: var(--border);
 }
 .leaflet-bar a:hover {
   background: var(--color-night-3);
 }
 .leaflet-control-attribution {
-  background: rgba(11, 11, 15, 0.7) !important;
-  color: rgba(238, 240, 242, 0.6);
+  background: color-mix(in srgb, var(--color-night) 80%, transparent) !important;
+  color: var(--color-bone);
 }
 .leaflet-control-attribution a {
   color: var(--color-blue);

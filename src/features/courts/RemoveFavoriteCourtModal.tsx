@@ -59,7 +59,7 @@ export default function RemoveFavoriteCourtModal({ open, onClose, courtName, onC
             type="button"
             onClick={handleClose}
             disabled={busy}
-            className="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-white/8 disabled:opacity-60"
+            className="rounded-full border border-[var(--border-strong)] px-5 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--hover)] disabled:opacity-60"
           >
             Cancel
           </button>

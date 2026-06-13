@@ -15,7 +15,7 @@ export default function NotificationBell({ unreadCount, onOpen }: Props) {
       onClick={onOpen}
       aria-label={label}
       title="Notifications"
-      className="relative rounded-full p-2 text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
+      className="relative rounded-full p-2 text-[var(--color-bone)]/75 transition hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
     >
       <svg
         aria-hidden

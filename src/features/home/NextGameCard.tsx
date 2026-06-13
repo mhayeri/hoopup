@@ -29,13 +29,17 @@ export default function NextGameCard({ entry }: { entry: ActiveSessionEntry }) {
     <div
       className={`rounded-2xl border bg-gradient-to-br p-5 ${
         live
-          ? 'border-[var(--color-volt)]/45 from-[var(--color-volt)]/12 to-transparent shadow-[0_0_30px_-8px_rgba(200,255,45,0.45)]'
+          ? 'glow-live-strong border-[var(--color-live)]/45 from-[var(--color-live)]/12 to-transparent'
           : 'border-[var(--color-blue)]/35 from-[var(--color-blue)]/14 to-transparent'
       }`}
     >
-      <p className="flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-[var(--color-volt)] uppercase">
+      <p
+        className={`flex items-center gap-2 text-xs font-bold tracking-[0.12em] uppercase ${
+          live ? 'text-[var(--color-live)]' : 'text-[var(--color-volt)]'
+        }`}
+      >
         {live ? (
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-volt)]" />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-live)]" />
         ) : null}
         {label}
       </p>

@@ -131,8 +131,8 @@ export default function SessionDetailPage() {
               Cancelled
             </span>
           ) : active ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-volt)] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[#0c1402]">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#0c1402]" />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-live)] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--on-live)]">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--on-live)]" />
               Hooping - {formatTimeUntilEnd(session.ends_at, now)}
             </span>
           ) : (
@@ -160,7 +160,7 @@ export default function SessionDetailPage() {
         </p>
 
         {session.notes ? (
-          <section className="mt-8 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3">
+          <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
               Notes
             </p>

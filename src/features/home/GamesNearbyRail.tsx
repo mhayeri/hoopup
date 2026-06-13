@@ -58,7 +58,7 @@ export default function GamesNearbyRail({
   }, [sessions, now, excludeSessionId]);
 
   return (
-    <div className="rounded-2xl border border-white/12 bg-[var(--color-night-2)]/60 p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)] ring-1 ring-[var(--color-blue)]/15 backdrop-blur">
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--color-night-2)]/60 p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)] ring-1 ring-[var(--color-blue)]/15 backdrop-blur">
       <p className="mb-3 flex items-center gap-2 px-1 text-xs font-bold tracking-[0.08em] text-[var(--color-volt)] uppercase">
         <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-volt)] shadow-[0_0_8px_var(--color-volt)]" />
         {heading}
@@ -112,6 +112,6 @@ export default function GamesNearbyRail({
 
 function SkeletonCard() {
   return (
-    <div className="h-[88px] animate-pulse rounded-xl border border-white/8 bg-white/[0.04]" />
+    <div className="h-[88px] animate-pulse rounded-xl border border-[var(--border)] bg-[var(--surface)]" />
   );
 }

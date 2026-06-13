@@ -24,7 +24,7 @@ export default function NavBar() {
   }
 
   return (
-    <header className="sticky top-0 z-10 border-b border-white/10 bg-[var(--color-night)]/85 backdrop-blur">
+    <header className="sticky top-0 z-10 border-b border-[var(--border)] bg-[var(--color-night)]/85 backdrop-blur">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
         <Link
           to="/"
@@ -36,7 +36,7 @@ export default function NavBar() {
           {session ? <PlayerSearchBar /> : null}
           <Link
             to="/map"
-            className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
+            className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
           >
             Map
           </Link>
@@ -48,14 +48,14 @@ export default function NavBar() {
               />
               <Link
                 to="/profile"
-                className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
+                className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
               >
                 Profile
               </Link>
               <button
                 type="button"
                 onClick={onSignOut}
-                className="rounded-full border border-white/15 px-4 py-2 font-semibold text-[var(--color-bone)] transition hover:border-[var(--color-blue)]/60 hover:bg-[var(--color-blue)]/10"
+                className="rounded-full border border-[var(--border-strong)] px-4 py-2 font-semibold text-[var(--color-bone)] transition hover:border-[var(--color-blue)]/60 hover:bg-[var(--color-blue)]/10"
               >
                 Sign out
               </button>
@@ -64,7 +64,7 @@ export default function NavBar() {
             <>
               <Link
                 to="/login"
-                className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-white/8 hover:text-[var(--color-bone)]"
+                className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
               >
                 Sign in
               </Link>
@@ -83,7 +83,7 @@ export default function NavBar() {
           aria-label="Menu"
           aria-expanded={menuOpen}
           aria-controls="mobile-nav-menu"
-          className="rounded-full p-2 text-[var(--color-bone)] transition hover:bg-white/8 sm:hidden"
+          className="rounded-full p-2 text-[var(--color-bone)] transition hover:bg-[var(--hover)] sm:hidden"
         >
           {menuOpen ? (
             <svg
