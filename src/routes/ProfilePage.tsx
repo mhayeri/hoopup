@@ -250,10 +250,17 @@ function Identity({
   email: string | null;
   onEdit: (() => void) | null;
 }) {
+  // Volt green reads as an accent on the dark surface, but that amber is
+  // low-contrast for a large heading on white, so the name goes ink in light.
+  const { theme } = useTheme();
   return (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className="text-2xl font-black tracking-tight break-words text-[var(--color-volt)]">
+        <h1
+          className={`text-2xl font-black tracking-tight break-words ${
+            theme === 'light' ? 'text-[var(--color-bone)]' : 'text-[var(--color-volt)]'
+          }`}
+        >
           @{profile.username}
         </h1>
         {onEdit ? (
