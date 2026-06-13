@@ -44,6 +44,14 @@
   /* Rail/text tint for a player with no skill set. White-on-dark by default;
      inverts to black-on-light so the roster rail stays visible (see skill.ts). */
   --color-skill-none: rgba(255, 255, 255, 0.3);
+
+  /* Elevation shadow colors + the card/link focus ring. Heavy ink shadows read
+     fine on dark surfaces but smother light ones, so they soften in light; the
+     focus ring is volt in dark but goes ink in light (amber/40 was near-invisible
+     on white). */
+  --elev-shadow: rgba(0, 0, 0, 0.6);
+  --drawer-shadow: rgba(0, 0, 0, 0.45);
+  --ring-focus: #c8ff2d;
 }
 
 /* The app defaults to the dark Volt theme. The no-flash bootstrap script in
@@ -73,6 +81,9 @@
   --hover: rgba(10, 10, 10, 0.06);
 
   --color-skill-none: rgba(10, 10, 10, 0.25);
+  --elev-shadow: rgba(0, 0, 0, 0.16);
+  --drawer-shadow: rgba(0, 0, 0, 0.12);
+  --ring-focus: #111111;
 }
 
 /* Live-card glow. Volt green in dark, crimson in light (matching --color-live);
@@ -147,6 +158,11 @@ option {
   color: var(--color-bone);
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
 }
+/* The heavy popup drop-shadow is tuned for the dark map; soften it on light. */
+:root[data-theme='light'] .leaflet-popup-content-wrapper,
+:root[data-theme='light'] .leaflet-popup-tip {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+}
 .leaflet-popup-content-wrapper {
   border: 1px solid var(--border);
 }
@@ -164,7 +180,7 @@ option {
 }
 .leaflet-control-attribution {
   background: color-mix(in srgb, var(--color-night) 80%, transparent) !important;
-  color: var(--color-bone);
+  color: color-mix(in srgb, var(--color-bone) 60%, transparent);
 }
 .leaflet-control-attribution a {
   color: var(--color-blue);
