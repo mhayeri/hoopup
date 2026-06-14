@@ -40,7 +40,7 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
         selected
           ? 'border-[var(--color-blue)] bg-[var(--color-blue)]/10 shadow-[0_0_0_1px_var(--color-blue)]'
           : live
-            ? 'border-[var(--color-volt)]/45 shadow-[0_0_24px_-6px_rgba(200,255,45,0.4)] hover:border-[var(--color-volt)]'
+            ? 'glow-live border-[var(--color-live)]/45 hover:border-[var(--color-live)]'
             : 'border-[var(--border)] hover:border-[var(--color-blue)]/50'
       }`}
     >

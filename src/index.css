@@ -41,6 +41,9 @@
   --color-skill-intermediate: #5b8bff;
   --color-skill-advanced: #a78bfa;
   --color-skill-pro: #fbbf24;
+  /* Rail/text tint for a player with no skill set. White-on-dark by default;
+     inverts to black-on-light so the roster rail stays visible (see skill.ts). */
+  --color-skill-none: rgba(255, 255, 255, 0.3);
 }
 
 /* The app defaults to the dark Volt theme. The no-flash bootstrap script in
@@ -68,6 +71,24 @@
   --border: rgba(10, 10, 10, 0.12);
   --border-strong: rgba(10, 10, 10, 0.18);
   --hover: rgba(10, 10, 10, 0.06);
+
+  --color-skill-none: rgba(10, 10, 10, 0.25);
+}
+
+/* Live-card glow. Volt green in dark, crimson in light (matching --color-live);
+   kept as a class so the rgba alpha survives the theme swap, which a Tailwind
+   arbitrary shadow-[var(...)] can't express. */
+.glow-live {
+  box-shadow: 0 0 24px -6px rgba(200, 255, 45, 0.4);
+}
+.glow-live-strong {
+  box-shadow: 0 0 30px -8px rgba(200, 255, 45, 0.45);
+}
+:root[data-theme='light'] .glow-live {
+  box-shadow: 0 0 24px -6px rgba(255, 59, 48, 0.4);
+}
+:root[data-theme='light'] .glow-live-strong {
+  box-shadow: 0 0 30px -8px rgba(255, 59, 48, 0.45);
 }
 
 html,

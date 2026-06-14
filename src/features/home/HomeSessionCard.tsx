@@ -28,7 +28,7 @@ export default function HomeSessionCard({ entry, now, live = false }: Props) {
       to={`/sessions/${session.id}`}
       className={`flex w-full flex-col gap-2 rounded-xl border bg-[var(--surface)] px-4 py-3 text-left transition outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-volt)]/40 ${
         live
-          ? 'border-[var(--color-volt)]/45 shadow-[0_0_24px_-6px_rgba(200,255,45,0.4)] hover:border-[var(--color-volt)]'
+          ? 'glow-live border-[var(--color-live)]/45 hover:border-[var(--color-live)]'
           : 'border-[var(--border)] hover:border-[var(--color-blue)]/50'
       }`}
     >
