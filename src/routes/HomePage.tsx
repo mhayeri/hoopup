@@ -240,9 +240,7 @@ function HowItWorks() {
               >
                 {step.n}
               </p>
-              <div
-                className={`md:col-span-7 ${i % 2 === 1 ? 'md:order-1 md:col-start-1 md:justify-self-end' : 'md:col-start-6'}`}
-              >
+              <div className={`md:col-span-7 ${i % 2 === 1 ? 'md:order-1 md:col-start-1' : 'md:col-start-6'}`}>
                 <h3 className="font-display text-4xl font-extrabold tracking-wide uppercase md:text-5xl">
                   {step.title}
                 </h3>
