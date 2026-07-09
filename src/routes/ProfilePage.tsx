@@ -252,17 +252,12 @@ function Identity({
   email: string | null;
   onEdit: (() => void) | null;
 }) {
-  // Volt green reads as an accent on the dark surface, but that amber is
-  // low-contrast for a large heading on white, so the name goes ink in light.
-  const { theme } = useTheme();
   return (
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1
-          className={`font-display text-4xl leading-none font-extrabold tracking-wide break-words uppercase ${
-            theme === 'light' ? 'text-[var(--color-bone)]' : 'text-[var(--color-volt)]'
-          }`}
-        >
+        {/* --volt-text keeps the name legible in both themes: volt on night,
+            dark gold on paper. */}
+        <h1 className="font-display text-3xl leading-none font-extrabold tracking-wide break-words text-[var(--volt-text)] uppercase sm:text-4xl">
           @{profile.username}
         </h1>
         {onEdit ? (

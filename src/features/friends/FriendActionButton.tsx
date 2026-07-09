@@ -107,7 +107,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
           stop(e);
           void run(send);
         }}
-        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-volt)]/30 bg-[var(--color-night-3)] text-[var(--color-volt)] transition hover:bg-[var(--color-volt)]/15 disabled:opacity-50"
+        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-volt)]/30 bg-[var(--color-night-3)] text-[var(--volt-text)] transition hover:bg-[var(--color-volt)]/15 disabled:opacity-50"
       >
         <span aria-hidden>+</span>
       </button>

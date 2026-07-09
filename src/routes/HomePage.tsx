@@ -52,7 +52,7 @@ function Hero({ sessions }: { sessions: UpcomingSession[] }) {
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-end px-6 pb-24 md:justify-center md:pb-28">
         <Reveal>
-          <p className="mb-5 flex items-center gap-2.5 font-mono text-xs font-semibold tracking-[0.34em] text-[var(--color-volt)] uppercase">
+          <p className="mb-5 flex items-center gap-2.5 font-mono text-xs font-semibold tracking-[0.34em] text-[var(--volt-text)] uppercase">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-volt)] shadow-[0_0_10px_var(--color-volt)]" />
             Pickup, organized
           </p>
@@ -138,7 +138,7 @@ function StatsStrip({ sessions }: { sessions: UpcomingSession[] }) {
       <div className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-4 border-t border-dashed border-[var(--border)] pt-6">
         {items.map(([n, label]) => (
           <div key={label}>
-            <div className="volt-glow font-mono text-4xl font-semibold text-[var(--color-volt)] tabular-nums">
+            <div className="volt-glow font-mono text-4xl font-semibold text-[var(--volt-text)] tabular-nums">
               <CountUp value={n} />
             </div>
             <div className="mt-1.5 font-mono text-[10px] font-semibold tracking-[0.22em] text-[var(--color-bone)]/45 uppercase">
@@ -295,7 +295,7 @@ function GamesBoard({
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-xs font-semibold tracking-[0.34em] text-[var(--color-volt)] uppercase">
+              <p className="font-mono text-xs font-semibold tracking-[0.34em] text-[var(--volt-text)] uppercase">
                 Live board
               </p>
               <h2 className="mt-2 font-display text-6xl font-black tracking-wide uppercase md:text-7xl">
@@ -304,7 +304,7 @@ function GamesBoard({
             </div>
             <Link
               to="/map"
-              className="group mb-2 inline-flex items-center gap-2 font-mono text-sm font-semibold tracking-wide text-[var(--color-bone)]/70 uppercase transition hover:text-[var(--color-volt)]"
+              className="group mb-2 inline-flex items-center gap-2 font-mono text-sm font-semibold tracking-wide text-[var(--color-bone)]/70 uppercase transition hover:text-[var(--volt-text)]"
             >
               See all on the map
               <span className="transition-transform group-hover:translate-x-1">→</span>
@@ -420,7 +420,7 @@ function SignedInHome({ userId }: { userId: string }) {
       <CourtGL variant="ambient" className="absolute inset-0" />
       <div className="relative z-10 mx-auto max-w-6xl px-6 py-12 md:py-16">
         <Reveal>
-          <p className="flex items-center gap-2.5 font-mono text-xs font-semibold tracking-[0.3em] text-[var(--color-volt)] uppercase">
+          <p className="flex items-center gap-2.5 font-mono text-xs font-semibold tracking-[0.3em] text-[var(--volt-text)] uppercase">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-volt)] shadow-[0_0_10px_var(--color-volt)]" />
             Welcome back{name ? `, ${name}` : ''}
           </p>

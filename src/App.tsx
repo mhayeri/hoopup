@@ -14,6 +14,17 @@ import RequireAuth from './components/RequireAuth';
 import NavBar from './components/NavBar';
 import SiteFooter from './components/SiteFooter';
 
+/* Routes that own their whole viewport: the map fills it, and the auth flow
+   is a single focused card — a footer under either just adds scroll. */
+const FOOTERLESS = new Set([
+  '/map',
+  '/login',
+  '/signup',
+  '/reset-password',
+  '/update-password',
+  '/auth/callback',
+]);
+
 export default function App() {
   const location = useLocation();
 
@@ -45,9 +56,7 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
-      {/* The map owns the full viewport below the header; a footer there would
-          just push the map into a scroll. Every other route ends with one. */}
-      {location.pathname !== '/map' ? <SiteFooter /> : null}
+      {FOOTERLESS.has(location.pathname) ? null : <SiteFooter />}
       {/* Film-grain texture over the whole app (pointer-events: none). */}
       <div aria-hidden className="grain" />
     </div>

@@ -102,7 +102,7 @@ function Avatar({
   const ring =
     type === 'friend_session' ? 'border-[var(--color-volt)]/40' : 'border-[var(--color-blue)]/50';
   const initial =
-    type === 'friend_session' ? 'text-[var(--color-volt)]' : 'text-[var(--color-blue)]';
+    type === 'friend_session' ? 'text-[var(--volt-text)]' : 'text-[var(--color-blue)]';
   return (
     <div
       className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-[var(--color-night-3)] ${ring}`}

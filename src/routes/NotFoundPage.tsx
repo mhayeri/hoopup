@@ -7,7 +7,7 @@ export default function NotFoundPage() {
       <div aria-hidden className="volt-floods absolute inset-0" />
       <CourtGL variant="ambient" className="absolute inset-0" />
       <section className="relative z-10 text-center">
-        <p className="font-mono text-xs font-semibold tracking-[0.4em] text-[var(--color-volt)] uppercase">
+        <p className="font-mono text-xs font-semibold tracking-[0.4em] text-[var(--volt-text)] uppercase">
           Air ball
         </p>
         <h1 className="text-outline mt-3 font-display text-[clamp(8rem,28vw,16rem)] leading-[0.8] font-black select-none">

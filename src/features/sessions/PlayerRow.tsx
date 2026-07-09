@@ -39,7 +39,7 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
       <span
         className={`text-center font-display leading-none font-bold tabular-nums ${
           jersey == null ? 'text-lg' : 'text-2xl'
-        } ${isHost ? 'text-[var(--color-volt)]' : 'text-[var(--color-bone)]/35'}`}
+        } ${isHost ? 'text-[var(--volt-text)]' : 'text-[var(--color-bone)]/35'}`}
       >
         {jersey ?? '-'}
       </span>
@@ -59,12 +59,12 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
       <div className="flex min-w-0 items-center gap-2">
         <Link
           to={`/u/${profile.username}`}
-          className="truncate rounded text-sm font-semibold text-[var(--color-bone)] outline-none hover:text-[var(--color-volt)] hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ring-focus)]/40"
+          className="truncate rounded text-sm font-semibold text-[var(--color-bone)] outline-none hover:text-[var(--volt-text)] hover:underline focus-visible:ring-2 focus-visible:ring-[var(--ring-focus)]/40"
         >
           @{profile.username}
         </Link>
         {isHost ? (
-          <span className="inline-flex shrink-0 items-center rounded-full border border-[var(--color-volt)]/40 bg-[var(--color-volt)]/10 px-2 py-0.5 font-mono text-[9.5px] font-bold tracking-wider text-[var(--color-volt)] uppercase">
+          <span className="inline-flex shrink-0 items-center rounded-full border border-[var(--color-volt)]/40 bg-[var(--color-volt)]/10 px-2 py-0.5 font-mono text-[9.5px] font-bold tracking-wider text-[var(--volt-text)] uppercase">
             Host
           </span>
         ) : null}

@@ -111,7 +111,7 @@ function SectionHead({ label, count, suffix }: { label: string; count: number; s
       <span className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--color-bone)]/60">
         {label}
       </span>
-      <span className="rounded-full bg-[var(--color-volt)]/15 px-2 py-0.5 text-xs font-bold text-[var(--color-volt)]">
+      <span className="rounded-full bg-[var(--color-volt)]/15 px-2 py-0.5 text-xs font-bold text-[var(--volt-text)]">
         {count}
         {suffix ? ` ${suffix}` : ''}
       </span>

@@ -23,6 +23,12 @@
   --color-live: #c8ff2d;
   --on-live: #0c1402;
 
+  /* Accent color for TEXT sitting on page/card backgrounds (kickers, counts,
+     stat numbers). Volt reads fine on night, but amber-on-paper fails
+     contrast, so the light theme swaps this to a dark gold while fills,
+     borders and giant display accents keep --color-volt. */
+  --volt-text: #c8ff2d;
+
   /* Semantic surface tokens — the recurring translucent card/border/hover
      patterns. Components reference these via `bg-[var(--surface)]`,
      `border-[var(--border)]`, etc. */
@@ -69,6 +75,7 @@
   --color-volt: #ffc400;
   --color-live: #e5372c;
   --on-live: #ffffff;
+  --volt-text: #8a6a00;
 
   --surface: rgba(16, 16, 16, 0.03);
   --surface-2: rgba(16, 16, 16, 0.055);

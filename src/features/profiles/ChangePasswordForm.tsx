@@ -84,7 +84,7 @@ export default function ChangePasswordForm() {
       {success ? (
         <p
           role="status"
-          className="rounded-md border border-[var(--color-volt)]/40 bg-[var(--color-volt)]/10 px-3 py-2 text-sm text-[var(--color-volt)]"
+          className="rounded-md border border-[var(--color-volt)]/40 bg-[var(--color-volt)]/10 px-3 py-2 text-sm text-[var(--volt-text)]"
         >
           Password updated successfully.
         </p>

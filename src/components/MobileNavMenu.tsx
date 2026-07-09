@@ -6,7 +6,7 @@ const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const itemClass =
-  'w-full rounded-lg px-3 py-3 text-left font-display text-3xl font-bold uppercase tracking-wide text-[var(--color-bone)] transition hover:bg-[var(--hover)] hover:text-[var(--color-volt)]';
+  'w-full rounded-lg px-3 py-3 text-left font-display text-3xl font-bold uppercase tracking-wide text-[var(--color-bone)] transition hover:bg-[var(--hover)] hover:text-[var(--volt-text)]';
 
 type Props = {
   open: boolean;

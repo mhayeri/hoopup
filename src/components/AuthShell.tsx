@@ -21,7 +21,7 @@ export default function AuthShell({ kicker, title, sub, children }: Props) {
       <div aria-hidden className="volt-floods absolute inset-0" />
       <CourtGL variant="ambient" className="absolute inset-0" />
       <div className="glass relative z-10 w-full max-w-md rounded-3xl p-6 sm:p-8">
-        <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-[var(--color-volt)] uppercase">
+        <p className="font-mono text-[11px] font-semibold tracking-[0.3em] text-[var(--volt-text)] uppercase">
           {kicker}
         </p>
         <h1 className="mt-2 font-display text-5xl font-black tracking-wide uppercase">{title}</h1>

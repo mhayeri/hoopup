@@ -105,7 +105,7 @@ function CourtMarkers({ filter, selectedCourtId, markerRefs }: CourtMarkersProps
               ) : null}
               <Link
                 to={`/courts/${c.id}`}
-                className="inline-block text-sm font-semibold text-[var(--color-volt)] hover:underline"
+                className="inline-block text-sm font-semibold text-[var(--volt-text)] hover:underline"
               >
                 View details →
               </Link>

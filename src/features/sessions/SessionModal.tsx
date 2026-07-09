@@ -75,10 +75,10 @@ export default function SessionModal({
     >
       <div
         ref={panelRef}
-        className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--color-night-2)] p-6 shadow-2xl"
+        className="glass w-full max-w-md rounded-3xl p-6 shadow-[0_40px_90px_-30px_var(--elev-shadow)]"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-volt)]">
+          <h2 className="font-display text-3xl font-extrabold tracking-wide text-[var(--color-bone)] uppercase">
             {title}
           </h2>
           <button

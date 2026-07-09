@@ -84,7 +84,7 @@ export default function QuickActions() {
             to={tile.to}
             className={`group flex flex-col gap-7 rounded-2xl border p-4 backdrop-blur transition hover:-translate-y-0.5 active:scale-[0.99] ${
               tile.primary
-                ? 'border-[var(--color-volt)]/40 bg-[var(--color-volt)]/8 text-[var(--color-volt)] hover:border-[var(--color-volt)]/80 hover:bg-[var(--color-volt)]/12'
+                ? 'border-[var(--color-volt)]/40 bg-[var(--color-volt)]/8 text-[var(--volt-text)] hover:border-[var(--color-volt)]/80 hover:bg-[var(--color-volt)]/12'
                 : 'border-[var(--border)] bg-[var(--surface)] text-[var(--color-bone)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)]'
             }`}
           >
@@ -100,7 +100,7 @@ export default function QuickActions() {
                 </span>
               </span>
               <span
-                className={`mt-0.5 block text-xs ${tile.primary ? 'text-[var(--color-volt)]/60' : 'text-[var(--color-bone)]/45'}`}
+                className={`mt-0.5 block text-xs ${tile.primary ? 'text-[var(--volt-text)]/60' : 'text-[var(--color-bone)]/45'}`}
               >
                 {tile.hint}
               </span>

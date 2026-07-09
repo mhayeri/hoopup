@@ -35,7 +35,7 @@ export default function NextGameCard({ entry }: { entry: ActiveSessionEntry }) {
     >
       <p
         className={`flex items-center gap-2 font-mono text-xs font-semibold tracking-[0.18em] uppercase ${
-          live ? 'text-[var(--color-live)]' : 'text-[var(--color-volt)]'
+          live ? 'text-[var(--color-live)]' : 'text-[var(--volt-text)]'
         }`}
       >
         {live ? (

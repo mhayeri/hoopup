@@ -93,7 +93,7 @@ function FooterCol({ title, links }: { title: string; links: FooterLink[] }) {
             {l.to ? (
               <Link
                 to={l.to}
-                className="text-[var(--color-bone)]/70 transition hover:text-[var(--color-volt)]"
+                className="text-[var(--color-bone)]/70 transition hover:text-[var(--volt-text)]"
               >
                 {l.label}
               </Link>
@@ -102,7 +102,7 @@ function FooterCol({ title, links }: { title: string; links: FooterLink[] }) {
                 href={l.href}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[var(--color-bone)]/70 transition hover:text-[var(--color-volt)]"
+                className="text-[var(--color-bone)]/70 transition hover:text-[var(--volt-text)]"
               >
                 {l.label}
               </a>

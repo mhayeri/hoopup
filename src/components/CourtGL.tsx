@@ -95,11 +95,12 @@ void main() {
   float tw = 0.5 + 0.5 * sin(u_time * (1.0 + rnd * 2.0) + rnd * 20.0);
   col += (1.0 - L) * mix(blue, volt, rnd) * smoothstep(0.025 + rnd * 0.012, 0.0, dd) * tw * 0.10;
 
-  // The ball.
+  // The ball. Wide screens float it right of the copy; narrow screens crest
+  // a much larger ball over the top-right corner so it never sits under text.
   if (u_ball > 0.5) {
     float wide = smoothstep(0.95, 1.35, aspect);
-    vec2 bc = mix(vec2(0.0, 0.42), vec2(0.66, 0.12), wide);
-    float br = mix(0.30, 0.44, wide);
+    vec2 bc = mix(vec2(aspect * 0.78, 0.92), vec2(0.66, 0.12), wide);
+    float br = mix(0.55, 0.44, wide);
     bc.y += sin(u_time * 0.7) * 0.014;
     bc += u_ptr * vec2(0.022, 0.016);
 
@@ -127,7 +128,7 @@ void main() {
 
       // Pebbled leather micro-noise.
       float peb = hash31(floor(m * 110.0)) * 0.05;
-      vec3 base = mix(vec3(0.062, 0.070, 0.092) + peb, vec3(0.985, 0.978, 0.958) - peb * 0.7, L);
+      vec3 base = mix(vec3(0.062, 0.070, 0.092) + peb, vec3(0.975, 0.962, 0.93) - peb * 0.45, L);
 
       vec3 Ldir = normalize(vec3(-0.45, 0.65, 0.62));
       float diff = clamp(dot(n, Ldir), 0.0, 1.0);
@@ -142,7 +143,12 @@ void main() {
       shade += volt * (1.0 - smoothstep(0.0, 0.11, minD)) * (1.0 - L) * 0.16;
 
       float spec = pow(clamp(dot(reflect(-Ldir, n), vec3(0.0, 0.0, 1.0)), 0.0, 1.0), 42.0);
-      col = mix(shade, seamCol, seam * 0.88) + spec * mix(0.22, 0.4, L);
+      col = mix(shade, seamCol, seam * mix(0.88, 0.68, L)) + spec * mix(0.22, 0.4, L);
+    } else if (L > 0.5) {
+      // Soft contact shadow that seats the light ball on the page (only when
+      // the ball floats clear of the edges, i.e. the wide layout).
+      float sd = length((p - vec2(bc.x, bc.y - br - 0.05)) * vec2(1.1, 3.4));
+      col = mix(col, col * 0.9, wide * smoothstep(0.55, 0.0, sd));
     }
   }
 

@@ -136,11 +136,12 @@ export default function CourtDetailPage() {
   ].filter((f): f is { label: string; value: string } => f !== null);
 
   return (
-    <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
-      <div className="mx-auto max-w-3xl px-6 py-12">
+    <main className="relative min-h-[calc(100dvh-3.5rem)] overflow-hidden bg-[var(--color-night)] text-[var(--color-bone)]">
+      <div aria-hidden className="volt-floods pointer-events-none absolute inset-0" />
+      <div className="relative mx-auto max-w-3xl px-6 py-12">
         <Link
           to="/map"
-          className="font-mono text-xs font-semibold tracking-[0.18em] text-[var(--color-bone)]/55 uppercase transition hover:text-[var(--color-volt)]"
+          className="font-mono text-xs font-semibold tracking-[0.18em] text-[var(--color-bone)]/55 uppercase transition hover:text-[var(--volt-text)]"
         >
           &larr; Back to map
         </Link>

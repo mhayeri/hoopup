@@ -165,7 +165,7 @@ export default function SessionPanel({
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="ml-auto text-[11px] font-bold text-[var(--color-volt)] underline underline-offset-2"
+                  className="ml-auto text-[11px] font-bold text-[var(--volt-text)] underline underline-offset-2"
                 >
                   Clear
                 </button>
@@ -345,7 +345,7 @@ function FilterChip({
       onClick={onClick}
       className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold transition ${
         active
-          ? 'bg-[var(--color-bone)]/12 text-[var(--color-volt)] shadow-sm'
+          ? 'bg-[var(--color-bone)]/12 text-[var(--volt-text)] shadow-sm'
           : 'text-[var(--color-bone)]/65 hover:text-[var(--color-bone)]'
       }`}
     >

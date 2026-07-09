@@ -48,7 +48,7 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
       <div className="flex items-baseline justify-between gap-2">
         <p className="truncate text-sm font-bold text-[var(--color-bone)]">{courtLabel}</p>
         <p className="shrink-0 font-mono text-xs font-semibold text-[var(--color-bone)]/50 tabular-nums">
-          <span className={live ? 'text-[var(--color-live)]' : 'text-[var(--color-volt)]'}>
+          <span className={live ? 'text-[var(--color-live)]' : 'text-[var(--volt-text)]'}>
             {goingCount}
           </span>
           /{SESSION_CAP}
