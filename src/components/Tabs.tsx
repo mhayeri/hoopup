@@ -46,11 +46,11 @@ export default function Tabs({ items, value, onChange, ariaLabel }: Props) {
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(item.id)}
             onKeyDown={(e) => handleKeyDown(e, i)}
-            className={
+            className={`relative rounded-md px-4 py-1.5 text-sm font-semibold transition ${
               selected
-                ? 'rounded-full bg-[var(--color-blue)]/20 px-4 py-1.5 text-sm font-semibold text-[var(--color-bone)]'
-                : 'rounded-full px-4 py-1.5 text-sm font-semibold text-[var(--color-bone)]/60 transition hover:text-[var(--color-bone)]'
-            }
+                ? 'text-[var(--color-bone)] after:absolute after:inset-x-3 after:-bottom-[9px] after:h-[2px] after:rounded-full after:bg-[var(--color-volt)] after:shadow-[0_0_8px_var(--color-volt)]'
+                : 'text-[var(--color-bone)]/60 hover:bg-[var(--hover)] hover:text-[var(--color-bone)]'
+            }`}
           >
             {item.label}
           </button>
