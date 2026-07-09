@@ -12,6 +12,7 @@ import SessionDetailPage from './routes/SessionDetailPage';
 import NotFoundPage from './routes/NotFoundPage';
 import RequireAuth from './components/RequireAuth';
 import NavBar from './components/NavBar';
+import SiteFooter from './components/SiteFooter';
 
 export default function App() {
   const location = useLocation();
@@ -44,6 +45,9 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
+      {/* The map owns the full viewport below the header; a footer there would
+          just push the map into a scroll. Every other route ends with one. */}
+      {location.pathname !== '/map' ? <SiteFooter /> : null}
       {/* Film-grain texture over the whole app (pointer-events: none). */}
       <div aria-hidden className="grain" />
     </div>

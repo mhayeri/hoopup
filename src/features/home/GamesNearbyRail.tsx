@@ -58,8 +58,8 @@ export default function GamesNearbyRail({
   }, [sessions, now, excludeSessionId]);
 
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-[var(--color-night-2)]/60 p-4 shadow-[0_30px_70px_-20px_var(--elev-shadow)] ring-1 ring-[var(--color-blue)]/15 backdrop-blur">
-      <p className="mb-3 flex items-center gap-2 px-1 text-xs font-bold tracking-[0.08em] text-[var(--color-volt)] uppercase">
+    <div className="glass rounded-3xl p-4 shadow-[0_30px_70px_-20px_var(--elev-shadow)]">
+      <p className="mb-3 flex items-center gap-2 px-1 font-mono text-[11px] font-semibold tracking-[0.22em] text-[var(--color-volt)] uppercase">
         <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-volt)] shadow-[0_0_8px_var(--color-volt)]" />
         {heading}
       </p>
