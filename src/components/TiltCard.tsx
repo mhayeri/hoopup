@@ -1,4 +1,4 @@
-import { useRef, type ReactNode, type PointerEvent } from 'react';
+import { useRef, type CSSProperties, type ReactNode, type PointerEvent } from 'react';
 
 type Props = {
   children: ReactNode;
@@ -67,7 +67,7 @@ export default function TiltCard({ children, className = '', maxTilt = 6, spotCo
       <span
         aria-hidden
         className="spot-border"
-        style={spotColor ? { '--spot-color': spotColor } : undefined}
+        style={spotColor ? ({ '--spot-color': spotColor } as CSSProperties) : undefined}
       />
     </div>
   );

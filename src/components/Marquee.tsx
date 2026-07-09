@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
@@ -15,7 +15,10 @@ type Props = {
 export default function Marquee({ children, duration = 36, className = '' }: Props) {
   return (
     <div className={`marquee ${className}`.trim()}>
-      <div className="marquee-track" style={{ '--marquee-duration': `${duration}s` }}>
+      <div
+        className="marquee-track"
+        style={{ '--marquee-duration': `${duration}s` } as CSSProperties}
+      >
         <div className="flex shrink-0 items-center">{children}</div>
         <div className="flex shrink-0 items-center" aria-hidden>
           {children}

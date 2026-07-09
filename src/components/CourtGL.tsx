@@ -248,12 +248,13 @@ export default function CourtGL({ className = '', variant = 'hero' }: Props) {
     }
 
     function frame() {
-      if (!gl || !program) return;
+      const cnv = canvasRef.current;
+      if (!gl || !program || !cnv) return;
       resize();
       ptr.x += (ptr.tx - ptr.x) * 0.06;
       ptr.y += (ptr.ty - ptr.y) * 0.06;
       const t = reduced ? 14.0 : (performance.now() - t0) / 1000;
-      gl.uniform2f(uniforms.res, canvas.width, canvas.height);
+      gl.uniform2f(uniforms.res, cnv.width, cnv.height);
       gl.uniform1f(uniforms.time, t);
       gl.uniform2f(uniforms.ptr, ptr.x, ptr.y);
       gl.uniform1f(uniforms.light, themeRef.current === 'light' ? 1 : 0);
