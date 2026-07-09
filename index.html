@@ -8,7 +8,14 @@
       name="description"
       content="HoopUp — find a basketball court, RSVP to a pickup game, get on the floor."
     />
-    <meta name="theme-color" content="#0b0b0f" />
+    <meta property="og:title" content="HoopUp — pickup basketball, organized" />
+    <meta
+      property="og:description"
+      content="Find a court near you, RSVP to a game, and show up knowing exactly who's running with you."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mhayeri.github.io/hoopup/" />
+    <meta name="theme-color" content="#06070b" />
     <!-- Resolve + apply the theme before first paint so light-mode users never
          see a flash of dark: localStorage -> system preference -> dark. The
          ThemeProvider reads this attribute back to stay in sync. -->
@@ -28,15 +35,17 @@
         }
       })();
     </script>
-    <!-- Display (Bebas Neue) + body (Inter) fonts declared in index.css's @theme.
-         Without these they fall back to system-ui everywhere. -->
+    <!-- Type system declared in index.css's @theme:
+         display  — Big Shoulders Display (variable weight, condensed athletic)
+         body     — Archivo (variable weight + width; wide caps for kicker labels)
+         mono     — Spline Sans Mono (times, counts, box-score numerals) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@300..900&family=Archivo:ital,wdth,wght@0,100..125,300..900;1,100..125,300..900&family=Spline+Sans+Mono:wght@400..700&display=swap"
       rel="stylesheet"
     />
-    <title>HoopUp</title>
+    <title>HoopUp — pickup basketball, organized</title>
   </head>
   <body>
     <div id="root"></div>
