@@ -107,7 +107,7 @@ export default function SessionPanel({
 
       <div className="border-b border-[var(--border)] px-5 pt-3 pb-3 md:pt-4">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-2xl leading-none tracking-wide text-[var(--color-bone)]">
+          <h2 className="font-display text-3xl leading-none font-extrabold tracking-wide text-[var(--color-bone)] uppercase">
             Find a game
           </h2>
           <button
@@ -260,7 +260,7 @@ export default function SessionPanel({
             <>
               {liveSessions.length > 0 ? (
                 <section>
-                  <p className="flex items-center gap-1.5 px-5 pt-4 pb-2 text-[11px] font-bold tracking-[0.12em] text-[var(--color-live)] uppercase">
+                  <p className="flex items-center gap-1.5 px-5 pt-4 pb-2 font-mono text-[10px] font-semibold tracking-[0.22em] text-[var(--color-live)] uppercase">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-live)]" />
                     Hooping · {liveSessions.length}
                   </p>
@@ -279,7 +279,7 @@ export default function SessionPanel({
               ) : null}
               {upcomingSessions.length > 0 ? (
                 <section>
-                  <p className="px-5 pt-4 pb-2 text-[11px] font-bold tracking-[0.12em] text-[var(--color-bone)]/55 uppercase">
+                  <p className="px-5 pt-4 pb-2 font-mono text-[10px] font-semibold tracking-[0.22em] text-[var(--color-bone)]/55 uppercase">
                     Upcoming · {upcomingSessions.length}{' '}
                     {upcomingSessions.length === 1 ? 'session' : 'sessions'}
                   </p>

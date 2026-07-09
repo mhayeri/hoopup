@@ -24,7 +24,7 @@ type Props = {
 /** Section divider label ("On the floor", "Bench") with a trailing rule. */
 function SubLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-6 mb-2.5 flex items-center gap-2.5 text-[11px] font-bold uppercase tracking-wider text-[var(--color-bone)]/55">
+    <div className="mt-6 mb-2.5 flex items-center gap-2.5 font-mono text-[10px] font-semibold tracking-[0.22em] text-[var(--color-bone)]/55 uppercase">
       <span>{children}</span>
       <span className="h-px flex-1 bg-[var(--border)]" />
     </div>
@@ -123,7 +123,7 @@ export default function RosterSection({
   // Box-score column header (rendered once, above the floor list).
   const columnHeader = (
     <div
-      className={`${ROW_GRID} rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-[var(--color-bone)]/60`}
+      className={`${ROW_GRID} rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2 font-mono text-[10px] font-semibold tracking-[0.16em] text-[var(--color-bone)]/60 uppercase`}
     >
       <span className="text-center">#</span>
       <span aria-hidden />
@@ -137,16 +137,16 @@ export default function RosterSection({
   return (
     <section className="mt-12">
       <div className="flex items-center gap-3">
-        <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-bone)]">
+        <h2 className="font-display text-4xl font-extrabold tracking-wide text-[var(--color-bone)] uppercase">
           Roster
         </h2>
-        <span className="rounded-full bg-[var(--color-blue)]/15 px-3 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-blue)]">
+        <span className="rounded-md bg-[var(--color-blue)]/15 px-3 py-0.5 font-mono text-xs font-semibold text-[var(--color-blue)] tabular-nums">
           {goingCount} / {SESSION_CAP}
         </span>
       </div>
 
       {inProgress ? (
-        <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-[var(--color-live)] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--on-live)]">
+        <p className="mt-3 inline-flex items-center gap-2 rounded-md bg-[var(--color-live)] px-3 py-1 font-mono text-xs font-semibold tracking-[0.14em] text-[var(--on-live)] uppercase">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--on-live)]" />
           Hooping - {formatTimeUntilEnd(endsAt, now)} - RSVPs locked
         </p>
@@ -177,7 +177,7 @@ export default function RosterSection({
                 type="button"
                 onClick={handleRsvp}
                 disabled={busy}
-                className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+                className="sheen rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.03] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busy ? 'Joining...' : "I'm in"}
               </button>

@@ -37,7 +37,7 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
 
       {/* # — jersey number */}
       <span
-        className={`text-center font-display leading-none tabular-nums ${
+        className={`text-center font-display leading-none font-bold tabular-nums ${
           jersey == null ? 'text-lg' : 'text-2xl'
         } ${isHost ? 'text-[var(--color-volt)]' : 'text-[var(--color-bone)]/35'}`}
       >
@@ -64,11 +64,8 @@ export default function PlayerRow({ rsvp, isHost = false, isYou = false, jersey 
           @{profile.username}
         </Link>
         {isHost ? (
-          <span
-            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[var(--color-volt)]/40 bg-[var(--color-volt)]/10 px-2 py-0.5 text-[9.5px] font-extrabold uppercase tracking-wider text-[var(--color-volt)]"
-            aria-label="Host"
-          >
-            <span aria-hidden>&#x1F451;</span> Host
+          <span className="inline-flex shrink-0 items-center rounded-full border border-[var(--color-volt)]/40 bg-[var(--color-volt)]/10 px-2 py-0.5 font-mono text-[9.5px] font-bold tracking-wider text-[var(--color-volt)] uppercase">
+            Host
           </span>
         ) : null}
         {isYou ? (
