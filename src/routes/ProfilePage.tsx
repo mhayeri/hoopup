@@ -79,7 +79,9 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
-        <p className="text-sm uppercase tracking-[0.4em] text-[var(--color-bone)]/55">Loading…</p>
+        <p className="font-mono text-sm tracking-[0.4em] text-[var(--color-bone)]/55 uppercase">
+          Loading…
+        </p>
       </main>
     );
   }
@@ -257,7 +259,7 @@ function Identity({
     <>
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h1
-          className={`text-2xl font-black tracking-tight break-words ${
+          className={`font-display text-4xl leading-none font-extrabold tracking-wide break-words uppercase ${
             theme === 'light' ? 'text-[var(--color-bone)]' : 'text-[var(--color-volt)]'
           }`}
         >
@@ -293,7 +295,7 @@ function ProfileStats({ profile }: { profile: PublicProfileRow }) {
       />
       <Item
         label="Home court"
-        value={profile.home_court_id != null ? `#${profile.home_court_id}` : null}
+        value={profile.home_court_id != null ? `Court #${profile.home_court_id}` : null}
       />
     </dl>
   );
@@ -302,10 +304,10 @@ function ProfileStats({ profile }: { profile: PublicProfileRow }) {
 function Item({ label, value }: { label: string; value: string | null }) {
   return (
     <div>
-      <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/55">
+      <dt className="font-mono text-[10px] font-semibold tracking-[0.2em] text-[var(--color-bone)]/55 uppercase">
         {label}
       </dt>
-      <dd className="mt-0.5 text-[var(--color-bone)]">{value ?? '-'}</dd>
+      <dd className="mt-1 font-semibold text-[var(--color-bone)]">{value ?? '-'}</dd>
     </div>
   );
 }
@@ -327,7 +329,7 @@ function SettingsPanel({
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
-        <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
+        <h3 className="font-mono text-xs font-semibold tracking-[0.22em] text-[var(--color-bone)]/55 uppercase">
           Appearance
         </h3>
         <p className="mt-2 text-sm text-[var(--color-bone)]/70">
@@ -351,18 +353,27 @@ function SettingsPanel({
             }`}
           >
             <span
-              className={`absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] leading-none transition-transform ${
-                isLight ? 'translate-x-5 bg-[#0c1402]' : 'translate-x-0 bg-white'
+              className={`absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full transition-transform ${
+                isLight ? 'translate-x-5 bg-[#0c1402] text-[var(--color-volt)]' : 'translate-x-0 bg-white text-[#0c1402]'
               }`}
             >
-              {isLight ? '☀️' : '🌙'}
+              {isLight ? (
+                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden>
+                  <circle cx="12" cy="12" r="4.2" />
+                  <path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3 19 19M19 5l-1.7 1.7M6.7 17.3 5 19" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor" aria-hidden>
+                  <path d="M20.4 14.7A8.6 8.6 0 0 1 9.3 3.6a8.6 8.6 0 1 0 11.1 11.1Z" />
+                </svg>
+              )}
             </span>
           </button>
         </div>
       </div>
 
       <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
-        <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
+        <h3 className="font-mono text-xs font-semibold tracking-[0.22em] text-[var(--color-bone)]/55 uppercase">
           Notifications
         </h3>
         <p className="mt-2 text-sm text-[var(--color-bone)]/70">
@@ -391,7 +402,7 @@ function SettingsPanel({
 
       {onChangePassword ? (
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
-          <h3 className="text-sm font-black uppercase tracking-widest text-[var(--color-bone)]/55">
+          <h3 className="font-mono text-xs font-semibold tracking-[0.22em] text-[var(--color-bone)]/55 uppercase">
             Security
           </h3>
           <p className="mt-2 text-sm text-[var(--color-bone)]/70">
@@ -408,7 +419,9 @@ function SettingsPanel({
       ) : null}
 
       <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-5">
-        <h3 className="text-sm font-black uppercase tracking-widest text-red-300">Account</h3>
+        <h3 className="font-mono text-xs font-semibold tracking-[0.22em] text-red-300 uppercase">
+          Account
+        </h3>
         <p className="mt-2 text-sm text-red-300/80">
           Permanently delete your account and all of your sessions, RSVPs, and profile data. This
           cannot be undone.
