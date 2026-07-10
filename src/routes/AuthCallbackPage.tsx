@@ -143,7 +143,7 @@ export default function AuthCallbackPage() {
     return (
       <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
         <div className="max-w-md text-center">
-          <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-volt)]">
+          <h1 className="font-display text-4xl font-black tracking-wide text-[var(--color-bone)] uppercase">
             Couldn't sign you in
           </h1>
           <p
@@ -155,7 +155,7 @@ export default function AuthCallbackPage() {
           <div className="mt-6 flex items-center justify-center gap-3">
             <Link
               to="/login"
-              className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
+              className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:bg-[var(--color-volt)]/90"
             >
               Sign in
             </Link>
@@ -174,7 +174,7 @@ export default function AuthCallbackPage() {
   return (
     <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
       <div className="text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-bone)]/60">
+        <p className="font-mono text-sm font-semibold tracking-[0.4em] text-[var(--color-bone)]/60 uppercase">
           Lacing up...
         </p>
         <p className="mt-4 text-[var(--color-bone)]/70">Finishing sign-in.</p>

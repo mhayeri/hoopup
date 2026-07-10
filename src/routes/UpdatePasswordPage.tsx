@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../providers/useAuth';
+import AuthShell from '../components/AuthShell';
 import { friendlyMessage } from '../lib/errors';
 import { PASSWORD_HINT, validatePassword } from '../lib/password';
 
@@ -49,105 +50,90 @@ export default function UpdatePasswordPage() {
 
   if (done) {
     return (
-      <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
-        <div className="max-w-md text-center">
-          <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-volt)]">
-            Password updated
-          </h1>
-          <p className="mt-4 text-[var(--color-bone)]/80">You're all set. Back on the floor.</p>
-          <button
-            type="button"
-            onClick={() => navigate('/profile', { replace: true })}
-            className="mt-6 rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
-          >
-            Go to profile
-          </button>
-        </div>
-      </main>
+      <AuthShell kicker="All set" title="Password updated">
+        <p className="mt-4 text-[var(--color-bone)]/80">You're all set. Back on the floor.</p>
+        <button
+          type="button"
+          onClick={() => navigate('/profile', { replace: true })}
+          className="sheen mt-6 rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.02] active:scale-[0.98]"
+        >
+          Go to profile
+        </button>
+      </AuthShell>
     );
   }
 
   // No recovery session - expired/invalid link.
   if (!loading && !session) {
     return (
-      <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
-        <div className="max-w-md text-center">
-          <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-volt)]">
-            Link expired
-          </h1>
-          <p className="mt-4 text-[var(--color-bone)]/80">
-            This password-reset link is missing or has expired. Request a fresh one.
-          </p>
-          <Link
-            to="/reset-password"
-            className="mt-6 inline-block rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
-          >
-            Request a new link
-          </Link>
-        </div>
-      </main>
+      <AuthShell kicker="Out of bounds" title="Link expired">
+        <p className="mt-4 text-[var(--color-bone)]/80">
+          This password-reset link is missing or has expired. Request a fresh one.
+        </p>
+        <Link
+          to="/reset-password"
+          className="sheen mt-6 inline-block rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.02] active:scale-[0.98]"
+        >
+          Request a new link
+        </Link>
+      </AuthShell>
     );
   }
 
   return (
-    <main className="flex min-h-[calc(100dvh-3.5rem)] items-center justify-center bg-[var(--color-night)] px-6 py-16 text-[var(--color-bone)]">
-      <div className="w-full max-w-sm">
-        <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-volt)]">
-          New password
-        </h1>
-        <p className="mt-2 text-sm text-[var(--color-bone)]/70">
-          Choose a new password for your account.
-        </p>
+    <AuthShell
+      kicker="Fresh start"
+      title="New password"
+      sub="Choose a new password for your account."
+    >
+      <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
+        <label className="block">
+          <span className="font-mono text-[11px] font-semibold tracking-[0.18em] text-[var(--color-bone)]/60 uppercase">
+            New password
+          </span>
+          <input
+            type="password"
+            required
+            autoComplete="new-password"
+            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={inputClass}
+          />
+          <span className="mt-1 block text-xs text-[var(--color-bone)]/55">{PASSWORD_HINT}</span>
+        </label>
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
-          <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
-              New password
-            </span>
-            <input
-              type="password"
-              required
-              autoComplete="new-password"
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={inputClass}
-            />
-            <span className="mt-1 block text-xs text-[var(--color-bone)]/55">{PASSWORD_HINT}</span>
-          </label>
+        <label className="block">
+          <span className="font-mono text-[11px] font-semibold tracking-[0.18em] text-[var(--color-bone)]/60 uppercase">
+            Confirm password
+          </span>
+          <input
+            type="password"
+            required
+            autoComplete="new-password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            className={inputClass}
+          />
+        </label>
 
-          <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
-              Confirm password
-            </span>
-            <input
-              type="password"
-              required
-              autoComplete="new-password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className={inputClass}
-            />
-          </label>
-
-          {error ? (
-            <p
-              role="alert"
-              className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
-            >
-              {error}
-            </p>
-          ) : null}
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+        {error ? (
+          <p
+            role="alert"
+            className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
           >
-            {submitting ? 'Updating...' : 'Update password'}
-          </button>
-        </form>
-      </div>
-    </main>
+            {error}
+          </p>
+        ) : null}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="sheen w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {submitting ? 'Updating...' : 'Update password'}
+        </button>
+      </form>
+    </AuthShell>
   );
 }

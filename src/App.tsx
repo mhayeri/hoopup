@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './routes/HomePage';
 import LoginPage from './routes/LoginPage';
 import SignupPage from './routes/SignupPage';
@@ -12,12 +13,34 @@ import SessionDetailPage from './routes/SessionDetailPage';
 import NotFoundPage from './routes/NotFoundPage';
 import RequireAuth from './components/RequireAuth';
 import NavBar from './components/NavBar';
+import SiteFooter from './components/SiteFooter';
+
+/* Routes that own their whole viewport: the map fills it, and the auth flow
+   is a single focused card — a footer under either just adds scroll. */
+const FOOTERLESS = new Set([
+  '/map',
+  '/login',
+  '/signup',
+  '/reset-password',
+  '/update-password',
+  '/auth/callback',
+]);
 
 export default function App() {
+  const location = useLocation();
+
+  // HashRouter has no scroll restoration: without this, following a footer
+  // link keeps the old scroll offset and the new page opens mid-scroll.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname, location.search]);
+
   return (
     <div className="flex min-h-full flex-col">
       <NavBar />
-      <div className="flex-1">
+      {/* Keyed by pathname so every navigation gets the route entrance
+          animation (CSS `.route-in`, disabled for reduced motion). */}
+      <div key={location.pathname} className="route-in flex-1">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/map" element={<MapPage />} />
@@ -40,6 +63,9 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
+      {FOOTERLESS.has(location.pathname) ? null : <SiteFooter />}
+      {/* Film-grain texture over the whole app (pointer-events: none). */}
+      <div aria-hidden className="grain" />
     </div>
   );
 }

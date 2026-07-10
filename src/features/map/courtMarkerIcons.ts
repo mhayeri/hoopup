@@ -27,12 +27,13 @@ export type CourtIconSet = {
   live: L.DivIcon;
 };
 
-// Recolored per theme so markers stay legible on each basemap. Dark uses the
-// Volt palette (blue structure / volt live); light uses Solar Court (black
-// structure / crimson live, matching --color-live). Slate default works on both.
+// Recolored per theme so markers stay legible on each basemap. Both themes
+// follow the Blacktop palette: teal structure for courts with sessions, ember
+// (dark) / crimson (light, matching --color-live) for in-progress games.
+// Warm-slate default works on both basemaps.
 const ICON_SETS: Record<Theme, CourtIconSet> = {
-  dark: { default: makeIcon('#64748b'), active: makeIcon('#2b6fff'), live: makeIcon('#c8ff2d') },
-  light: { default: makeIcon('#64748b'), active: makeIcon('#111111'), live: makeIcon('#ff3b30') },
+  dark: { default: makeIcon('#8a8378'), active: makeIcon('#38b2a0'), live: makeIcon('#ff6a3d') },
+  light: { default: makeIcon('#8a8378'), active: makeIcon('#0c6e60'), live: makeIcon('#d92c3f') },
 };
 
 export function getCourtIcons(theme: Theme): CourtIconSet {

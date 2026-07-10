@@ -1,12 +1,23 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
 import PlayerSearchBar from '../features/friends/PlayerSearchBar';
 import PlayerSearchOverlay from '../features/friends/PlayerSearchOverlay';
 import NotificationBell from '../features/notifications/NotificationBell';
 import NotificationsPanel from '../features/notifications/NotificationsPanel';
 import { useNotifications } from '../features/notifications/useNotifications';
+import BallMark from './BallMark';
 import MobileNavMenu from './MobileNavMenu';
+
+/** Shared NavLink styling — quiet by default, bone on hover, volt underline
+ *  bar (sitting on the header's bottom border) when the route is active. */
+function navLinkClass({ isActive }: { isActive: boolean }) {
+  return `relative rounded-full px-4 py-2 font-semibold transition hover:bg-[var(--hover)] ${
+    isActive
+      ? 'text-[var(--color-bone)] after:absolute after:inset-x-4 after:-bottom-[13px] after:h-[2px] after:rounded-full after:bg-[var(--color-volt)] after:shadow-[0_0_8px_var(--color-volt)]'
+      : 'text-[var(--color-bone)]/70 hover:text-[var(--color-bone)]'
+  }`;
+}
 
 export default function NavBar() {
   const { session, user, signOut } = useAuth();
@@ -25,52 +36,46 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-10 border-b border-[var(--border)] bg-[var(--color-night)]/85 backdrop-blur">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link
           to="/"
-          className="text-2xl font-black uppercase tracking-tight text-[var(--color-bone)]"
+          className="group flex items-center gap-2 text-2xl font-black tracking-tight text-[var(--color-bone)] uppercase"
         >
-          Hoop<span className="text-[var(--color-volt)]">Up</span>
+          <BallMark className="h-[22px] w-[22px] text-[var(--color-volt)] transition-transform duration-700 ease-out group-hover:rotate-[360deg]" />
+          <span className="font-display text-[26px] tracking-wide">
+            Hoop<span className="text-[var(--color-volt)]">Up</span>
+          </span>
         </Link>
-        <div className="hidden items-center gap-2 text-sm sm:flex">
+        <div className="hidden items-center gap-1.5 text-sm sm:flex">
           {session ? <PlayerSearchBar /> : null}
-          <Link
-            to="/map"
-            className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
-          >
+          <NavLink to="/map" className={navLinkClass}>
             Map
-          </Link>
+          </NavLink>
           {session ? (
             <>
               <NotificationBell
                 unreadCount={notifs.unreadCount}
                 onOpen={() => setNotifOpen(true)}
               />
-              <Link
-                to="/profile"
-                className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
-              >
+              <NavLink to="/profile" className={navLinkClass}>
                 Profile
-              </Link>
+              </NavLink>
               <button
                 type="button"
                 onClick={onSignOut}
-                className="rounded-full border border-[var(--border-strong)] px-4 py-2 font-semibold text-[var(--color-bone)] transition hover:border-[var(--color-blue)]/60 hover:bg-[var(--color-blue)]/10"
+                className="ml-1 rounded-full border border-[var(--border-strong)] px-4 py-2 font-semibold text-[var(--color-bone)] transition hover:border-[var(--color-blue)]/60 hover:bg-[var(--color-blue)]/10 active:scale-[0.97]"
               >
                 Sign out
               </button>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="rounded-full px-4 py-2 font-semibold text-[var(--color-bone)]/75 transition hover:bg-[var(--hover)] hover:text-[var(--color-bone)]"
-              >
+              <NavLink to="/login" className={navLinkClass}>
                 Sign in
-              </Link>
+              </NavLink>
               <Link
                 to="/signup"
-                className="rounded-full bg-[var(--color-volt)] px-4 py-2 font-semibold text-[#0c1402] shadow-[0_0_20px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
+                className="sheen ml-1 rounded-full bg-[var(--color-volt)] px-4 py-2 font-semibold text-[var(--on-volt)] shadow-[0_0_20px_var(--glow-cta)] transition hover:scale-[1.03] active:scale-[0.97]"
               >
                 Sign up
               </Link>

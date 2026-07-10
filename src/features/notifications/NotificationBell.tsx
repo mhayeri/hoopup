@@ -31,7 +31,7 @@ export default function NotificationBell({ unreadCount, onOpen }: Props) {
         <path d="M13.73 21a2 2 0 0 1-3.46 0" />
       </svg>
       {unreadCount > 0 ? (
-        <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-[var(--color-night)] bg-[var(--color-volt)] px-1 text-[10px] font-extrabold leading-none text-[#0c1402]">
+        <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full border-2 border-[var(--color-night)] bg-[var(--color-volt)] px-1 text-[10px] font-extrabold leading-none text-[var(--on-volt)]">
           {unreadCount > 9 ? '9+' : unreadCount}
         </span>
       ) : null}

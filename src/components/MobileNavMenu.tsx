@@ -6,7 +6,7 @@ const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const itemClass =
-  'w-full rounded-lg px-3 py-3 text-left text-base font-semibold text-[var(--color-bone)] hover:bg-[var(--hover)]';
+  'w-full rounded-lg px-3 py-3 text-left font-display text-3xl font-bold uppercase tracking-wide text-[var(--color-bone)] transition hover:bg-[var(--hover)] hover:text-[var(--volt-text)]';
 
 type Props = {
   open: boolean;
@@ -115,7 +115,7 @@ export default function MobileNavMenu({
               >
                 <span>Notifications</span>
                 {unreadCount > 0 ? (
-                  <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--color-volt)] px-1 text-[10px] font-extrabold leading-none text-[#0c1402]">
+                  <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--color-volt)] px-1 text-[10px] font-extrabold leading-none text-[var(--on-volt)]">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 ) : null}
@@ -142,7 +142,7 @@ export default function MobileNavMenu({
               <Link
                 to="/signup"
                 onClick={onClose}
-                className="mt-1 w-full rounded-lg bg-[var(--color-volt)] px-3 py-3 text-center text-base font-semibold text-[#0c1402] shadow-[0_0_20px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
+                className="mt-1 w-full rounded-lg bg-[var(--color-volt)] px-3 py-3 text-center text-base font-semibold text-[var(--on-volt)] shadow-[0_0_20px_var(--glow-cta)] transition hover:bg-[var(--color-volt)]/90"
               >
                 Sign up
               </Link>

@@ -29,7 +29,7 @@ export default function Tabs({ items, value, onChange, ariaLabel }: Props) {
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className="flex flex-wrap gap-1 border-b border-[var(--border)] pb-2"
+      className="flex flex-wrap gap-x-6 gap-y-1 border-b border-[var(--border)]"
     >
       {items.map((item, i) => {
         const selected = item.id === value;
@@ -46,11 +46,11 @@ export default function Tabs({ items, value, onChange, ariaLabel }: Props) {
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(item.id)}
             onKeyDown={(e) => handleKeyDown(e, i)}
-            className={
+            className={`relative px-1 pb-3 font-mono text-xs font-semibold tracking-[0.18em] uppercase transition ${
               selected
-                ? 'rounded-full bg-[var(--color-blue)]/20 px-4 py-1.5 text-sm font-semibold text-[var(--color-bone)]'
-                : 'rounded-full px-4 py-1.5 text-sm font-semibold text-[var(--color-bone)]/60 transition hover:text-[var(--color-bone)]'
-            }
+                ? 'text-[var(--color-bone)] after:absolute after:inset-x-0 after:-bottom-px after:h-[2px] after:rounded-full after:bg-[var(--color-volt)] after:shadow-[0_0_8px_var(--color-volt)]'
+                : 'text-[var(--color-bone)]/55 hover:text-[var(--color-bone)]'
+            }`}
           >
             {item.label}
           </button>

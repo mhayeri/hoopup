@@ -19,6 +19,7 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
   const hostLabel = host ? `@${host.username}` : 'Unknown host';
   const initial = host?.username.charAt(0).toUpperCase() ?? '?';
   const now = useNow();
+  const fillPct = Math.min((goingCount / SESSION_CAP) * 100, 100);
 
   // The outer "select this card" target is a div, not a button, so the
   // inner FriendActionButton doesn't become a nested-interactive element.
@@ -44,25 +45,43 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
             : 'border-[var(--border)] hover:border-[var(--color-blue)]/50'
       }`}
     >
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-bold text-[var(--color-bone)]">{courtLabel}</p>
+      <div className="flex items-baseline justify-between gap-2">
+        <p className="truncate text-sm font-bold text-[var(--color-bone)]">{courtLabel}</p>
+        <p className="shrink-0 font-mono text-xs font-semibold text-[var(--color-bone)]/50 tabular-nums">
+          <span className={live ? 'text-[var(--color-live)]' : 'text-[var(--volt-text)]'}>
+            {goingCount}
+          </span>
+          /{SESSION_CAP}
+        </p>
       </div>
       {live ? (
-        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--color-live)] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[var(--on-live)]">
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-md bg-[var(--color-live)] px-2 py-0.5 font-mono text-[11px] font-bold tracking-wide text-[var(--on-live)] uppercase">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--on-live)]" />
           Hooping · {formatTimeUntilEnd(session.ends_at, now)}
         </span>
       ) : (
-        <span className="inline-flex w-fit items-center rounded-full bg-[var(--color-bone)]/10 px-2 py-0.5 text-[11px] font-bold text-[var(--color-bone)]">
+        <span className="inline-flex w-fit items-center rounded-md bg-[var(--color-bone)]/8 px-2 py-0.5 font-mono text-[11px] font-semibold tracking-wide text-[var(--color-bone)]/85">
           {formatPanelTime(session.starts_at)}
         </span>
       )}
+      {/* Roster fill — 15 spots, volt while open, live color when hooping. */}
+      <div
+        aria-hidden
+        className="h-1 w-full overflow-hidden rounded-full bg-[var(--color-bone)]/10"
+      >
+        <div
+          className={`h-full rounded-full transition-[width] duration-500 ${
+            live ? 'bg-[var(--color-live)]' : 'bg-[var(--color-volt)]/80'
+          }`}
+          style={{ width: `${fillPct}%` }}
+        />
+      </div>
       <div className="flex items-center gap-2 text-xs">
         <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[var(--color-blue)]/40 bg-[var(--color-night-3)]">
           {host?.avatar_url ? (
             <img src={host.avatar_url} alt="" className="h-full w-full object-cover" />
           ) : (
-            <span className="text-[10px] font-bold uppercase text-[var(--color-blue)]">
+            <span className="text-[10px] font-bold text-[var(--color-blue)] uppercase">
               {initial}
             </span>
           )}
@@ -71,9 +90,6 @@ export default function SessionCard({ entry, selected, live = false, onSelect }:
         {host ? (
           <FriendActionButton otherUserId={host.id} username={host.username} variant="icon" />
         ) : null}
-        <span className="ml-auto whitespace-nowrap font-semibold text-[var(--color-bone)]/55">
-          <span className="text-[var(--color-volt)]">{goingCount}</span>/{SESSION_CAP} going
-        </span>
       </div>
     </div>
   );

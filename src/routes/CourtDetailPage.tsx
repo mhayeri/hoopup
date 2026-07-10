@@ -75,7 +75,7 @@ export default function CourtDetailPage() {
     return (
       <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
         <div className="mx-auto max-w-3xl px-6 py-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-bone)]/60">
+          <p className="font-mono text-sm font-semibold tracking-[0.4em] text-[var(--color-bone)]/60 uppercase">
             Loading court…
           </p>
         </div>
@@ -136,28 +136,34 @@ export default function CourtDetailPage() {
   ].filter((f): f is { label: string; value: string } => f !== null);
 
   return (
-    <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
-      <div className="mx-auto max-w-3xl px-6 py-12">
-        <Link to="/map" className="text-sm font-semibold text-[var(--color-blue)] hover:underline">
-          Back to map
+    <main className="relative min-h-[calc(100dvh-3.5rem)] overflow-hidden bg-[var(--color-night)] text-[var(--color-bone)]">
+      <div aria-hidden className="volt-floods pointer-events-none absolute inset-0" />
+      <div className="relative mx-auto max-w-3xl px-6 py-12">
+        <Link
+          to="/map"
+          className="font-mono text-xs font-semibold tracking-[0.18em] text-[var(--color-bone)]/55 uppercase transition hover:text-[var(--volt-text)]"
+        >
+          &larr; Back to map
         </Link>
-        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
-          <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-bone)]">
+        <div className="mt-4 flex flex-wrap items-start justify-between gap-3">
+          <h1 className="font-display text-6xl leading-[0.9] font-black tracking-wide uppercase md:text-7xl">
             {courtDisplayName}
           </h1>
           <FavoriteCourtButton courtId={court.id} />
         </div>
 
-        <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {facts.map((f) => (
             <div
               key={f.label}
-              className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3"
             >
-              <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
+              <dt className="font-mono text-[10px] font-semibold tracking-[0.18em] text-[var(--color-bone)]/55 uppercase">
                 {f.label}
               </dt>
-              <dd className="mt-1 text-[var(--color-bone)]">{f.value}</dd>
+              <dd className="mt-1 text-sm font-semibold break-words text-[var(--color-bone)]">
+                {f.value}
+              </dd>
             </div>
           ))}
         </dl>
@@ -165,11 +171,11 @@ export default function CourtDetailPage() {
         {liveSessions.length > 0 ? (
           <section className="mt-12">
             <div className="flex items-center gap-3">
-              <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-[var(--color-live)]">
+              <h2 className="flex items-center gap-2.5 font-display text-4xl font-extrabold tracking-wide text-[var(--color-live)] uppercase">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--color-live)]" />
                 Hooping
               </h2>
-              <span className="rounded-full bg-[var(--color-live)]/15 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-[var(--color-live)]">
+              <span className="rounded-md bg-[var(--color-live)]/15 px-2.5 py-0.5 font-mono text-xs font-semibold text-[var(--color-live)] tabular-nums">
                 {liveSessions.length}
               </span>
             </div>
@@ -185,14 +191,14 @@ export default function CourtDetailPage() {
 
         <section className="mt-12">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-black uppercase tracking-tight text-[var(--color-bone)]">
-              Upcoming sessions
+            <h2 className="font-display text-4xl font-extrabold tracking-wide text-[var(--color-bone)] uppercase">
+              Upcoming
             </h2>
             {user ? (
               <button
                 type="button"
                 onClick={() => setHostModalOpen(true)}
-                className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
+                className="sheen rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.03] active:scale-[0.98]"
               >
                 Host a session
               </button>

@@ -31,7 +31,7 @@ export default function FavoriteCourtButton({ courtId }: { courtId: number }) {
       title={isFavorite ? 'Saved - tap to remove' : 'Save this court'}
       className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition disabled:opacity-60 ${
         isFavorite
-          ? 'bg-[var(--color-volt)] text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] hover:bg-[var(--color-volt)]/90'
+          ? 'bg-[var(--color-volt)] text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] hover:bg-[var(--color-volt)]/90'
           : 'border border-[var(--border-strong)] text-[var(--color-bone)] hover:bg-[var(--hover)]'
       }`}
     >

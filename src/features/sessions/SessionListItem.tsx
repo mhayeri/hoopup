@@ -17,7 +17,7 @@ type Props = {
 };
 
 const ROLE_PILL_CLASS: Record<Role, string> = {
-  going: 'bg-[var(--color-volt)] text-[#0c1402]',
+  going: 'bg-[var(--color-volt)] text-[var(--on-volt)]',
   waitlist: 'bg-[var(--color-bone)]/10 text-[var(--color-bone)]/80',
 };
 
@@ -48,8 +48,8 @@ export default function SessionListItem({ session, courtName, role }: Props) {
           <p
             className={
               courtName
-                ? 'text-sm text-[var(--color-bone)]/70'
-                : 'font-semibold text-[var(--color-bone)]'
+                ? 'font-mono text-sm text-[var(--color-bone)]/70'
+                : 'font-mono font-semibold text-[var(--color-bone)]'
             }
           >
             {formatSessionRange(session.starts_at, session.ends_at)}
@@ -67,16 +67,16 @@ export default function SessionListItem({ session, courtName, role }: Props) {
             </span>
           ) : null}
           {cancelled ? (
-            <span className="rounded-full border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-widest text-red-300">
+            <span className="rounded-md border border-red-500/40 bg-red-500/10 px-2 py-0.5 font-mono text-xs font-semibold tracking-wide text-red-300 uppercase">
               Cancelled
             </span>
           ) : active ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-live)] px-2 py-0.5 text-xs font-semibold uppercase tracking-widest text-[var(--on-live)]">
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-[var(--color-live)] px-2 py-0.5 font-mono text-xs font-semibold tracking-wide text-[var(--on-live)] uppercase">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--on-live)]" />
               Hooping - {formatTimeUntilEnd(session.ends_at, now)}
             </span>
           ) : (
-            <span className="rounded-full bg-[var(--color-blue)]/15 px-2 py-0.5 text-xs font-semibold uppercase tracking-widest text-[var(--color-blue)]">
+            <span className="rounded-md bg-[var(--color-blue)]/15 px-2 py-0.5 font-mono text-xs font-semibold tracking-wide text-[var(--color-blue)] uppercase">
               {relativeTime(session.starts_at, now)}
             </span>
           )}

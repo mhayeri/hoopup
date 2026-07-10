@@ -34,7 +34,7 @@ export default function ProfileIdentity({ profile, onUsernameClick, footer }: Pr
         <Link
           to={`/u/${profile.username}`}
           onClick={onUsernameClick}
-          className="block truncate text-sm font-semibold text-[var(--color-bone)] hover:text-[var(--color-volt)] hover:underline"
+          className="block truncate text-sm font-semibold text-[var(--color-bone)] hover:text-[var(--volt-text)] hover:underline"
         >
           @{profile.username}
         </Link>
@@ -69,7 +69,7 @@ function ProfileAvatar({ avatarUrl, username }: { avatarUrl: string | null; user
       {avatarUrl ? (
         <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
       ) : (
-        <span className="text-xs font-bold uppercase text-[var(--color-volt)]">
+        <span className="text-xs font-bold text-[var(--volt-text)] uppercase">
           {username.charAt(0)}
         </span>
       )}

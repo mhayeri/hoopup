@@ -51,7 +51,7 @@ export default function SessionDetailPage() {
     return (
       <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
         <div className="mx-auto max-w-3xl px-6 py-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[var(--color-bone)]/60">
+          <p className="font-mono text-sm font-semibold tracking-[0.4em] text-[var(--color-bone)]/60 uppercase">
             Loading session...
           </p>
         </div>
@@ -78,10 +78,10 @@ export default function SessionDetailPage() {
     return (
       <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
         <div className="mx-auto max-w-3xl px-6 py-16 text-center">
-          <h1 className="text-3xl font-black uppercase tracking-tight text-[var(--color-volt)]">
+          <h1 className="text-outline font-display text-5xl font-black tracking-wide uppercase md:text-6xl">
             Session not found
           </h1>
-          <p className="mt-3 text-[var(--color-bone)]/70">
+          <p className="mt-4 text-[var(--color-bone)]/70">
             This session may have been removed or never existed.
           </p>
           <Link
@@ -113,36 +113,37 @@ export default function SessionDetailPage() {
   }
 
   return (
-    <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
-      <div className="mx-auto max-w-3xl px-6 py-12">
+    <main className="relative min-h-[calc(100dvh-3.5rem)] overflow-hidden bg-[var(--color-night)] text-[var(--color-bone)]">
+      <div aria-hidden className="volt-floods pointer-events-none absolute inset-0" />
+      <div className="relative mx-auto max-w-3xl px-6 py-12">
         <Link
           to={session.court ? `/courts/${session.court.id}` : '/map'}
-          className="text-sm font-semibold text-[var(--color-blue)] hover:underline"
+          className="font-mono text-xs font-semibold tracking-[0.18em] text-[var(--color-bone)]/55 uppercase transition hover:text-[var(--volt-text)]"
         >
-          &larr; Back to {session.court ? courtName : 'map'}
+          &larr; {session.court ? courtName : 'Back to map'}
         </Link>
 
-        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
-          <h1 className="text-4xl font-black uppercase tracking-tight text-[var(--color-volt)]">
+        <div className="mt-4 flex flex-wrap items-start justify-between gap-3">
+          <h1 className="font-display text-6xl leading-[0.9] font-black tracking-wide uppercase md:text-7xl">
             {courtName}
           </h1>
           {cancelled ? (
-            <span className="rounded-full border border-red-500/40 bg-red-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-red-300">
+            <span className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-1 font-mono text-xs font-semibold tracking-[0.18em] text-red-300 uppercase">
               Cancelled
             </span>
           ) : active ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-live)] px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--on-live)]">
+            <span className="glow-live inline-flex items-center gap-1.5 rounded-md bg-[var(--color-live)] px-3 py-1 font-mono text-xs font-semibold tracking-[0.18em] text-[var(--on-live)] uppercase">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--on-live)]" />
               Hooping - {formatTimeUntilEnd(session.ends_at, now)}
             </span>
           ) : (
-            <span className="rounded-full bg-[var(--color-blue)]/15 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-blue)]">
+            <span className="rounded-md bg-[var(--color-blue)]/15 px-3 py-1 font-mono text-xs font-semibold tracking-[0.18em] text-[var(--color-blue)] uppercase">
               {relativeTime(session.starts_at, now)}
             </span>
           )}
         </div>
 
-        <p className="mt-2 text-lg text-[var(--color-bone)]">
+        <p className="mt-3 font-mono text-base text-[var(--color-bone)]/90">
           {formatSessionRange(session.starts_at, session.ends_at)}
         </p>
         <p className="mt-1 text-sm text-[var(--color-bone)]/70">
@@ -150,7 +151,7 @@ export default function SessionDetailPage() {
           {session.host?.username ? (
             <Link
               to={`/u/${session.host.username}`}
-              className="font-semibold text-[var(--color-bone)] hover:text-[var(--color-volt)]"
+              className="font-semibold text-[var(--color-bone)] hover:text-[var(--volt-text)]"
             >
               @{hostName}
             </Link>
@@ -160,8 +161,8 @@ export default function SessionDetailPage() {
         </p>
 
         {session.notes ? (
-          <section className="mt-8 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-bone)]/60">
+          <section className="mt-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+            <p className="font-mono text-[10px] font-semibold tracking-[0.22em] text-[var(--color-bone)]/55 uppercase">
               Notes
             </p>
             <p className="mt-1 whitespace-pre-wrap text-[var(--color-bone)]">{session.notes}</p>
