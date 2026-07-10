@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../providers/useAuth';
 import { useTheme } from '../providers/useTheme';
@@ -13,7 +13,7 @@ import Tabs, { type TabItem } from '../components/Tabs';
 import FriendsTab from '../features/friends/FriendsTab';
 import FavoriteCourtsList from '../features/courts/FavoriteCourtsList';
 import FriendActionButton from '../features/friends/FriendActionButton';
-import type { PublicProfileRow } from '../features/profiles/useProfileByUsername';
+import { SKILL_TIER_COLOR } from '../lib/skill';
 
 type TabId = 'sessions' | 'friends' | 'favorites' | 'settings';
 
@@ -103,53 +103,68 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="min-h-[calc(100dvh-3.5rem)] bg-[var(--color-night)] text-[var(--color-bone)]">
-      <div className="mx-auto max-w-5xl px-6 py-10">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-          <aside className="lg:col-span-5">
-            <div className="rounded-3xl border border-[var(--border)] bg-[var(--color-night-2)] p-8 shadow-sm">
-              {isSelf && editing && updateProfile && ownHook.profile ? (
-                // Edit mode (self): the full avatar uploader on top, the form below.
-                <>
-                  <AvatarUpload
-                    userId={profile.id}
-                    currentUrl={profile.avatar_url}
-                    onUploaded={async (url) => {
-                      await updateProfile({ avatar_url: url });
-                    }}
-                  />
-                  <div className="mt-6 border-t border-[var(--border)] pt-6">
-                    <ProfileEditForm
-                      profile={ownHook.profile}
-                      onSubmit={async (patch) => {
-                        const result = await updateProfile(patch);
-                        if (!result.error) {
-                          setEditing(false);
-                          void refresh();
-                        }
-                        return result;
-                      }}
-                      onCancel={() => setEditing(false)}
-                    />
-                  </div>
-                </>
-              ) : (
-                // Read mode (self or public): identity sits beside the avatar so the
-                // top of the card isn't blank; the action slot + stats follow below.
-                <>
-                  <div className="flex items-start gap-4">
-                    <ReadOnlyAvatar url={profile.avatar_url} username={profile.username} />
-                    <div className="min-w-0 flex-1">
-                      <Identity
-                        profile={profile}
-                        email={isSelf ? (user?.email ?? null) : null}
-                        onEdit={isSelf ? () => setEditing(true) : null}
-                      />
-                    </div>
-                  </div>
+    <main className="relative min-h-[calc(100dvh-3.5rem)] overflow-hidden bg-[var(--color-night)] text-[var(--color-bone)]">
+      <div aria-hidden className="volt-floods pointer-events-none absolute inset-0" />
+      <div className="relative mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
+        {/* Player card — full-width header: avatar + identity + actions, with a
+            stat band along the bottom edge. */}
+        <header className="overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--color-night-2)] shadow-[0_30px_70px_-30px_var(--elev-shadow)]">
+          {isSelf && editing && updateProfile && ownHook.profile ? (
+            <div className="max-w-2xl p-6 sm:p-8">
+              <AvatarUpload
+                userId={profile.id}
+                currentUrl={profile.avatar_url}
+                onUploaded={async (url) => {
+                  await updateProfile({ avatar_url: url });
+                }}
+              />
+              <div className="mt-6 border-t border-[var(--border)] pt-6">
+                <ProfileEditForm
+                  profile={ownHook.profile}
+                  onSubmit={async (patch) => {
+                    const result = await updateProfile(patch);
+                    if (!result.error) {
+                      setEditing(false);
+                      void refresh();
+                    }
+                    return result;
+                  }}
+                  onCancel={() => setEditing(false)}
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col gap-6 p-6 sm:flex-row sm:items-start sm:p-8">
+                <PlayerAvatar url={profile.avatar_url} username={profile.username} />
+
+                <div className="min-w-0 flex-1">
+                  <p className="font-mono text-[10px] font-semibold tracking-[0.3em] text-[var(--color-bone)]/45 uppercase">
+                    Player profile
+                  </p>
+                  {/* --volt-text keeps the name legible in both themes: ember on
+                      asphalt, burnt orange on concrete. */}
+                  <h1 className="mt-1.5 font-display text-4xl leading-[0.95] font-extrabold tracking-wide break-words text-[var(--volt-text)] uppercase sm:text-5xl">
+                    @{profile.username}
+                  </h1>
+                  {isSelf && user?.email ? (
+                    <p className="mt-2 text-sm text-[var(--color-bone)]/55">{user.email}</p>
+                  ) : null}
+                  {profile.bio ? (
+                    <p className="mt-3 max-w-xl whitespace-pre-wrap text-[var(--color-bone)]/80">
+                      {profile.bio}
+                    </p>
+                  ) : null}
 
                   {isSelf && updateProfile ? (
-                    <div className="mt-6">
+                    <div className="mt-5 flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setEditing(true)}
+                        className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_20px_var(--glow-cta)] transition hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        Edit profile
+                      </button>
                       <AvatarUpload
                         userId={profile.id}
                         currentUrl={profile.avatar_url}
@@ -160,7 +175,7 @@ export default function ProfilePage() {
                       />
                     </div>
                   ) : showAddFriendButton ? (
-                    <div className="mt-6">
+                    <div className="mt-5 w-full sm:max-w-56">
                       <FriendActionButton
                         otherUserId={profile.id}
                         username={profile.username}
@@ -168,47 +183,71 @@ export default function ProfilePage() {
                       />
                     </div>
                   ) : null}
-
-                  <div className="mt-6 border-t border-[var(--border)] pt-6">
-                    <ProfileStats profile={profile} />
-                  </div>
-                </>
-              )}
-            </div>
-          </aside>
-
-          <section className="mt-6 space-y-6 lg:col-span-7 lg:mt-0">
-            <div className="rounded-3xl border border-[var(--border)] bg-[var(--color-night-2)] p-8 shadow-sm">
-              <Tabs
-                items={tabItems}
-                value={tab}
-                onChange={(id) => setTab(id as TabId)}
-                ariaLabel="Profile sections"
-              />
-              <div
-                role="tabpanel"
-                id={`tabpanel-${tab}`}
-                aria-labelledby={`tab-${tab}`}
-                className="mt-6"
-              >
-                {tab === 'sessions' ? <ActiveSessionsList userId={profile.id} /> : null}
-                {tab === 'friends' ? (
-                  <FriendsTab userId={profile.id} viewerId={isSelf ? (user?.id ?? null) : null} />
-                ) : null}
-                {tab === 'favorites' && isSelf ? <FavoriteCourtsList userId={profile.id} /> : null}
-                {tab === 'settings' && isSelf ? (
-                  <SettingsPanel
-                    notificationsEnabled={ownHook.profile?.notifications_enabled ?? true}
-                    onToggleNotifications={(value) => {
-                      void ownHook.updateProfile({ notifications_enabled: value });
-                    }}
-                    onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
-                    onDeleteAccount={() => setDeleteOpen(true)}
-                  />
-                ) : null}
+                </div>
               </div>
-            </div>
-          </section>
+
+              {/* Stat band. */}
+              <dl className="grid grid-cols-2 sm:grid-cols-4">
+                <StatCell label="Skill">
+                  {profile.skill_level ? (
+                    <span
+                      className="font-semibold capitalize"
+                      style={{ color: SKILL_TIER_COLOR[profile.skill_level] }}
+                    >
+                      {profile.skill_level}
+                    </span>
+                  ) : (
+                    <Dash />
+                  )}
+                </StatCell>
+                <StatCell label="Position">
+                  {profile.preferred_position ?? <Dash />}
+                </StatCell>
+                <StatCell label="Years playing">
+                  {profile.years_playing != null ? (
+                    <span className="font-mono tabular-nums">{profile.years_playing}</span>
+                  ) : (
+                    <Dash />
+                  )}
+                </StatCell>
+                <StatCell label="Home court">
+                  {profile.home_court_id != null ? `Court #${profile.home_court_id}` : <Dash />}
+                </StatCell>
+              </dl>
+            </>
+          )}
+        </header>
+
+        {/* Full-width tab strip + panel below the player card. */}
+        <div className="mt-8">
+          <Tabs
+            items={tabItems}
+            value={tab}
+            onChange={(id) => setTab(id as TabId)}
+            ariaLabel="Profile sections"
+          />
+          <div
+            role="tabpanel"
+            id={`tabpanel-${tab}`}
+            aria-labelledby={`tab-${tab}`}
+            className="mt-6"
+          >
+            {tab === 'sessions' ? <ActiveSessionsList userId={profile.id} /> : null}
+            {tab === 'friends' ? (
+              <FriendsTab userId={profile.id} viewerId={isSelf ? (user?.id ?? null) : null} />
+            ) : null}
+            {tab === 'favorites' && isSelf ? <FavoriteCourtsList userId={profile.id} /> : null}
+            {tab === 'settings' && isSelf ? (
+              <SettingsPanel
+                notificationsEnabled={ownHook.profile?.notifications_enabled ?? true}
+                onToggleNotifications={(value) => {
+                  void ownHook.updateProfile({ notifications_enabled: value });
+                }}
+                onChangePassword={hasEmailAuth ? () => setPasswordOpen(true) : null}
+                onDeleteAccount={() => setDeleteOpen(true)}
+              />
+            ) : null}
+          </div>
         </div>
       </div>
 
@@ -226,13 +265,14 @@ export default function ProfilePage() {
   );
 }
 
-function ReadOnlyAvatar({ url, username }: { url: string | null; username: string }) {
+/** Squircle avatar for the player-card header. */
+function PlayerAvatar({ url, username }: { url: string | null; username: string }) {
   return (
-    <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--color-blue)]/40 bg-[var(--color-night-3)]">
+    <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-[var(--border-strong)] bg-[var(--color-night-3)] sm:h-28 sm:w-28">
       {url ? (
         <img src={url} alt="" className="h-full w-full object-cover" />
       ) : (
-        <span className="text-sm font-bold uppercase text-[var(--color-blue)]">
+        <span className="font-display text-4xl font-bold text-[var(--color-bone)]/45 uppercase">
           {username.charAt(0)}
         </span>
       )}
@@ -240,71 +280,20 @@ function ReadOnlyAvatar({ url, username }: { url: string | null; username: strin
   );
 }
 
-// Username + (self-only Edit + email) + bio. Rendered beside the avatar.
-function Identity({
-  profile,
-  email,
-  onEdit,
-}: {
-  // Accepts both the full owner row and the narrower public-route row —
-  // ProfileRow is structurally assignable to PublicProfileRow.
-  profile: PublicProfileRow;
-  email: string | null;
-  onEdit: (() => void) | null;
-}) {
+/** One cell of the player-card stat band. */
+function StatCell({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <>
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        {/* --volt-text keeps the name legible in both themes: volt on night,
-            dark gold on paper. */}
-        <h1 className="font-display text-3xl leading-none font-extrabold tracking-wide break-words text-[var(--volt-text)] uppercase sm:text-4xl">
-          @{profile.username}
-        </h1>
-        {onEdit ? (
-          <button
-            type="button"
-            onClick={onEdit}
-            className="rounded-full border border-[var(--color-blue)]/50 px-4 py-2 text-sm font-semibold text-[var(--color-bone)] transition hover:bg-[var(--color-blue)]/10"
-          >
-            Edit
-          </button>
-        ) : null}
-      </div>
-      {email ? <p className="mt-1 text-sm text-[var(--color-bone)]/55">{email}</p> : null}
-      {profile.bio ? (
-        <p className="mt-2 whitespace-pre-wrap text-[var(--color-bone)]/80">{profile.bio}</p>
-      ) : null}
-    </>
-  );
-}
-
-// Skill / Position / Years playing / Home court. Rendered below the divider.
-function ProfileStats({ profile }: { profile: PublicProfileRow }) {
-  return (
-    <dl className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-      <Item label="Skill" value={profile.skill_level} />
-      <Item label="Position" value={profile.preferred_position} />
-      <Item
-        label="Years playing"
-        value={profile.years_playing != null ? String(profile.years_playing) : null}
-      />
-      <Item
-        label="Home court"
-        value={profile.home_court_id != null ? `Court #${profile.home_court_id}` : null}
-      />
-    </dl>
-  );
-}
-
-function Item({ label, value }: { label: string; value: string | null }) {
-  return (
-    <div>
-      <dt className="font-mono text-[10px] font-semibold tracking-[0.2em] text-[var(--color-bone)]/55 uppercase">
+    <div className="border-t border-[var(--border)] px-6 py-4 even:border-l even:border-l-[var(--border)] sm:border-l sm:border-l-[var(--border)] sm:first:border-l-0">
+      <dt className="font-mono text-[10px] font-semibold tracking-[0.2em] text-[var(--color-bone)]/50 uppercase">
         {label}
       </dt>
-      <dd className="mt-1 font-semibold text-[var(--color-bone)]">{value ?? '-'}</dd>
+      <dd className="mt-1 truncate font-semibold text-[var(--color-bone)]">{children}</dd>
     </div>
   );
+}
+
+function Dash() {
+  return <span className="text-[var(--color-bone)]/30">—</span>;
 }
 
 function SettingsPanel({
