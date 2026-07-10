@@ -157,7 +157,9 @@ export default function ProfilePage() {
                   ) : null}
 
                   {isSelf && updateProfile ? (
-                    <div className="mt-5 flex flex-wrap items-center gap-3">
+                    <div className="mt-5">
+                      {/* Photo upload lives in the edit flow — one control here
+                          keeps the card clean. */}
                       <button
                         type="button"
                         onClick={() => setEditing(true)}
@@ -165,14 +167,6 @@ export default function ProfilePage() {
                       >
                         Edit profile
                       </button>
-                      <AvatarUpload
-                        userId={profile.id}
-                        currentUrl={profile.avatar_url}
-                        onUploaded={async (url) => {
-                          await updateProfile({ avatar_url: url });
-                        }}
-                        showAvatar={false}
-                      />
                     </div>
                   ) : showAddFriendButton ? (
                     <div className="mt-5 w-full sm:max-w-56">
