@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './routes/HomePage';
 import LoginPage from './routes/LoginPage';
@@ -27,6 +28,12 @@ const FOOTERLESS = new Set([
 
 export default function App() {
   const location = useLocation();
+
+  // HashRouter has no scroll restoration: without this, following a footer
+  // link keeps the old scroll offset and the new page opens mid-scroll.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname, location.search]);
 
   return (
     <div className="flex min-h-full flex-col">

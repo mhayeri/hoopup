@@ -12,11 +12,12 @@ attribute vec2 a_pos;
 void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
 `;
 
-/* One full-scene pass: blue-black gradient + floodlights + perspective court
-   grid + drifting dust + a procedural basketball (analytic ray/sphere hit,
-   rotating seam frame, pebble micro-noise, volt/blue rim lights, glowing
-   seams) + light sweep + vignette + dither. u_light morphs the whole scene
-   to the Solar Court palette (paper, ink grid, amber rim, ink seams). */
+/* One full-scene pass: warm asphalt gradient + floodlights + perspective
+   court grid + drifting dust + a procedural basketball (analytic ray/sphere
+   hit, rotating seam frame, pebble micro-noise, teal/ember rim lights,
+   glowing ember seams) + light sweep + vignette + dither. u_light morphs the
+   scene to Blacktop Day: sunlit concrete, teal court paint, and a proper
+   orange-leather ball with ink seams and a contact shadow. */
 const FRAG = `
 precision highp float;
 uniform vec2 u_res;
@@ -49,21 +50,22 @@ void main() {
   float aspect = u_res.x / u_res.y;
   float L = u_light;
 
-  vec3 volt = vec3(0.784, 1.0, 0.176);
-  vec3 blue = vec3(0.169, 0.435, 1.0);
-  vec3 amber = vec3(1.0, 0.768, 0.0);
-  vec3 ink = vec3(0.063, 0.063, 0.063);
+  // Blacktop palette: ember (ball leather) energy, court-teal structure.
+  vec3 ember = vec3(1.0, 0.416, 0.239);
+  vec3 teal = vec3(0.22, 0.7, 0.627);
+  vec3 emberDeep = vec3(0.91, 0.314, 0.059);
+  vec3 ink = vec3(0.098, 0.078, 0.063);
 
-  // Base gradient: night blue-black, or warm paper.
-  vec3 darkBg = mix(vec3(0.016, 0.019, 0.033), vec3(0.043, 0.051, 0.078), smoothstep(-1.0, 1.3, p.y));
-  vec3 lightBg = mix(vec3(0.976, 0.972, 0.955), vec3(1.0, 1.0, 0.995), smoothstep(-1.0, 1.0, p.y));
+  // Base gradient: warm asphalt night, or sunlit concrete.
+  vec3 darkBg = mix(vec3(0.028, 0.023, 0.018), vec3(0.062, 0.051, 0.04), smoothstep(-1.0, 1.3, p.y));
+  vec3 lightBg = mix(vec3(0.949, 0.929, 0.886), vec3(0.988, 0.982, 0.966), smoothstep(-1.0, 1.0, p.y));
   vec3 col = mix(darkBg, lightBg, L);
 
   // Floodlight washes.
   float f1 = exp(-pow(length((p - vec2(-aspect * 0.75, 0.95)) * vec2(0.8, 1.1)), 2.0) * 1.4);
   float f2 = exp(-pow(length((p - vec2(aspect * 0.85, 1.05)) * vec2(0.9, 1.2)), 2.0) * 1.6);
-  col += (1.0 - L) * (blue * f1 * 0.16 + volt * f2 * 0.08);
-  col += L * (amber * f2 * 0.10 - vec3(0.02) * f1);
+  col += (1.0 - L) * (teal * f1 * 0.13 + ember * f2 * 0.09);
+  col += L * (emberDeep * f2 * 0.07 - vec3(0.015) * f1);
 
   // Perspective court floor.
   float yh = -0.18;
@@ -78,14 +80,14 @@ void main() {
       smoothstep(lw, 0.0, abs(gg.x - 0.5) - 0.46),
       smoothstep(lw, 0.0, abs(gg.y - 0.5) - 0.46)
     );
-    vec3 gridCol = mix(blue, ink, L);
-    col += gridCol * grid * fade * mix(0.085, 0.05, L);
+    vec3 gridCol = mix(teal, mix(teal, ink, 0.5), L);
+    col += gridCol * grid * fade * mix(0.10, 0.09, L);
     // Center-court arc on the floor.
     float arc = abs(length((p - vec2(0.0, yh)) * vec2(1.0, 3.4)) - 0.62);
-    col += gridCol * smoothstep(0.012, 0.004, arc) * fade * mix(0.30, 0.16, L);
+    col += gridCol * smoothstep(0.012, 0.004, arc) * fade * mix(0.32, 0.24, L);
   }
 
-  // Drifting dust motes (dark theme only).
+  // Drifting dust motes — floodlit dust at night, sun motes in daylight.
   vec2 dp = p * 5.5 + vec2(u_time * 0.015, -u_time * 0.03);
   vec2 id = floor(dp);
   vec2 f = fract(dp);
@@ -93,7 +95,7 @@ void main() {
   vec2 pos = vec2(fract(rnd * 7.13), fract(rnd * 13.7));
   float dd = length(f - pos);
   float tw = 0.5 + 0.5 * sin(u_time * (1.0 + rnd * 2.0) + rnd * 20.0);
-  col += (1.0 - L) * mix(blue, volt, rnd) * smoothstep(0.025 + rnd * 0.012, 0.0, dd) * tw * 0.10;
+  col += mix(mix(teal, ember, rnd), emberDeep, L) * smoothstep(0.025 + rnd * 0.012, 0.0, dd) * tw * mix(0.10, 0.045, L);
 
   // The ball. Wide screens float it right of the copy; narrow screens crest
   // a much larger ball over the top-right corner so it never sits under text.
@@ -108,10 +110,10 @@ void main() {
     float d2 = dot(q, q);
     float rr = br * br;
 
-    // Halo bleed around the silhouette.
+    // Halo bleed around the silhouette (floodlit at night, warm sun in day).
     float dc = length(q) - br;
-    vec3 haloCol = mix(mix(blue, volt, clamp(q.x / br * 0.5 + 0.5, 0.0, 1.0)), amber, L);
-    col += haloCol * exp(-max(dc, 0.0) * 7.5) * mix(0.10, 0.05, L);
+    vec3 haloCol = mix(mix(teal, ember, clamp(q.x / br * 0.5 + 0.5, 0.0, 1.0)), emberDeep, L);
+    col += haloCol * exp(-max(dc, 0.0) * 7.5) * mix(0.10, 0.06, L);
 
     if (d2 < rr) {
       float z = sqrt(rr - d2);
@@ -126,24 +128,25 @@ void main() {
       float minD = min(e1, min(e2, e3));
       float seam = 1.0 - smoothstep(0.012, 0.030, minD);
 
-      // Pebbled leather micro-noise.
+      // Pebbled leather micro-noise. Night ball is warm graphite; the day
+      // ball is proper orange leather.
       float peb = hash31(floor(m * 110.0)) * 0.05;
-      vec3 base = mix(vec3(0.062, 0.070, 0.092) + peb, vec3(0.975, 0.962, 0.93) - peb * 0.45, L);
+      vec3 base = mix(vec3(0.085, 0.068, 0.055) + peb, vec3(0.84, 0.41, 0.19) + peb * 0.8, L);
 
       vec3 Ldir = normalize(vec3(-0.45, 0.65, 0.62));
       float diff = clamp(dot(n, Ldir), 0.0, 1.0);
       float rim = pow(1.0 - n.z, 2.6);
-      vec3 rimCol = mix(mix(blue, volt, clamp(n.x * 0.9 + 0.55, 0.0, 1.0)), amber, L);
-      vec3 shade = base * (0.55 + 0.5 * diff);
-      shade += rimCol * rim * mix(0.55, 0.34, L);
+      vec3 rimCol = mix(mix(teal, ember, clamp(n.x * 0.9 + 0.55, 0.0, 1.0)), vec3(1.0, 0.93, 0.82), L);
+      vec3 shade = base * mix(0.55, 0.62, L) + base * mix(0.5, 0.55, L) * diff;
+      shade += rimCol * rim * mix(0.55, 0.38, L);
 
-      // Volt seams glow in the dark; crisp ink channels on paper.
+      // Ember seams glow at night; crisp ink channels on the leather by day.
       float pulse = 1.1 + 0.22 * sin(u_time * 1.8);
-      vec3 seamCol = mix(volt * pulse, ink, L);
-      shade += volt * (1.0 - smoothstep(0.0, 0.11, minD)) * (1.0 - L) * 0.16;
+      vec3 seamCol = mix(ember * pulse, vec3(0.11, 0.075, 0.055), L);
+      shade += ember * (1.0 - smoothstep(0.0, 0.11, minD)) * (1.0 - L) * 0.16;
 
       float spec = pow(clamp(dot(reflect(-Ldir, n), vec3(0.0, 0.0, 1.0)), 0.0, 1.0), 42.0);
-      col = mix(shade, seamCol, seam * mix(0.88, 0.68, L)) + spec * mix(0.22, 0.4, L);
+      col = mix(shade, seamCol, seam * mix(0.88, 0.8, L)) + spec * mix(0.22, 0.3, L);
     } else if (L > 0.5) {
       // Soft contact shadow that seats the light ball on the page (only when
       // the ball floats clear of the edges, i.e. the wide layout).
@@ -152,10 +155,10 @@ void main() {
     }
   }
 
-  // Slow floodlight sweep.
+  // Slow floodlight sweep (a passing cloud's warm edge in daylight).
   float sx = fract(u_time * 0.03) * 4.4 - 2.2;
   float sweep = exp(-pow((p.x - p.y * 0.3 - sx) * 1.5, 2.0));
-  col += (1.0 - L) * blue * sweep * 0.04 + L * amber * sweep * 0.02;
+  col += (1.0 - L) * teal * sweep * 0.035 + L * emberDeep * sweep * 0.025;
 
   // Vignette + dither (kills gradient banding).
   float vig = smoothstep(2.0, 0.45, length(p * vec2(0.75, 1.0)));

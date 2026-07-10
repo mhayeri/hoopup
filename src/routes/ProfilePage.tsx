@@ -350,8 +350,8 @@ function SettingsPanel({
             <span
               className={`absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full transition-transform ${
                 isLight
-                  ? 'translate-x-5 bg-[#0c1402] text-[var(--color-volt)]'
-                  : 'translate-x-0 bg-white text-[#0c1402]'
+                  ? 'translate-x-5 bg-white text-[var(--color-volt)]'
+                  : 'translate-x-0 bg-white text-[#1f1a15]'
               }`}
             >
               {isLight ? (
@@ -398,7 +398,7 @@ function SettingsPanel({
           >
             <span
               className={`absolute top-1 left-1 h-5 w-5 rounded-full transition-transform ${
-                notificationsEnabled ? 'translate-x-5 bg-[#0c1402]' : 'translate-x-0 bg-white'
+                notificationsEnabled ? 'translate-x-5 bg-white' : 'translate-x-0 bg-white'
               }`}
             />
           </button>

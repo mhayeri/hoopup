@@ -75,7 +75,7 @@ export default function NavBar() {
               </NavLink>
               <Link
                 to="/signup"
-                className="sheen ml-1 rounded-full bg-[var(--color-volt)] px-4 py-2 font-semibold text-[#0c1402] shadow-[0_0_20px_rgba(200,255,45,0.35)] transition hover:scale-[1.03] active:scale-[0.97]"
+                className="sheen ml-1 rounded-full bg-[var(--color-volt)] px-4 py-2 font-semibold text-[var(--on-volt)] shadow-[0_0_20px_var(--glow-cta)] transition hover:scale-[1.03] active:scale-[0.97]"
               >
                 Sign up
               </Link>

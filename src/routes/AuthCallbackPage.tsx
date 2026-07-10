@@ -155,7 +155,7 @@ export default function AuthCallbackPage() {
           <div className="mt-6 flex items-center justify-center gap-3">
             <Link
               to="/login"
-              className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90"
+              className="rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:bg-[var(--color-volt)]/90"
             >
               Sign in
             </Link>

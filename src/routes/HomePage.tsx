@@ -79,7 +79,7 @@ function Hero({ sessions }: { sessions: UpcomingSession[] }) {
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
               to="/signup"
-              className="sheen rounded-full bg-[var(--color-volt)] px-7 py-3.5 font-semibold text-[#0c1402] shadow-[0_0_32px_rgba(200,255,45,0.35)] transition hover:scale-[1.03] active:scale-[0.98]"
+              className="sheen rounded-full bg-[var(--color-volt)] px-7 py-3.5 font-semibold text-[var(--on-volt)] shadow-[0_0_32px_var(--glow-cta)] transition hover:scale-[1.03] active:scale-[0.98]"
             >
               Create an account
             </Link>
@@ -347,7 +347,7 @@ function GamesBoard({
                 </p>
                 <Link
                   to="/map"
-                  className="sheen mt-7 inline-block rounded-full bg-[var(--color-volt)] px-6 py-3 text-sm font-semibold text-[#0c1402] shadow-[0_0_26px_rgba(200,255,45,0.3)] transition hover:scale-[1.03] active:scale-[0.98]"
+                  className="sheen mt-7 inline-block rounded-full bg-[var(--color-volt)] px-6 py-3 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_26px_var(--glow-cta)] transition hover:scale-[1.03] active:scale-[0.98]"
                 >
                   Host the first game
                 </Link>
@@ -387,7 +387,7 @@ function FinalCta() {
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <Link
               to="/signup"
-              className="sheen rounded-full bg-[var(--color-volt)] px-8 py-4 font-semibold text-[#0c1402] shadow-[0_0_36px_rgba(200,255,45,0.4)] transition hover:scale-[1.03] active:scale-[0.98]"
+              className="sheen rounded-full bg-[var(--color-volt)] px-8 py-4 font-semibold text-[var(--on-volt)] shadow-[0_0_36px_var(--glow-cta)] transition hover:scale-[1.03] active:scale-[0.98]"
             >
               Create an account
             </Link>
@@ -436,7 +436,7 @@ function SignedInHome({ userId }: { userId: string }) {
         <div className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-[1.1fr_0.9fr] md:items-start">
           <Reveal delay={160} className="order-1 md:col-start-1 md:row-start-1">
             {nextEntry ? (
-              <TiltCard spotColor="rgba(200,255,45,0.5)">
+              <TiltCard spotColor="var(--glow-cta)">
                 <NextGameCard entry={nextEntry} />
               </TiltCard>
             ) : (
@@ -480,7 +480,7 @@ function EmptyNextRun() {
       </p>
       <Link
         to="/map"
-        className="sheen mt-6 inline-block rounded-full bg-[var(--color-volt)] px-6 py-2.5 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.03] active:scale-[0.98]"
+        className="sheen mt-6 inline-block rounded-full bg-[var(--color-volt)] px-6 py-2.5 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.03] active:scale-[0.98]"
       >
         Find a court
       </Link>

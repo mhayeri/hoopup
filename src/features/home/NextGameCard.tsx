@@ -56,7 +56,7 @@ export default function NextGameCard({ entry }: { entry: ActiveSessionEntry }) {
       <div className="mt-6 flex flex-wrap gap-2.5">
         <Link
           to={`/sessions/${session.id}`}
-          className="sheen rounded-full bg-[var(--color-volt)] px-5 py-2.5 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.03] active:scale-[0.98]"
+          className="sheen rounded-full bg-[var(--color-volt)] px-5 py-2.5 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.03] active:scale-[0.98]"
         >
           View session
         </Link>

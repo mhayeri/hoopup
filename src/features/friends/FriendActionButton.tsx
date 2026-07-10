@@ -72,7 +72,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
     return (
       <Link
         to="/login"
-        className="inline-flex w-full items-center justify-center rounded-full bg-[var(--color-volt)] px-5 py-2.5 text-sm font-semibold text-[#0c1402] transition hover:bg-[var(--color-volt)]/90"
+        className="inline-flex w-full items-center justify-center rounded-full bg-[var(--color-volt)] px-5 py-2.5 text-sm font-semibold text-[var(--on-volt)] transition hover:bg-[var(--color-volt)]/90"
       >
         Sign in to add friend
       </Link>
@@ -129,7 +129,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
             stop(e);
             void run(send);
           }}
-          className={`${primaryShell} rounded-full bg-[var(--color-volt)] font-semibold text-[#0c1402] transition hover:bg-[var(--color-volt)]/90 disabled:opacity-60`}
+          className={`${primaryShell} rounded-full bg-[var(--color-volt)] font-semibold text-[var(--on-volt)] transition hover:bg-[var(--color-volt)]/90 disabled:opacity-60`}
         >
           + Add friend
         </button>
@@ -168,7 +168,7 @@ export default function FriendActionButton({ otherUserId, username, variant = 'p
               stop(e);
               void run(accept);
             }}
-            className={`${primaryShell} flex-1 rounded-full bg-[var(--color-volt)] font-semibold text-[#0c1402] transition hover:bg-[var(--color-volt)]/90 disabled:opacity-60`}
+            className={`${primaryShell} flex-1 rounded-full bg-[var(--color-volt)] font-semibold text-[var(--on-volt)] transition hover:bg-[var(--color-volt)]/90 disabled:opacity-60`}
           >
             Accept
           </button>

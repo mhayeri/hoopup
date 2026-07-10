@@ -17,7 +17,7 @@ type Props = {
 };
 
 const ROLE_PILL_CLASS: Record<Role, string> = {
-  going: 'bg-[var(--color-volt)] text-[#0c1402]',
+  going: 'bg-[var(--color-volt)] text-[var(--on-volt)]',
   waitlist: 'bg-[var(--color-bone)]/10 text-[var(--color-bone)]/80',
 };
 

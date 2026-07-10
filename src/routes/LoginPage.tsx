@@ -137,7 +137,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="sheen w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="sheen w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {submitting ? 'Signing in...' : 'Sign in'}
         </button>

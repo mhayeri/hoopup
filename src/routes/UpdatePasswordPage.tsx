@@ -55,7 +55,7 @@ export default function UpdatePasswordPage() {
         <button
           type="button"
           onClick={() => navigate('/profile', { replace: true })}
-          className="sheen mt-6 rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.02] active:scale-[0.98]"
+          className="sheen mt-6 rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.02] active:scale-[0.98]"
         >
           Go to profile
         </button>
@@ -72,7 +72,7 @@ export default function UpdatePasswordPage() {
         </p>
         <Link
           to="/reset-password"
-          className="sheen mt-6 inline-block rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.02] active:scale-[0.98]"
+          className="sheen mt-6 inline-block rounded-full bg-[var(--color-volt)] px-5 py-2 text-sm font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.02] active:scale-[0.98]"
         >
           Request a new link
         </Link>
@@ -129,7 +129,7 @@ export default function UpdatePasswordPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="sheen w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="sheen w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {submitting ? 'Updating...' : 'Update password'}
         </button>

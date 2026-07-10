@@ -7,27 +7,37 @@
   --font-body: 'Archivo', 'Helvetica Neue', system-ui, sans-serif;
   --font-mono: 'Spline Sans Mono', ui-monospace, 'Cascadia Mono', monospace;
 
-  /* Volt "Courtside" theme — floodlit blue-black base, electric blue for
-     structure, volt green for energy/live. These are the DARK defaults; the
-     light "Solar Court" theme redefines them under :root[data-theme='light']. */
-  --color-night: #06070b;
-  --color-night-2: #0c0e15;
-  --color-night-3: #151824;
-  --color-bone: #f4f4ee;
-  --color-blue: #2b6fff;
-  --color-volt: #c8ff2d;
+  /* "Blacktop" palette — basketball-authentic ember + court teal. Dark is a
+     warm asphalt night: ember orange (ball leather) is ENERGY [live, primary
+     CTAs, key numbers], court teal (playground paint) is STRUCTURE [links,
+     outlines, selection, secondary]. These are the DARK defaults; the light
+     "Blacktop Day" theme redefines them under :root[data-theme='light'].
+     NOTE: token names (--color-volt / --color-blue) are kept for stability —
+     read them as "energy" and "structure". */
+  --color-night: #0c0a08;
+  --color-night-2: #151210;
+  --color-night-3: #1f1a15;
+  --color-bone: #f4efe6;
+  --color-blue: #38b2a0;
+  --color-volt: #ff6a3d;
 
-  /* Live / "Hooping" energy. In dark it's the same volt green; the light theme
-     splits it to crimson so live reads apart from the amber primary CTA.
+  /* Text/glyph color that sits on a --color-volt (ember) fill. */
+  --on-volt: #200b03;
+  /* Glow color for ember CTA shadows (kept as a token so the alpha follows
+     the theme's energy color). */
+  --glow-cta: rgba(255, 106, 61, 0.4);
+
+  /* Live / "Hooping" energy. In dark it's the same ember; the light theme
+     splits it to crimson so live reads apart from the orange primary CTA.
      --on-live is the text/glyph color that sits on a --color-live fill. */
-  --color-live: #c8ff2d;
-  --on-live: #0c1402;
+  --color-live: #ff6a3d;
+  --on-live: #200b03;
 
   /* Accent color for TEXT sitting on page/card backgrounds (kickers, counts,
-     stat numbers). Volt reads fine on night, but amber-on-paper fails
-     contrast, so the light theme swaps this to a dark gold while fills,
+     stat numbers). Ember needs a touch more brightness on asphalt, and drops
+     to a burnt orange on the light theme's concrete for contrast; fills,
      borders and giant display accents keep --color-volt. */
-  --volt-text: #c8ff2d;
+  --volt-text: #ff8a5e;
 
   /* Semantic surface tokens — the recurring translucent card/border/hover
      patterns. Components reference these via `bg-[var(--surface)]`,
@@ -50,10 +60,10 @@
 
   /* Elevation shadow colors + the card/link focus ring. Heavy ink shadows read
      fine on dark surfaces but smother light ones, so they soften in light; the
-     focus ring is volt in dark but goes ink in light. */
+     focus ring is ember in dark but goes ink in light. */
   --elev-shadow: rgba(0, 0, 0, 0.6);
   --drawer-shadow: rgba(0, 0, 0, 0.45);
-  --ring-focus: #c8ff2d;
+  --ring-focus: #ff6a3d;
 }
 
 /* The app defaults to the dark Volt theme. The no-flash bootstrap script in
@@ -67,26 +77,28 @@
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --color-night: #faf9f5;
-  --color-night-2: #ffffff;
-  --color-night-3: #f0eee6;
-  --color-bone: #101010;
-  --color-blue: #101010;
-  --color-volt: #ffc400;
-  --color-live: #e5372c;
+  --color-night: #f5f1e8;
+  --color-night-2: #fdfcf9;
+  --color-night-3: #e9e2d4;
+  --color-bone: #191410;
+  --color-blue: #0c6e60;
+  --color-volt: #e8500f;
+  --on-volt: #ffffff;
+  --glow-cta: rgba(232, 80, 15, 0.3);
+  --color-live: #d92c3f;
   --on-live: #ffffff;
-  --volt-text: #8a6a00;
+  --volt-text: #b23a05;
 
-  --surface: rgba(16, 16, 16, 0.03);
-  --surface-2: rgba(16, 16, 16, 0.055);
-  --border: rgba(16, 16, 16, 0.12);
-  --border-strong: rgba(16, 16, 16, 0.2);
-  --hover: rgba(16, 16, 16, 0.06);
+  --surface: rgba(25, 20, 16, 0.035);
+  --surface-2: rgba(25, 20, 16, 0.06);
+  --border: rgba(25, 20, 16, 0.13);
+  --border-strong: rgba(25, 20, 16, 0.22);
+  --hover: rgba(25, 20, 16, 0.06);
 
-  --color-skill-none: rgba(16, 16, 16, 0.25);
-  --elev-shadow: rgba(24, 20, 8, 0.14);
-  --drawer-shadow: rgba(24, 20, 8, 0.1);
-  --ring-focus: #101010;
+  --color-skill-none: rgba(25, 20, 16, 0.25);
+  --elev-shadow: rgba(30, 22, 10, 0.15);
+  --drawer-shadow: rgba(30, 22, 10, 0.1);
+  --ring-focus: #191410;
 }
 
 html,
@@ -106,11 +118,10 @@ body {
      date/time pickers, scrollbars) follow the active theme. */
 }
 
-/* Text selection carries the energy color in both themes (volt on dark,
-   amber on light — ink text reads on both fills). */
+/* Text selection carries the energy color in both themes. */
 ::selection {
   background: var(--color-volt);
-  color: #0c1402;
+  color: var(--on-volt);
 }
 
 /* Slim, theme-following scrollbars. */
@@ -143,27 +154,27 @@ option {
 /* Atmosphere                                                          */
 /* ------------------------------------------------------------------ */
 
-/* Floodlight wash behind full-page routes. */
+/* Floodlight wash behind full-page routes (teal + ember on asphalt). */
 .volt-floods {
   background:
-    radial-gradient(46% 55% at 18% 4%, rgba(43, 111, 255, 0.2), transparent 62%),
-    radial-gradient(38% 48% at 86% -2%, rgba(200, 255, 45, 0.11), transparent 60%),
-    radial-gradient(70% 70% at 50% 122%, rgba(43, 111, 255, 0.09), transparent 62%);
+    radial-gradient(46% 55% at 18% 4%, rgba(56, 178, 160, 0.14), transparent 62%),
+    radial-gradient(38% 48% at 86% -2%, rgba(255, 106, 61, 0.1), transparent 60%),
+    radial-gradient(70% 70% at 50% 122%, rgba(56, 178, 160, 0.07), transparent 62%);
 }
 .volt-glow {
-  text-shadow: 0 0 32px rgba(200, 255, 45, 0.45);
+  text-shadow: 0 0 32px rgba(255, 106, 61, 0.45);
 }
 
-/* In the light Solar Court theme the neon floods read as muddy smears on
-   paper, so soften them: drop the text-glow and swap the radials for a faint
-   grey + amber sunlight wash. */
+/* In the light Blacktop Day theme the glows read as muddy smears on concrete,
+   so soften them: drop the text-glow and swap the radials for a faint teal +
+   warm sunlight wash. */
 :root[data-theme='light'] .volt-glow {
   text-shadow: none;
 }
 :root[data-theme='light'] .volt-floods {
   background:
-    radial-gradient(42% 52% at 20% 6%, rgba(17, 17, 17, 0.04), transparent 60%),
-    radial-gradient(40% 50% at 84% 0%, rgba(255, 196, 0, 0.14), transparent 60%);
+    radial-gradient(42% 52% at 20% 6%, rgba(12, 110, 96, 0.06), transparent 60%),
+    radial-gradient(40% 50% at 84% 0%, rgba(232, 80, 15, 0.09), transparent 60%);
 }
 
 /* Film-grain overlay, mounted once in App. Static (not animated) so it reads
@@ -200,16 +211,16 @@ option {
    kept as a class so the rgba alpha survives the theme swap, which a Tailwind
    arbitrary shadow-[var(...)] can't express. */
 .glow-live {
-  box-shadow: 0 0 24px -6px rgba(200, 255, 45, 0.4);
+  box-shadow: 0 0 24px -6px rgba(255, 106, 61, 0.4);
 }
 .glow-live-strong {
-  box-shadow: 0 0 30px -8px rgba(200, 255, 45, 0.45);
+  box-shadow: 0 0 30px -8px rgba(255, 106, 61, 0.45);
 }
 :root[data-theme='light'] .glow-live {
-  box-shadow: 0 0 24px -6px rgba(229, 55, 44, 0.4);
+  box-shadow: 0 0 24px -6px rgba(217, 44, 63, 0.4);
 }
 :root[data-theme='light'] .glow-live-strong {
-  box-shadow: 0 0 30px -8px rgba(229, 55, 44, 0.45);
+  box-shadow: 0 0 30px -8px rgba(217, 44, 63, 0.45);
 }
 
 /* ------------------------------------------------------------------ */

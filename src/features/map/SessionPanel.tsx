@@ -133,7 +133,7 @@ export default function SessionPanel({
               <span
                 className={`ml-1.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
                   filtersActive
-                    ? 'bg-[var(--color-volt)] text-[#0c1402]'
+                    ? 'bg-[var(--color-volt)] text-[var(--on-volt)]'
                     : 'bg-[var(--color-blue)] text-white'
                 }`}
               >

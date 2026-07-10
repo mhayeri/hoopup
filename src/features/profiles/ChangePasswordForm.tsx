@@ -93,7 +93,7 @@ export default function ChangePasswordForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-full bg-[var(--color-volt)] px-6 py-2 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:bg-[var(--color-volt)]/90 disabled:cursor-not-allowed disabled:opacity-60"
+        className="rounded-full bg-[var(--color-volt)] px-6 py-2 font-semibold text-[var(--on-volt)] shadow-[0_0_22px_var(--glow-cta)] transition hover:bg-[var(--color-volt)]/90 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {submitting ? 'Updating...' : 'Update password'}
       </button>
