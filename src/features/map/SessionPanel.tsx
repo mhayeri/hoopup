@@ -155,7 +155,11 @@ export default function SessionPanel({
           <div className="mt-5 flex flex-col gap-4">
             <FilterRow label="When">
               {TIME_WINDOWS.map(([value, label]) => (
-                <Chip key={value} active={timeWindow === value} onClick={() => setTimeWindow(value)}>
+                <Chip
+                  key={value}
+                  active={timeWindow === value}
+                  onClick={() => setTimeWindow(value)}
+                >
                   {label}
                 </Chip>
               ))}

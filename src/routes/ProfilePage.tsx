@@ -200,9 +200,7 @@ export default function ProfilePage() {
                     <Dash />
                   )}
                 </StatCell>
-                <StatCell label="Position">
-                  {profile.preferred_position ?? <Dash />}
-                </StatCell>
+                <StatCell label="Position">{profile.preferred_position ?? <Dash />}</StatCell>
                 <StatCell label="Years playing">
                   {profile.years_playing != null ? (
                     <span className="font-mono tabular-nums">{profile.years_playing}</span>
