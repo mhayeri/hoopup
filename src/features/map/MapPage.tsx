@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, ZoomControl, useMap } from 'react-leaflet';
 import type { Marker as LeafletMarker } from 'leaflet';
 import { useOverpassSync } from './useOverpassSync';
 import { useCourtsInView } from './useCourtsInView';
@@ -143,21 +143,14 @@ export default function MapPage() {
   const selectedCourtId = selectedEntry?.court?.id ?? null;
 
   return (
-    <div className="grid h-[calc(100vh-3.5rem)] grid-cols-1 grid-rows-[1fr_auto] bg-[var(--color-night)] md:grid-cols-[340px_1fr] md:grid-rows-1">
-      <SessionPanel
-        sessions={sessions}
-        loading={loading}
-        error={error}
-        filter={filter}
-        onFilterChange={setFilter}
-        selectedSessionId={selectedSessionId}
-        onSelectSession={setSelectedEntry}
-      />
-      <div className="relative row-start-1 md:row-start-auto">
+    <div className="relative h-[calc(100vh-3.5rem)] bg-[var(--color-night)]">
+      {/* Full-bleed map behind everything. */}
+      <div className="absolute inset-0">
         <MapContainer
           center={DEFAULT_CENTER}
           zoom={DEFAULT_ZOOM}
           scrollWheelZoom
+          zoomControl={false}
           className="h-full w-full"
         >
           <TileLayer
@@ -165,11 +158,27 @@ export default function MapPage() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
             url={basemapUrl}
           />
+          {/* Zoom lives top-right so the floating panel never covers it. */}
+          <ZoomControl position="topright" />
           <RecenterOnUser />
           <OverpassSync />
           <CourtMarkers filter={filter} selectedCourtId={selectedCourtId} markerRefs={markerRefs} />
           <FlyToSelected entry={selectedEntry} />
         </MapContainer>
+      </div>
+
+      {/* The panel floats as a glass card on desktop and docks to the bottom
+          edge as a drawer on mobile. z-[1000] clears Leaflet's panes/controls. */}
+      <div className="absolute inset-x-0 bottom-0 z-[1000] md:inset-x-auto md:top-4 md:bottom-4 md:left-4 md:w-[360px]">
+        <SessionPanel
+          sessions={sessions}
+          loading={loading}
+          error={error}
+          filter={filter}
+          onFilterChange={setFilter}
+          selectedSessionId={selectedSessionId}
+          onSelectSession={setSelectedEntry}
+        />
       </div>
     </div>
   );

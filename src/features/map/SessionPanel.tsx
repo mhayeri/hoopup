@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import SessionCard from './SessionCard';
 import type { UpcomingSession } from './useUpcomingSessions';
 import {
@@ -9,6 +9,7 @@ import {
 } from '../sessions/formatTime';
 import { SESSION_CAP } from '../sessions/useSessionRsvps';
 import type { SkillLevel } from '../../lib/database.types';
+import { SKILL_TIER_COLOR } from '../../lib/skill';
 import { useNow } from '../../lib/useNow';
 
 export type MapFilter = 'sessions' | 'all';
@@ -24,9 +25,9 @@ type SkillFilter = SkillLevel | 'any';
 
 const SKILL_OPTIONS: [SkillFilter, string][] = [
   ['any', 'Any'],
-  ['beginner', 'Beginner'],
-  ['intermediate', 'Intermediate'],
-  ['advanced', 'Advanced'],
+  ['beginner', 'Beg'],
+  ['intermediate', 'Int'],
+  ['advanced', 'Adv'],
   ['pro', 'Pro'],
 ];
 
@@ -40,6 +41,12 @@ type Props = {
   onSelectSession: (entry: UpcomingSession) => void;
 };
 
+/**
+ * The "Find a game" panel. Floats over the map as a glass card on desktop;
+ * docks to the bottom edge as an expandable drawer on mobile. Filters are a
+ * flat system — mono section labels over borderless chip rows — instead of
+ * nested boxed pill groups.
+ */
 export default function SessionPanel({
   sessions,
   loading,
@@ -92,9 +99,8 @@ export default function SessionPanel({
   }
 
   return (
-    <aside
-      className={`relative flex w-full flex-col overflow-hidden bg-[var(--color-night-2)] text-[var(--color-bone)] shadow-[0_-10px_24px_-12px_var(--drawer-shadow)] md:h-full md:w-[340px] md:border-r md:border-[var(--border)] md:shadow-none`}
-    >
+    <aside className="flex max-h-full flex-col overflow-hidden rounded-t-3xl border border-[var(--border)] bg-[color-mix(in_srgb,var(--color-night-2)_90%,transparent)] text-[var(--color-bone)] shadow-[0_-16px_50px_-20px_var(--drawer-shadow)] backdrop-blur-md md:h-full md:rounded-3xl md:shadow-[0_30px_80px_-30px_var(--elev-shadow)]">
+      {/* Drawer handle (mobile only). */}
       <button
         type="button"
         onClick={() => setMobileExpanded((v) => !v)}
@@ -102,11 +108,11 @@ export default function SessionPanel({
         aria-label={mobileExpanded ? 'Collapse session list' : 'Expand session list'}
         className="block md:hidden"
       >
-        <span className="mx-auto mt-2 mb-1 block h-1 w-9 rounded-full bg-[var(--color-bone)]/20" />
+        <span className="mx-auto mt-2.5 mb-1 block h-1 w-9 rounded-full bg-[var(--color-bone)]/20" />
       </button>
 
-      <div className="border-b border-[var(--border)] px-5 pt-3 pb-3 md:pt-4">
-        <div className="mb-3 flex items-center justify-between">
+      <div className="px-5 pt-3 pb-4 md:pt-5">
+        <div className="flex items-baseline justify-between gap-3">
           <h2 className="font-display text-3xl leading-none font-extrabold tracking-wide text-[var(--color-bone)] uppercase">
             Find a game
           </h2>
@@ -114,103 +120,102 @@ export default function SessionPanel({
             type="button"
             onClick={() => setMobileExpanded((v) => !v)}
             aria-label={mobileExpanded ? 'Collapse' : 'Expand'}
-            className="rounded-md px-1 py-0.5 text-base text-[var(--color-bone)]/55 md:hidden"
+            className="rounded-md px-1 py-0.5 text-sm text-[var(--color-bone)]/55 md:hidden"
           >
-            {mobileExpanded ? '▼' : '▲'}
+            {mobileExpanded ? '▾' : '▴'}
           </button>
         </div>
+
+        {/* View toggle — one segmented control. */}
         <div
           role="tablist"
           aria-label="Map filter"
-          className="inline-flex gap-1 rounded-full bg-[var(--color-bone)]/8 p-1"
+          className="mt-4 grid grid-cols-2 gap-1 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1"
         >
-          <FilterTab active={filter === 'all'} onClick={() => onFilterChange('all')}>
+          <SegmentTab active={filter === 'all'} onClick={() => onFilterChange('all')}>
             All courts
-          </FilterTab>
-          <FilterTab active={filter === 'sessions'} onClick={() => onFilterChange('sessions')}>
+          </SegmentTab>
+          <SegmentTab active={filter === 'sessions'} onClick={() => onFilterChange('sessions')}>
             Sessions
             {count > 0 || filtersActive ? (
               <span
-                className={`ml-1.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
+                className={`ml-2 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 font-mono text-[10px] font-bold ${
                   filtersActive
                     ? 'bg-[var(--color-volt)] text-[var(--on-volt)]'
-                    : 'bg-[var(--color-blue)] text-white'
+                    : 'bg-[var(--color-bone)]/12 text-[var(--color-bone)]'
                 }`}
               >
                 {count}
               </span>
             ) : null}
-          </FilterTab>
+          </SegmentTab>
         </div>
 
         {filter === 'sessions' ? (
-          <div className="mt-3 border-t border-dashed border-[var(--border)] pt-3">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <div
-                role="group"
-                aria-label="Time window"
-                className="inline-flex flex-wrap gap-1 rounded-2xl bg-[var(--color-bone)]/8 p-1"
+          <div className="mt-5 flex flex-col gap-4">
+            <FilterRow label="When">
+              {TIME_WINDOWS.map(([value, label]) => (
+                <Chip key={value} active={timeWindow === value} onClick={() => setTimeWindow(value)}>
+                  {label}
+                </Chip>
+              ))}
+            </FilterRow>
+
+            <FilterRow label="Host skill">
+              {SKILL_OPTIONS.map(([value, label]) => (
+                <Chip key={value} active={skill === value} onClick={() => setSkill(value)}>
+                  {value !== 'any' ? (
+                    <span
+                      aria-hidden
+                      className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: SKILL_TIER_COLOR[value] }}
+                    />
+                  ) : null}
+                  {label}
+                </Chip>
+              ))}
+            </FilterRow>
+
+            <div className="flex items-center justify-between gap-3">
+              <button
+                type="button"
+                role="switch"
+                aria-checked={openOnly}
+                onClick={() => setOpenOnly((v) => !v)}
+                className="group flex items-center gap-2.5 text-sm font-semibold text-[var(--color-bone)]/75 transition hover:text-[var(--color-bone)]"
               >
-                {TIME_WINDOWS.map(([value, label]) => (
-                  <FilterChip
-                    key={value}
-                    active={timeWindow === value}
-                    onClick={() => setTimeWindow(value)}
-                  >
-                    {label}
-                  </FilterChip>
-                ))}
-              </div>
+                <span
+                  aria-hidden
+                  className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+                    openOnly ? 'bg-[var(--color-volt)]' : 'bg-[var(--color-bone)]/15'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white transition-transform ${
+                      openOnly ? 'translate-x-4' : ''
+                    }`}
+                  />
+                </span>
+                Open spots only
+              </button>
               {filtersActive ? (
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="ml-auto text-[11px] font-bold text-[var(--volt-text)] underline underline-offset-2"
+                  className="font-mono text-[11px] font-semibold tracking-[0.14em] text-[var(--volt-text)] uppercase underline underline-offset-4"
                 >
                   Clear
                 </button>
               ) : null}
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                aria-pressed={openOnly}
-                onClick={() => setOpenOnly((v) => !v)}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
-                  openOnly
-                    ? 'border-[var(--color-blue)]/50 bg-[var(--color-blue)]/15 text-[var(--color-bone)]'
-                    : 'border-[var(--border-strong)] text-[var(--color-bone)]/75 hover:bg-[var(--hover)]'
-                }`}
-              >
-                <span
-                  className={`inline-flex h-3.5 w-3.5 items-center justify-center rounded-full border text-[9px] leading-none text-white ${
-                    openOnly
-                      ? 'border-[var(--color-blue)] bg-[var(--color-blue)]'
-                      : 'border-[var(--color-bone)]/30'
-                  }`}
-                >
-                  {openOnly ? '✓' : ''}
-                </span>
-                Open spots
-              </button>
-              <div
-                role="group"
-                aria-label="Host skill"
-                className="inline-flex flex-wrap gap-1 rounded-2xl bg-[var(--color-bone)]/8 p-1"
-              >
-                {SKILL_OPTIONS.map(([value, label]) => (
-                  <FilterChip key={value} active={skill === value} onClick={() => setSkill(value)}>
-                    {label}
-                  </FilterChip>
-                ))}
-              </div>
             </div>
           </div>
         ) : null}
       </div>
 
       <div
-        className={`flex-col md:flex md:flex-1 md:min-h-0 ${mobileExpanded ? 'flex max-h-[50vh]' : 'hidden'}`}
+        className={`min-h-0 flex-col border-t border-[var(--border)] md:flex md:flex-1 ${
+          mobileExpanded ? 'flex max-h-[45vh]' : 'hidden'
+        }`}
       >
         <div className="flex flex-1 flex-col overflow-y-auto pb-4">
           {loading && sessions.length === 0 ? (
@@ -303,14 +308,15 @@ export default function SessionPanel({
   );
 }
 
-function FilterTab({
+/** One half of the All courts / Sessions segmented control. */
+function SegmentTab({
   active,
   onClick,
   children,
 }: {
   active: boolean;
   onClick: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <button
@@ -318,10 +324,10 @@ function FilterTab({
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className={`inline-flex items-center rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
+      className={`inline-flex items-center justify-center rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
         active
-          ? 'bg-[var(--color-bone)]/12 text-[var(--color-bone)] shadow-sm'
-          : 'text-[var(--color-bone)]/65 hover:text-[var(--color-bone)]'
+          ? 'bg-[var(--color-night-3)] text-[var(--color-bone)] shadow-sm'
+          : 'text-[var(--color-bone)]/60 hover:text-[var(--color-bone)]'
       }`}
     >
       {children}
@@ -329,24 +335,38 @@ function FilterTab({
   );
 }
 
-function FilterChip({
+/** Mono section label + a flat row of chips. */
+function FilterRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div>
+      <p className="mb-1.5 font-mono text-[10px] font-semibold tracking-[0.22em] text-[var(--color-bone)]/45 uppercase">
+        {label}
+      </p>
+      <div role="group" aria-label={label} className="flex flex-wrap gap-1.5">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Chip({
   active,
   onClick,
   children,
 }: {
   active: boolean;
   onClick: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <button
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold transition ${
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold transition ${
         active
-          ? 'bg-[var(--color-bone)]/12 text-[var(--volt-text)] shadow-sm'
-          : 'text-[var(--color-bone)]/65 hover:text-[var(--color-bone)]'
+          ? 'border-[var(--border-strong)] bg-[var(--surface-2)] text-[var(--color-bone)]'
+          : 'border-transparent text-[var(--color-bone)]/55 hover:text-[var(--color-bone)]'
       }`}
     >
       {children}
