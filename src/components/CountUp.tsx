@@ -50,7 +50,7 @@ export default function CountUp({ value, duration = 1100, className }: Props) {
           io.disconnect();
         }
       },
-      { threshold: 0.4 },
+      { threshold: 0.4 }
     );
     io.observe(el);
     return () => {

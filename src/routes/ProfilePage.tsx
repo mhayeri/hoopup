@@ -349,11 +349,21 @@ function SettingsPanel({
           >
             <span
               className={`absolute top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full transition-transform ${
-                isLight ? 'translate-x-5 bg-[#0c1402] text-[var(--color-volt)]' : 'translate-x-0 bg-white text-[#0c1402]'
+                isLight
+                  ? 'translate-x-5 bg-[#0c1402] text-[var(--color-volt)]'
+                  : 'translate-x-0 bg-white text-[#0c1402]'
               }`}
             >
               {isLight ? (
-                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden>
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-3 w-3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  aria-hidden
+                >
                   <circle cx="12" cy="12" r="4.2" />
                   <path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5 5l1.7 1.7M17.3 17.3 19 19M19 5l-1.7 1.7M6.7 17.3 5 19" />
                 </svg>

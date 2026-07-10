@@ -29,7 +29,7 @@ function observe(el: Element, onReveal: () => void) {
         observer?.unobserve(entry.target);
       }
     },
-    { threshold: 0.12, rootMargin: '0px 0px -32px 0px' },
+    { threshold: 0.12, rootMargin: '0px 0px -32px 0px' }
   );
   pending.set(el, onReveal);
   observer.observe(el);
@@ -62,6 +62,6 @@ export default function Reveal({ children, delay = 0, className = '', as = 'div'
       className: `reveal ${shown ? 'is-revealed' : ''} ${className}`.trim(),
       style: delay ? { '--reveal-delay': `${delay}ms` } : undefined,
     },
-    children,
+    children
   );
 }

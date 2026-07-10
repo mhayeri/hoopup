@@ -298,7 +298,7 @@ export default function CourtGL({ className = '', variant = 'hero' }: Props) {
         if (visible) start();
         else stop();
       },
-      { threshold: 0.01 },
+      { threshold: 0.01 }
     );
     io.observe(canvas);
 

@@ -87,52 +87,52 @@ export default function UpdatePasswordPage() {
       sub="Choose a new password for your account."
     >
       <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate>
-          <label className="block">
-            <span className="font-mono text-[11px] font-semibold tracking-[0.18em] text-[var(--color-bone)]/60 uppercase">
-              New password
-            </span>
-            <input
-              type="password"
-              required
-              autoComplete="new-password"
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={inputClass}
-            />
-            <span className="mt-1 block text-xs text-[var(--color-bone)]/55">{PASSWORD_HINT}</span>
-          </label>
+        <label className="block">
+          <span className="font-mono text-[11px] font-semibold tracking-[0.18em] text-[var(--color-bone)]/60 uppercase">
+            New password
+          </span>
+          <input
+            type="password"
+            required
+            autoComplete="new-password"
+            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={inputClass}
+          />
+          <span className="mt-1 block text-xs text-[var(--color-bone)]/55">{PASSWORD_HINT}</span>
+        </label>
 
-          <label className="block">
-            <span className="font-mono text-[11px] font-semibold tracking-[0.18em] text-[var(--color-bone)]/60 uppercase">
-              Confirm password
-            </span>
-            <input
-              type="password"
-              required
-              autoComplete="new-password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className={inputClass}
-            />
-          </label>
+        <label className="block">
+          <span className="font-mono text-[11px] font-semibold tracking-[0.18em] text-[var(--color-bone)]/60 uppercase">
+            Confirm password
+          </span>
+          <input
+            type="password"
+            required
+            autoComplete="new-password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            className={inputClass}
+          />
+        </label>
 
-          {error ? (
-            <p
-              role="alert"
-              className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
-            >
-              {error}
-            </p>
-          ) : null}
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="sheen w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        {error ? (
+          <p
+            role="alert"
+            className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300"
           >
-            {submitting ? 'Updating...' : 'Update password'}
-          </button>
+            {error}
+          </p>
+        ) : null}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="sheen w-full rounded-full bg-[var(--color-volt)] px-6 py-3 font-semibold text-[#0c1402] shadow-[0_0_22px_rgba(200,255,45,0.35)] transition hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {submitting ? 'Updating...' : 'Update password'}
+        </button>
       </form>
     </AuthShell>
   );

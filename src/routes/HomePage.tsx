@@ -4,7 +4,11 @@ import { useAuth } from '../providers/useAuth';
 import { useProfile } from '../features/profiles/useProfile';
 import { useUpcomingSessions, type UpcomingSession } from '../features/map/useUpcomingSessions';
 import { useUserActiveSessions } from '../features/sessions/useUserActiveSessions';
-import { getSessionStatus, isWithinTimeWindow, formatPanelTime } from '../features/sessions/formatTime';
+import {
+  getSessionStatus,
+  isWithinTimeWindow,
+  formatPanelTime,
+} from '../features/sessions/formatTime';
 import { useNow } from '../lib/useNow';
 import CourtGL from '../components/CourtGL';
 import Reveal from '../components/Reveal';
@@ -240,7 +244,9 @@ function HowItWorks() {
               >
                 {step.n}
               </p>
-              <div className={`md:col-span-7 ${i % 2 === 1 ? 'md:order-1 md:col-start-1' : 'md:col-start-6'}`}>
+              <div
+                className={`md:col-span-7 ${i % 2 === 1 ? 'md:order-1 md:col-start-1' : 'md:col-start-6'}`}
+              >
                 <h3 className="font-display text-4xl font-extrabold tracking-wide uppercase md:text-5xl">
                   {step.title}
                 </h3>
@@ -337,8 +343,7 @@ function GamesBoard({
                   Empty court
                 </p>
                 <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-[var(--color-bone)]/55">
-                  No games on the board yet. Grab a court on the map and be the first to put one
-                  up.
+                  No games on the board yet. Grab a court on the map and be the first to put one up.
                 </p>
                 <Link
                   to="/map"
@@ -370,8 +375,7 @@ function FinalCta() {
       <div className="relative mx-auto max-w-6xl px-6 py-28 text-center md:py-36">
         <Reveal>
           <h2 className="font-display text-[clamp(4rem,12vw,9.5rem)] leading-[0.85] font-black tracking-tight uppercase">
-            Got{' '}
-            <span className="volt-glow text-[var(--color-volt)]">next?</span>
+            Got <span className="volt-glow text-[var(--color-volt)]">next?</span>
           </h2>
         </Reveal>
         <Reveal delay={120}>
